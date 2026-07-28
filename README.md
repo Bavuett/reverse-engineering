@@ -7,8 +7,8 @@ folder per subject, all sharing the same structure and tooling.
 Each topic mirrors the shape of `reversing-dalvik-bytecode`: topic-centric chapters,
 self-updating Dataview indices, Templater scaffolding for every note type, and a small set of
 standalone note types (cheatsheets, tool notes, reading notes, project logs) for things that don't
-belong to one chapter — just nested under `Topics/<TopicName>/` instead of sitting at the vault
-root, so the vault can hold as many topics as you're studying.
+belong to one chapter. Topics are top-level folders at the repository root — so the vault can hold
+as many as you're studying, side by side.
 
 ## 📓 Using this template
 
@@ -35,15 +35,16 @@ root, so the vault can hold as many topics as you're studying.
 
 | Path | Content |
 |---|---|
-| `Topics/` | every topic you're studying, one folder each — empty at ship time |
+| `<TopicName>/` (one per topic) | everything for that subject, at the repository root |
 | `_Topic-Skeleton/` | copy-source for a new topic's `Reference`/`Case-Studies`/`Cheatsheets`/`Tools`/`Reading-Notes`/`Projects` folders, including a fictional `demo-project-case-study/` showing the expected case-study shape |
 | `Templates/` | every Templater template, used vault-wide across all topics |
 | `assets/` | non-note files (scans, screenshots, exported diagrams), not topic-specific |
 
-Each topic follows this internal shape:
+Topic folders sit directly at the root alongside these three — don't use `Templates`,
+`_Topic-Skeleton`, or `assets` as a topic name. Each topic follows this internal shape:
 
 ```
-Topics/<TopicName>/
+<TopicName>/
 ├── <TopicName>.md      <- topic home/MOC
 ├── 01-ChapterName/       <- numbered concept chapters, added as you go
 │   ├── ChapterName.md

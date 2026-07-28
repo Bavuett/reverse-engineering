@@ -10,7 +10,7 @@ look up in five seconds rather than read. Created from [[New-Cheatsheet]].
 
 ```dataview
 TABLE subject AS "Subject"
-FROM "Topics/TOPIC" AND #cheatsheet
+FROM "TOPIC" AND #cheatsheet
 SORT file.name ASC
 ```
 

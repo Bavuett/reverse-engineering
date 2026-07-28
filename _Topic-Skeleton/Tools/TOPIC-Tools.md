@@ -10,7 +10,7 @@ their common commands and the gotchas you keep forgetting. Created from [[New-To
 
 ```dataview
 TABLE tool_name AS "Tool", version AS "Version"
-FROM "Topics/TOPIC" AND #tool
+FROM "TOPIC" AND #tool
 SORT file.name ASC
 ```
 

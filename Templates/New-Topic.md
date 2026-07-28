@@ -1,6 +1,6 @@
 <%*
 const topicName = await tp.system.prompt("Topic name — a short PascalCase identifier, e.g. Rust, ReverseEngineering", "", true);
-await tp.file.move("Topics/" + topicName + "/" + topicName);
+await tp.file.move(topicName + "/" + topicName);
 -%>
 ---
 tags: [moc, topic]
@@ -43,12 +43,12 @@ _(populate as you add chapters with [[New-Chapter]])_
 - [[Home]]
 
 > [!todo] Finish setting up this topic (see `CLAUDE.md` → "Adding a new topic")
-> This template just created `Topics/<% topicName %>/<% tp.file.title %>.md` for you. Still to do
+> This template just created `<% topicName %>/<% tp.file.title %>.md` for you. Still to do
 > by hand:
 > - [ ] Copy `01-Reference/`, `Case-Studies/TOPIC-Case-Studies.md` (skip `demo-project-case-study/`
 >   — that one stays in `_Topic-Skeleton/` as reference-only documentation), `Cheatsheets/`,
 >   `Tools/`, `Reading-Notes/`, and `Projects/` from `_Topic-Skeleton/` into
->   `Topics/<% topicName %>/`
+>   `<% topicName %>/`
 > - [ ] Rename every `TOPIC`-prefixed file you copied, e.g. `TOPIC-Reference.md` →
 >   `<% topicName %>-Reference.md`
 > - [ ] Find-and-replace the `TOPIC` placeholder inside those files' content (titles, aliases,

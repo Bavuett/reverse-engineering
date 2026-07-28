@@ -26,19 +26,17 @@ SORT file.name ASC
 > [!info] Requires Dataview
 > See the "Recommended Obsidian setup" section below.
 
-> [!todo] No topics yet
-> This template ships with zero topics. Add your first one with the [[New-Topic]] template — it
-> scaffolds the topic's home note, then walks you through copying the rest of the structure from
-> `_Topic-Skeleton/`. See `CLAUDE.md` → "Adding a new topic".
+Add another topic with the [[New-Topic]] template — it scaffolds the topic's home note, then walks
+you through copying the rest of the structure from `_Topic-Skeleton/`. See `CLAUDE.md` → "Adding a
+new topic".
 
 ## 🧩 How each topic is structured
 
-Every topic under `Topics/<TopicName>/` follows the same internal shape — the same one
-`reversing-dalvik-bytecode` used, just nested one level under its own topic folder instead of
-sitting at the vault root:
+Every topic is its own top-level folder at the repository root and follows the same internal
+shape — the same one `reversing-dalvik-bytecode` used:
 
 ```
-Topics/<TopicName>/
+<TopicName>/
 ├── <TopicName>.md           <- topic home/MOC (this template's version of "Home.md", one per topic)
 ├── 01-ChapterName/           <- numbered concept chapters, added as you go
 │   ├── ChapterName.md
@@ -79,16 +77,19 @@ more than one topic. See `CLAUDE.md` for the full uniqueness rule.
 
 | Path | Content |
 |---|---|
-| `Topics/` | every topic you're studying, one folder each |
+| `<TopicName>/` (one per topic) | everything for that subject — see "How each topic is structured" above |
 | `_Topic-Skeleton/` | copy-source for scaffolding a new topic's Reference/Case-Studies/Cheatsheets/Tools/Reading-Notes/Projects folders |
 | `Templates/` | Templater templates for every note type, used vault-wide across all topics |
 | `assets/` | non-note files (scans, screenshots, exported diagrams), not topic-specific |
 
+Topic folders sit directly at the root alongside these three — don't use `Templates`,
+`_Topic-Skeleton`, or `assets` as a topic name.
+
 ## ⚙️ Recommended Obsidian setup
 
-The vault ships with base configuration under `.obsidian/`, including plugin IDs already listed in
-`community-plugins.json`. Install these community plugins (Settings → Community plugins → Browse)
-to unlock everything:
+The vault ships with these community plugins already bundled under `.obsidian/plugins/` and enabled
+in `community-plugins.json` — no manual install from the Community Plugins browser needed, just
+open the vault in Obsidian and (if prompted) trust/enable community plugins once:
 
 | Plugin | Why it's used here |
 |---|---|
@@ -96,10 +97,11 @@ to unlock everything:
 | **Dataview** | Powers the self-updating tables here and in every topic's Reference/Case-Studies/Cheatsheets/Tools/Reading-Notes/Projects index — add a note with the right tag anywhere in a topic and it appears with no manual edits. |
 | **Spaced Repetition** | Turns the `#flashcards` decks at the bottom of each chapter's concept note into a review queue (`Review flashcards` command), for active recall practice. |
 
-Without these plugins installed, the notes still read perfectly fine — the Dataview blocks just
-render as plain code fences, and the flashcards as plain text — but installing them turns the
-vault from a static reference into something that actively helps you learn and stays organized as
-it grows.
+Without these plugins enabled, the notes still read perfectly fine — the Dataview blocks just
+render as plain code fences, and the flashcards as plain text — but enabling them turns the vault
+from a static reference into something that actively helps you learn and stays organized as it
+grows. If Obsidian ever reports a plugin failed to load right after pulling changes, reload the app
+(or toggle the plugin off/on) so it picks up the newly-synced plugin files.
 
 On phone/tablet: enable sync (Obsidian Sync, iCloud, or simply cloning this git repo) and use
 global search or the *Backlinks* panel to jump between linked notes quickly.

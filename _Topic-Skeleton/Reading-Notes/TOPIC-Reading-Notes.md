@@ -10,7 +10,7 @@ Notes tracking books, courses, papers, and RFCs as you work through them. Create
 
 ```dataview
 TABLE author AS "Author", type AS "Type", status AS "Status"
-FROM "Topics/TOPIC" AND #reading-note
+FROM "TOPIC" AND #reading-note
 SORT status ASC, file.name ASC
 ```
 

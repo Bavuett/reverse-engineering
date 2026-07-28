@@ -22,7 +22,7 @@ topic:
 
 ```dataview
 TABLE category AS "Category"
-FROM "Topics/TOPIC" AND #reference-entry
+FROM "TOPIC" AND #reference-entry
 SORT file.name ASC
 ```
 
@@ -33,7 +33,7 @@ a chapter's own `examples/` subfolder):
 
 ```dataview
 TABLE file.folder AS "Chapter"
-FROM "Topics/TOPIC" AND #example
+FROM "TOPIC" AND #example
 SORT file.folder ASC, file.name ASC
 ```
 
@@ -44,7 +44,7 @@ Every real-world fragment (tagged `#snippet`, normally filed under a chapter's o
 
 ```dataview
 TABLE project AS "Project", source AS "Source", source_path AS "Source path", date_added AS "Added", file.folder AS "Chapter"
-FROM "Topics/TOPIC" AND #snippet
+FROM "TOPIC" AND #snippet
 SORT project ASC, file.name ASC
 ```
 

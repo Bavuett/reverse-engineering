@@ -1,5 +1,5 @@
 <%*
-const topicSegment = tp.file.folder(true).split("/")[1];
+const topicSegment = tp.file.folder(true).split("/")[0];
 -%>
 ---
 tags: [example]

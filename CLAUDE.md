@@ -1,15 +1,18 @@
 # Project structure guide
 
 This repository is a multi-topic Obsidian vault of public study notes: reverse engineering, a
-programming language, a CS topic, ... — one self-contained **topic** per subject, all sharing the
-same structure and tooling. Every topic is organized as a set of **topic-centric chapters** plus a
-handful of standalone note-type folders, not as separate "theory / examples / snippets" areas.
-Follow this convention whenever you add, move, or rename content — do not reintroduce a flat or
-type-grouped layout, and do not flatten topics back onto the vault root.
+programming language, a CS topic, ... — one self-contained **topic** per subject, each its own
+top-level folder at the repository root, all sharing the same structure and tooling. Every topic
+is organized as a set of **topic-centric chapters** plus a handful of standalone note-type
+folders, not as separate "theory / examples / snippets" areas. Follow this convention whenever you
+add, move, or rename content — do not reintroduce a flat or type-grouped layout, and do not nest
+topics under a wrapper folder.
 
-The one exception is `assets/`, at the repository root: non-note files (scans, screenshots,
-exported diagrams), shared vault-wide, not scoped to any topic. It isn't a chapter and isn't part
-of the Obsidian note graph.
+Topic folders sit directly at the repository root, alongside a few reserved, non-topic folders:
+`Templates/` (Templater templates, used vault-wide), `_Topic-Skeleton/` (copy-source for
+scaffolding a new topic), and `assets/` (non-note files — scans, screenshots, exported diagrams —
+shared vault-wide, not scoped to any topic, not part of the Obsidian note graph). Don't name a
+topic `Templates`, `_Topic-Skeleton`, or `assets`.
 
 ## Vault-wide filename uniqueness
 
@@ -38,23 +41,25 @@ from its own folder path and uses that to link to the right `Reference`/`Bibliog
 
 ```
 <%*
-const topicSegment = tp.file.folder(true).split("/")[1];
+const topicSegment = tp.file.folder(true).split("/")[0];
 -%>
 ```
 
 `tp.file.folder(true)` returns the note's folder relative to the vault root (e.g.
-`Topics/Rust/02-Ownership`); index `[1]` is always the topic name, regardless of how deep the note
-sits inside that topic (a chapter, its `examples/`, a case study's `notes/`, ...). `New-Chapter.md`
-and `New-Topic.md` already know the topic name from their own prompts, so they use that directly
+`Rust/02-Ownership`); index `[0]` is always the topic name, regardless of how deep the note sits
+inside that topic (a chapter, its `examples/`, a case study's `notes/`, ...). `New-Chapter.md` and
+`New-Topic.md` already know the topic name from their own prompts, so they use that directly
 instead of deriving it. Keep this pattern when adding a new template that needs to link back to a
 topic-level note.
 
-## Topics live in `Topics/`, scaffolded from `_Topic-Skeleton/`
+## Topics live at the repository root, scaffolded from `_Topic-Skeleton/`
 
-`Topics/` holds one folder per subject (`Topics/Rust/`, `Topics/Reverse-Engineering/`, ...) — empty
-at ship time. `_Topic-Skeleton/` is not a topic itself; it's a literal copy-source for the parts of
-a new topic that aren't safe to script blindly (multiple files at once), using the literal
-placeholder text `TOPIC` in filenames, titles, aliases, Dataview `FROM` clauses, and wikilinks:
+Each subject is its own top-level folder (`Rust/`, `Reverse-Engineering/`, ...), a direct sibling
+of `Templates/`, `_Topic-Skeleton/`, and `assets/` — there's no `Topics/` wrapper folder. This
+template ships with zero topics. `_Topic-Skeleton/` is not a topic itself; it's a literal
+copy-source for the parts of a new topic that aren't safe to script blindly (multiple files at
+once), using the literal placeholder text `TOPIC` in filenames, titles, aliases, Dataview `FROM`
+clauses, and wikilinks:
 
 ```
 _Topic-Skeleton/
@@ -81,13 +86,13 @@ imported `source/`, analysis `notes/`) without cluttering every real topic with 
 ## Adding a new topic
 
 1. Run Templater's **"Create new note from template"** command and pick `Templates/New-Topic.md`.
-   It prompts for a topic name and uses `tp.file.move` to create
-   `Topics/<TopicName>/<TopicName>.md` — the topic's home note — pre-filled with a map of the
-   topic's sections and a `[!todo]` checklist for the rest, because it touches multiple files and
-   isn't safe to script blindly:
+   It prompts for a topic name and uses `tp.file.move` to create `<TopicName>/<TopicName>.md` — the
+   topic's home note, at the repository root — pre-filled with a map of the topic's sections and a
+   `[!todo]` checklist for the rest, because it touches multiple files and isn't safe to script
+   blindly:
 2. Copy `01-Reference/`, `Case-Studies/TOPIC-Case-Studies.md` (skip `demo-project-case-study/`),
    `Cheatsheets/`, `Tools/`, `Reading-Notes/`, and `Projects/` from `_Topic-Skeleton/` into
-   `Topics/<TopicName>/`.
+   `<TopicName>/`.
 3. Rename every `TOPIC`-prefixed file you copied to the real topic name, e.g. `TOPIC-Reference.md`
    → `<TopicName>-Reference.md`.
 4. Find-and-replace the `TOPIC` placeholder inside those files' content (titles, aliases, Dataview
@@ -96,18 +101,18 @@ imported `source/`, analysis `notes/`) without cluttering every real topic with 
    `.obsidian/plugins/templater-obsidian/data.json` → `folder_templates`:
 
    ```json
-   { "folder": "Topics/<TopicName>/01-Reference", "template": "Templates/New-Reference-Entry.md" },
-   { "folder": "Topics/<TopicName>/Case-Studies", "template": "Templates/New-Case-Study.md" },
-   { "folder": "Topics/<TopicName>/Cheatsheets", "template": "Templates/New-Cheatsheet.md" },
-   { "folder": "Topics/<TopicName>/Tools", "template": "Templates/New-Tool-Note.md" },
-   { "folder": "Topics/<TopicName>/Reading-Notes", "template": "Templates/New-Reading-Note.md" },
-   { "folder": "Topics/<TopicName>/Projects", "template": "Templates/New-Project-Note.md" }
+   { "folder": "<TopicName>/01-Reference", "template": "Templates/New-Reference-Entry.md" },
+   { "folder": "<TopicName>/Case-Studies", "template": "Templates/New-Case-Study.md" },
+   { "folder": "<TopicName>/Cheatsheets", "template": "Templates/New-Cheatsheet.md" },
+   { "folder": "<TopicName>/Tools", "template": "Templates/New-Tool-Note.md" },
+   { "folder": "<TopicName>/Reading-Notes", "template": "Templates/New-Reading-Note.md" },
+   { "folder": "<TopicName>/Projects", "template": "Templates/New-Project-Note.md" }
    ```
 
 6. Add the topic to the table in `Home.md` and `README.md`.
 
 (Without Templater — e.g. using only the core "Templates" plugin — create
-`Topics/<TopicName>/<TopicName>.md` by hand instead, then apply the rest of the same steps.)
+`<TopicName>/<TopicName>.md` by hand instead, then apply the rest of the same steps.)
 
 ## Chapter layout
 
@@ -116,7 +121,7 @@ Within a topic, every fundamental concept is a numbered directory (`01-ChapterNa
 with [[New-Chapter]]. Each chapter directory follows the same internal shape:
 
 ```
-Topics/<TopicName>/0X-ChapterName/
+<TopicName>/0X-ChapterName/
 ├── ChapterName.md    <- the concept note itself (same base name as the folder)
 ├── examples/          <- worked walkthroughs for this concept
 └── snippets/          <- real-world fragments illustrating this concept
@@ -139,7 +144,7 @@ A topic's `0N-Reference/` is not a chapter about a single concept — it holds g
 bibliography, and quick-reference tables, plus **Dataview queries that aggregate content from
 every chapter in that topic** (all reference-entry notes, all examples, all snippets, regardless
 of which chapter folder they physically live in — scoped to the topic via
-`FROM "Topics/<TopicName>"`). When adding a new reference entry, example, or snippet, you never
+`FROM "<TopicName>"`). When adding a new reference entry, example, or snippet, you never
 need to manually edit `<TopicName>-Reference.md`'s listings — they update themselves as long as
 the new note carries the right tag (`#reference-entry`, `#example`, `#snippet`).
 
@@ -150,14 +155,14 @@ topic. Its own number moves up every time a new concept chapter is added right b
 
 Run Templater's **"Create new note from template"** command (not folder-scoped, since the target
 folder doesn't exist yet) and pick `Templates/New-Chapter.md`. It prompts for the topic, chapter
-number, and chapter name, then uses `tp.file.move` to create
-`Topics/<TopicName>/0N-ChapterName/` and place `ChapterName.md` inside it in one step (Templater
-creates any missing intermediate folders for you), pre-filled with the same body as
-`New-Concept.md`. It finishes by inserting a `[!todo]` checklist for the steps that still need a
-human, because they touch other files and aren't safe to script blindly:
+number, and chapter name, then uses `tp.file.move` to create `<TopicName>/0N-ChapterName/` and
+place `ChapterName.md` inside it in one step (Templater creates any missing intermediate folders
+for you), pre-filled with the same body as `New-Concept.md`. It finishes by inserting a `[!todo]`
+checklist for the steps that still need a human, because they touch other files and aren't safe to
+script blindly:
 
 1. Add the chapter to the chapter list and Mermaid diagram in the topic's home note
-   (`Topics/<TopicName>/<TopicName>.md`).
+   (`<TopicName>/<TopicName>.md`).
 2. If the number you picked was already taken by this topic's `Reference` chapter, rename that
    folder to the next free number, fix up its own internal `0X-` references, and update its
    `folder_templates` path in `.obsidian/plugins/templater-obsidian/data.json`.
@@ -184,7 +189,7 @@ which is for tiny fragments illustrating exactly one concept. Don't confuse the 
 Each case study follows this shape:
 
 ```
-Topics/<TopicName>/Case-Studies/<project-name>/
+<TopicName>/Case-Studies/<project-name>/
 ├── <Project Name>.md    <- overview note (from Templates/New-Case-Study.md)
 ├── source/               <- imported files, real layout preserved exactly
 │   └── ...
@@ -205,7 +210,7 @@ Topics/<TopicName>/Case-Studies/<project-name>/
   auto-configured here (not confident enough in the exact `app.json` key across Obsidian versions
   to write it silently), so it stays a manual one-time step.
 - Starting a new case study needs one manual Templater config addition, the same way adding a new
-  chapter does: `Topics/<TopicName>/Case-Studies/<project-name>/notes` →
+  chapter does: `<TopicName>/Case-Studies/<project-name>/notes` →
   `Templates/New-Case-Study-Note.md` in `.obsidian/plugins/templater-obsidian/data.json` →
   `folder_templates`.
 
@@ -213,7 +218,7 @@ Topics/<TopicName>/Case-Studies/<project-name>/
 
 These live in their own unnumbered folders inside each topic, are not scoped to any chapter, and
 each has its own Dataview-powered MOC index note (mirroring the `Reference` chapter's pattern,
-scoped to that topic via `FROM "Topics/<TopicName>"`):
+scoped to that topic via `FROM "<TopicName>"`):
 
 | Folder | Template | Tag | For |
 |---|---|---|---|

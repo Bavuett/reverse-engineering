@@ -11,7 +11,7 @@ full distinction and the expected folder shape.
 
 ```dataview
 TABLE project AS "Project", status AS "Status", date_started AS "Started"
-FROM "Topics/TOPIC" AND #case-study
+FROM "TOPIC" AND #case-study
 SORT date_started DESC
 ```
 
@@ -19,7 +19,7 @@ SORT date_started DESC
 
 ```dataview
 TABLE case_study AS "Case study", created AS "Created"
-FROM "Topics/TOPIC" AND #case-study-note
+FROM "TOPIC" AND #case-study-note
 SORT created DESC
 ```
 
@@ -28,13 +28,13 @@ SORT created DESC
 
 ## Starting a new case study
 
-1. Create `Topics/TOPIC/Case-Studies/<project-name>/` and use the [[New-Case-Study]] template for
+1. Create `TOPIC/Case-Studies/<project-name>/` and use the [[New-Case-Study]] template for
    its overview note.
 2. Import only the files you actually need into
-   `Topics/TOPIC/Case-Studies/<project-name>/source/`, keeping their original file/module layout.
-3. Add analysis notes under `Topics/TOPIC/Case-Studies/<project-name>/notes/` using the
+   `TOPIC/Case-Studies/<project-name>/source/`, keeping their original file/module layout.
+3. Add analysis notes under `TOPIC/Case-Studies/<project-name>/notes/` using the
    [[New-Case-Study-Note]] template.
-4. Add a `folder_templates` entry mapping `Topics/TOPIC/Case-Studies/<project-name>/notes` →
+4. Add a `folder_templates` entry mapping `TOPIC/Case-Studies/<project-name>/notes` →
    `Templates/New-Case-Study-Note.md` in `.obsidian/plugins/templater-obsidian/data.json`.
 
 See `_Topic-Skeleton/Case-Studies/demo-project-case-study/` (not copied into real topics — it's
