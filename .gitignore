@@ -1,0 +1,7 @@
+# Local Obsidian state (panel/tab layout): device-specific, avoids sync
+# conflicts when the vault is synced across multiple devices (desktop/mobile).
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+
+# Obsidian's internal trash
+.trash/
