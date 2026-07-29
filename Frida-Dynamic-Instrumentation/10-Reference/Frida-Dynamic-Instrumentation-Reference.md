@@ -1,18 +1,18 @@
 ---
 tags: [moc]
-aliases: ["ARM64-Android Reference"]
+aliases: ["Frida Dynamic Instrumentation Reference"]
 ---
 
-# ARM64-Android · Reference
+# Frida-Dynamic-Instrumentation · Reference
 
-Quick-consultation material for **ARM64-Android**: glossary, bibliography, plus a topic-wide,
-always-up-to-date overview of every reference entry, worked example, and real-world snippet —
-regardless of which chapter folder they live in.
+Quick-consultation material for **Frida-Dynamic-Instrumentation**: glossary, bibliography, plus a
+topic-wide, always-up-to-date overview of every reference entry, worked example, and real-world
+snippet — regardless of which chapter folder they live in.
 
 | Note | Content |
 |---|---|
-| [[ARM64-Android-Glossary\|Glossary]] | Terminology used across this topic |
-| [[ARM64-Android-Bibliography\|Bibliography]] | Sources, tools, and further reading |
+| [[Frida-Dynamic-Instrumentation-Glossary\|Glossary]] | Terminology used across this topic |
+| [[Frida-Dynamic-Instrumentation-Bibliography\|Bibliography]] | Sources, tools, and further reading |
 
 ## Reference entries
 
@@ -22,7 +22,7 @@ topic:
 
 ```dataview
 TABLE category AS "Category"
-FROM "ARM64-Android" AND #reference-entry
+FROM "Frida-Dynamic-Instrumentation" AND #reference-entry
 SORT file.name ASC
 ```
 
@@ -33,7 +33,7 @@ a chapter's own `examples/` subfolder):
 
 ```dataview
 TABLE file.folder AS "Chapter"
-FROM "ARM64-Android" AND #example
+FROM "Frida-Dynamic-Instrumentation" AND #example
 SORT file.folder ASC, file.name ASC
 ```
 
@@ -44,7 +44,7 @@ Every real-world fragment (tagged `#snippet`, normally filed under a chapter's o
 
 ```dataview
 TABLE project AS "Project", source AS "Source", source_path AS "Source path", date_added AS "Added", file.folder AS "Chapter"
-FROM "ARM64-Android" AND #snippet
+FROM "Frida-Dynamic-Instrumentation" AND #snippet
 SORT project ASC, file.name ASC
 ```
 
@@ -56,7 +56,7 @@ SORT project ASC, file.name ASC
 
 For a full project-by-project investigation (imported source kept in its real file/module layout,
 plus open-ended analysis notes not scoped to a single chapter), see
-[[ARM64-Android-Case-Studies|Case Studies]] rather than the per-chapter `snippets/` above.
+[[Frida-Dynamic-Instrumentation-Case-Studies|Case Studies]] rather than the per-chapter `snippets/` above.
 
 ## Extending this section
 
@@ -66,4 +66,4 @@ snippet, create it directly inside the relevant chapter's `examples/` or `snippe
 
 ## See also
 
-- [[ARM64-Android]]
+- [[Frida-Dynamic-Instrumentation]]

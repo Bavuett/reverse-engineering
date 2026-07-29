@@ -80,7 +80,8 @@ invoke-interface {v0}, LDrawable;->draw()V
 ```
 
 > [!tip] invoke-interface vs invoke-virtual
-> Both resolve the target method at runtime based on the object's actual class. The distinction is about *how* the call site itself refers to the method: through a class type (`invoke-virtual`) or through an interface type (`invoke-interface`), which uses a different runtime lookup table (the interface method table rather than the class vtable).
+>
+> Both resolve the target method at runtime based on the object's actual class. The distinction is about _how_ the call site itself refers to the method: through a class type (`invoke-virtual`) or through an interface type (`invoke-interface`), which uses a different runtime lookup table (the interface method table rather than the class vtable).
 
 ## Diagram
 

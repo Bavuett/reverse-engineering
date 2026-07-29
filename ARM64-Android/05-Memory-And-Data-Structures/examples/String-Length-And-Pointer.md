@@ -7,9 +7,7 @@ created: 2026-07-28
 
 ## Goal
 
-Contrast a NUL-terminated C string with a length-prefixed managed string, since the two demand
-completely different disassembly patterns for "how long is this string?". Belongs to
-[[Memory-And-Data-Structures]].
+Contrast a NUL-terminated C string with a length-prefixed managed string, since the two demand completely different disassembly patterns for "how long is this string?". Belongs to [[Memory-And-Data-Structures]].
 
 ## Walkthrough
 
@@ -33,17 +31,9 @@ managed_string_length:
 
 ## Step by step
 
-1. The C-style version has no length field at all — it *must* scan byte-by-byte looking for a
-   terminating `0`, using a post-incrementing load (`ldrb w2, [x1], #1`) inside a tight loop. Seeing
-   this exact shape (byte load, post-increment, compare-and-branch-if-nonzero, repeat) is itself
-   enough to identify "this is computing a C string's length" even with zero symbol information.
-2. The managed-string version instead **stores its length as a field**, so getting the length is a
-   single field load, O(1), no loop at all. This is a strong, easy-to-spot signal that you're
-   looking at a managed-runtime string type (Dart `String`, Java `String` on the ART native side,
-   ...) rather than a raw C buffer.
-3. The absence of a loop is informative on its own: if you expected a length computation and see a
-   single field load instead, that's your cue to go figure out the object's layout (see
-   [[Memory-And-Data-Structures]]) rather than assume the length is hardcoded or missing.
+1. The C-style version has no length field at all — it _must_ scan byte-by-byte looking for a terminating `0`, using a post-incrementing load (`ldrb w2, [x1], #1`) inside a tight loop. Seeing this exact shape (byte load, post-increment, compare-and-branch-if-nonzero, repeat) is itself enough to identify "this is computing a C string's length" even with zero symbol information.
+2. The managed-string version instead **stores its length as a field**, so getting the length is a single field load, O(1), no loop at all. This is a strong, easy-to-spot signal that you're looking at a managed-runtime string type (Dart `String`, Java `String` on the ART native side, ...) rather than a raw C buffer.
+3. The absence of a loop is informative on its own: if you expected a length computation and see a single field load instead, that's your cue to go figure out the object's layout (see [[Memory-And-Data-Structures]]) rather than assume the length is hardcoded or missing.
 
 ## Diagram
 

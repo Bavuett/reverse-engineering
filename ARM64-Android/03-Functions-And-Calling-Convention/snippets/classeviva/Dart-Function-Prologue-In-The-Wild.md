@@ -12,10 +12,7 @@ license_note: "Personal study/research purposes only. This is a tiny excerpt of 
 
 ## Context
 
-`GradeUtils.getAvg` is a small static method (computes a weighted grade average). Its disassembly
-opens with the textbook four-part Dart-AOT prologue described in
-[[Functions-And-Calling-Convention]] — a good first real example precisely because the method
-itself is simple enough that the prologue isn't competing with a complicated body for attention.
+`GradeUtils.getAvg` is a small static method (computes a weighted grade average). Its disassembly opens with the textbook four-part Dart-AOT prologue described in [[Functions-And-Calling-Convention]] — a good first real example precisely because the method itself is simple enough that the prologue isn't competing with a complicated body for attention.
 
 ## Original path
 
@@ -52,18 +49,9 @@ static _ getAvg(/* No info */) {
 
 ## Notes
 
-- `b.ls #0xc20dc8` targets a call to `StackOverflowSharedWithoutFPURegsStub` — note the naming:
-  "WithoutFPURegs" vs. "WithFPURegs" stub variants exist so the slow path only saves/restores the
-  floating-point register file when the function actually uses it, avoiding needless overhead on
-  the (extremely hot, checked on every call) common path. After the stub returns, control jumps
-  *back* to just after the original stack-overflow check (`b #0xc20cfc`, one instruction past the
-  `ldr x16, [THR, #0x38]`) to retry.
-- The function's real logic sits entirely between `CheckStackOverflow` and `LeaveFrame` — once
-  you've internalized the shape of both ends, only that middle section needs actual reading. Here
-  it computes a numeric average using two folds over a list — the full body is a good next read
-  for [[Memory-And-Data-Structures]] (boxed doubles) once this chapter's pattern is second nature.
-- `LeaveFrame` mirrors `EnterFrame` exactly: `mov SP, fp` then `ldp fp, lr, [SP], #0x10` then
-  `ret` — no surprises, which is the point.
+- `b.ls #0xc20dc8` targets a call to `StackOverflowSharedWithoutFPURegsStub` — note the naming: "WithoutFPURegs" vs. "WithFPURegs" stub variants exist so the slow path only saves/restores the floating-point register file when the function actually uses it, avoiding needless overhead on the (extremely hot, checked on every call) common path. After the stub returns, control jumps _back_ to just after the original stack-overflow check (`b #0xc20cfc`, one instruction past the `ldr x16, [THR, #0x38]`) to retry.
+- The function's real logic sits entirely between `CheckStackOverflow` and `LeaveFrame` — once you've internalized the shape of both ends, only that middle section needs actual reading. Here it computes a numeric average using two folds over a list — the full body is a good next read for [[Memory-And-Data-Structures]] (boxed doubles) once this chapter's pattern is second nature.
+- `LeaveFrame` mirrors `EnterFrame` exactly: `mov SP, fp` then `ldp fp, lr, [SP], #0x10` then `ret` — no surprises, which is the point.
 
 ## See also
 

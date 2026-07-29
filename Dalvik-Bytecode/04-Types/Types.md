@@ -10,7 +10,7 @@ Dalvik identifies every type with a compact textual **descriptor**: a single let
 ## Primitive types
 
 | Symbol | Java type | Size |
-|---|---|---|
+| --- | --- | --- |
 | `V` | `void` | — (return type only) |
 | `Z` | `boolean` | 32 bit (in registers) |
 | `B` | `byte` | 32 bit (in registers) |
@@ -25,9 +25,10 @@ Dalvik identifies every type with a compact textual **descriptor**: a single let
 > See the quick-reference version in [[Dalvik-Type-Table]].
 
 > [!tip] Why `long`/`double` occupy two registers
+>
 > Dalvik registers are 32 bits wide (see [[Registers]]); a 64-bit value is split across a pair of consecutive registers. If a `long` occupies `v2`-`v3`, the next free register is `v4`, **not** `v3`.
 
-Note that only `Z`, `B`, `S`, `C`, `I`, `F` actually fit a *single* register at the bit level even though the JVM/Dalvik spec formally lists them as distinct types — the verifier still tracks them as distinct types for type-safety purposes, even though at the bytecode level `boolean`/`byte`/`short`/`char` are frequently manipulated with plain `int` arithmetic instructions and only re-narrowed when stored back into a field or array of that exact type.
+Note that only `Z`, `B`, `S`, `C`, `I`, `F` actually fit a _single_ register at the bit level even though the JVM/Dalvik spec formally lists them as distinct types — the verifier still tracks them as distinct types for type-safety purposes, even though at the bytecode level `boolean`/`byte`/`short`/`char` are frequently manipulated with plain `int` arithmetic instructions and only re-narrowed when stored back into a field or array of that exact type.
 
 ## Reference types
 
@@ -78,6 +79,7 @@ String[] names;
 ```
 
 > [!note] An `int[][]` is an array of `int[]`, not a flat block
+>
 > `[[I` is really "array of (array of int)": each row is an independent `[I` object with its own length. This matters when reading/writing elements — see [[Multidimensional-Arrays|the worked example]].
 
 ## Method descriptors
@@ -115,7 +117,7 @@ LExample;->method(IILjava/lang/String;Z)Ljava/lang/Object;
 ```
 
 | Descriptor portion | Meaning |
-|---|---|
+| --- | --- |
 | `LExample;` | class declaring the method |
 | `->` | class/member separator (also used for fields, see [[Classes]]) |
 | `method` | method name |
@@ -123,6 +125,7 @@ LExample;->method(IILjava/lang/String;Z)Ljava/lang/Object;
 | `Ljava/lang/Object;` | return type |
 
 > [!warning] No commas, no spaces
+>
 > Parameter types in a signature have **no commas and no spaces**: `(IILjava/lang/String;Z)` is simply the four descriptors `I`, `I`, `Ljava/lang/String;`, `Z` written back to back. The trailing `;` on every reference type is exactly what lets a parser tell one descriptor from the next.
 
 ## More examples

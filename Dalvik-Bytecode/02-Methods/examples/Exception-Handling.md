@@ -58,6 +58,7 @@ public class SafeParser {
 4. Both paths converge on the same kind of `return v0`, but reach it through different control flow.
 
 > [!tip] `.catchall`
+>
 > A `catch (Throwable t)` block, or the compiler-generated cleanup code for a `finally` block, is expressed the same way but with `.catchall {:start .. :end} :handler` — no exception type is specified, since it matches everything.
 
 ## Diagram

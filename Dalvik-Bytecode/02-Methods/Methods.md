@@ -1,6 +1,6 @@
 ---
 tags: [fundamentals]
-aliases: [".method", "Smali constructor", "invoke-virtual", "invoke-direct"]
+aliases: [".method", "Smali constructor", "invoke-virtual", "invoke-direct", "vtable", "itable", "move-result", "invoke-virtual/range"]
 ---
 
 # Methods
@@ -18,7 +18,7 @@ A method in smali is wrapped between `.method` and `.end method`. Inside, `.loca
 ```
 
 | Part | Meaning |
-|---|---|
+| --- | --- |
 | `<access-flags>` | `public`, `private`, `protected`, `static`, `final`, `abstract`, `native`, `synchronized`, `constructor`, `bridge`, `varargs`, ... |
 | `<name>` | method name; `<init>` for instance constructors, `<clinit>` for the static initializer |
 | `(<param-types>)` | parameter type descriptors, concatenated with no separators — see [[Types]] |
@@ -43,21 +43,45 @@ invoke-super {p0}, LParent;->onCreate()V
 ```
 
 | Instruction | Resolution | Typical target |
-|---|---|---|
+| --- | --- | --- |
 | `invoke-direct` | compile-time | constructors, `private` methods |
 | `invoke-static` | compile-time | `static` methods |
 | `invoke-virtual` | runtime, by actual object type | `public`/`protected` instance methods |
 | `invoke-interface` | runtime, via interface method table | methods called through an interface reference |
-| `invoke-super` | compile-time, but calls the *declared* superclass's implementation | `super.method()` calls |
+| `invoke-super` | compile-time, but calls the _declared_ superclass's implementation | `super.method()` calls |
 
-> [!tip] Why so many `invoke-*` variants
-> Static resolution (`invoke-direct`/`invoke-static`) is cheap: the target address is fixed at compile time. Dynamic resolution (`invoke-virtual`/`invoke-interface`) costs a vtable/itable lookup at runtime but is what makes polymorphism possible.
+> [!tip] What the vtable/itable actually are, and why so many `invoke-*` variants
+>
+> Every class gets a **vtable** (virtual method table) at compile/load time: an array of method pointers, one slot per virtual method. A subclass inherits its parent's slot layout and can only _override_ a slot (same index, new pointer) or _append_ new slots for methods it introduces itself — it can never reorder or drop one, since code compiled against the parent already assumes those indices. That's why `invoke-virtual` is cheap despite being "dynamic": resolving it is just "look up slot N in whatever vtable the object's actual runtime class has", a single array read, regardless of how deep the class hierarchy is.
+>
+> Interfaces don't fit that scheme. Unrelated classes can each implement the same interface and place its methods at completely different vtable slots (there's no common ancestor to agree on a shared layout with), and a single class can implement several interfaces at once. So an interface call can't be a fixed-offset lookup — instead every class also carries an **itable** (interface method table), indexed by interface method rather than by a single shared numeric slot. `invoke-interface` pays for that extra indirection over the itable; `invoke-virtual` avoids it because single-inheritance class hierarchies can share one flat vtable.
+>
+> Static resolution (`invoke-direct`/`invoke-static`) skips both tables entirely: the target address is baked in at compile time, since there's no overriding to account for.
 
-When a call site would need more than 5 registers (this + 4 arguments) to pass its arguments, smali switches to the `/range` variant instead of listing individual registers:
+### Getting the return value: `move-result`
+
+`invoke-*` instructions never name a destination register — their register list (`{p0, v1}` above) is only the _arguments_. Whatever the callee returns is instead placed in an implicit, VM-internal "result" slot right after the call returns, and the _next_ instruction — only if the value is actually needed — reads it out into a real register:
+
+```smali
+invoke-virtual {v0}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+move-result-object v0    # v0 now holds the returned String
+```
+
+Pick the variant matching the return type: `move-result` for a single 32-bit value (`int`, `float`, ...), `move-result-wide` for a 64-bit value (`long`, `double`), `move-result-object` for any reference type. Calling a `void` method needs none of these; likewise if the caller doesn't need a non-`void` result, the `move-result*` is simply omitted and the value in the implicit slot is never read.
+
+### `invoke-*/range`: same call, a different argument encoding
+
+Every `invoke-*` instruction shown above (`invoke-direct {p0, v1}, ...`) uses a compact encoding that has room for at most 5 argument registers, each referenced with only 4 bits — so it can only name registers `v0`-`v15`. A call that needs more arguments than that, or whose arguments happen to live in a register numbered above 15 (common in methods with large `.registers` counts), can't be expressed in that compact form at all.
+
+`invoke-direct/range`, `invoke-static/range`, `invoke-virtual/range`, `invoke-interface/range`, and `invoke-super/range` are the same five instruction families, just with a wider encoding: instead of listing each argument register individually, they take a single *starting* register and a count, and the arguments are simply "the next N registers from there":
 
 ```smali
 invoke-virtual/range {v0 .. v6}, LWidget;->configure(IIIIII)V
 ```
+
+This still passes 7 values (`this` = `v0`, plus 6 `int` arguments in `v1`-`v6`) to `configure`, exactly like the non-range form would — resolution (`invoke-virtual` still does a vtable lookup), the surrounding `move-result*`, everything is identical. The only real constraint the `/range` form imposes is that the argument registers must be *consecutive*: `{v0 .. v6}` is valid, but there is no way to say "`v0`, then `v10`, then `v3`" in range form. Because of that, when the compiler needs `/range`, it typically also emits extra `move`/`move-object` instructions beforehand to shuffle the actual argument values into a contiguous block of registers first, purely so the call can be encoded — that shuffling has no effect on what gets called or what it does, only on how the instruction stream lays out the argument registers.
+
+In short: `/range` is only a wider envelope for the same call — never a different resolution rule, never a different target. `baksmali` picks whichever form the raw bytecode actually used, so seeing `/range` in a disassembly just means the original call needed more than 5 registers or ones numbered above 15, nothing more.
 
 ### Abstract and native methods
 
@@ -178,3 +202,6 @@ Real-world fragments illustrating this chapter (once added) live in `snippets/` 
 Which special method name is reserved for the instance constructor, and which for the static initializer?::`<init>` for the instance constructor, `<clinit>` for the static initializer.
 Why does `invoke-super` resolve at compile time even though it calls an instance method?::Because it always targets the exact superclass implementation named in the instruction, bypassing dynamic dispatch on the object's actual runtime type.
 What does `.catch Lexception; {:start .. :end} :handler` declare?::A protected code region: if the given exception type (or a subtype) is thrown between `:start` and `:end`, execution transfers to `:handler`.
+Why is `invoke-interface` slower to resolve than `invoke-virtual`, even though both are "dynamic"?::`invoke-virtual` looks up a fixed slot in the object's class's vtable (shared across the single-inheritance hierarchy), while `invoke-interface` must go through the itable, since unrelated classes implementing the same interface can place its methods at different slots.
+Why doesn't `invoke-virtual {p0, v1}, LPerson;->greet()Ljava/lang/String;` name a register to receive the returned `String`?::Because `invoke-*` instructions never carry a destination register; the return value lands in an implicit VM-internal slot that the following `move-result-object` (or `move-result`/`move-result-wide`) instruction must explicitly read out — and can simply be omitted if the value isn't needed.
+Does `invoke-virtual/range` call a different method, or resolve differently, compared to plain `invoke-virtual`?::No — it's the exact same instruction family and resolution (still a vtable lookup); `/range` only changes how the argument registers are encoded, using a start register + count instead of listing each one, because it can address more than 5 arguments and registers above `v15`. The arguments it names must be consecutive.

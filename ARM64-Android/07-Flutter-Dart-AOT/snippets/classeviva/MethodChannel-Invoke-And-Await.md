@@ -12,16 +12,11 @@ license_note: "Personal study/research purposes only. This is a tiny excerpt of 
 
 ## Context
 
-The SPID (Italian public digital-identity SSO) login page needs the surrounding Android app to
-open a URL in an external intent — something Dart code can't do on its own. It builds an argument
-map, calls into Flutter's `MethodChannel` (which crosses over into genuinely JNI/native engine
-code, see [[Android-Native-Internals]]), and `await`s the result. A textbook real instance of
-[[Flutter-Dart-AOT#Explanation|`async`/`await` and platform channels]].
+The SPID (Italian public digital-identity SSO) login page needs the surrounding Android app to open a URL in an external intent — something Dart code can't do on its own. It builds an argument map, calls into Flutter's `MethodChannel` (which crosses over into genuinely JNI/native engine code, see [[Android-Native-Internals]]), and `await`s the result. A textbook real instance of [[Flutter-Dart-AOT#Explanation|`async`/`await` and platform channels]].
 
 ## Original path
 
-`ui/pages/account_pages/sign_in_pages/login_spid_page.dart` (blutter output mirroring
-`package:classeviva/ui/pages/account_pages/sign_in_pages/login_spid_page.dart`)
+`ui/pages/account_pages/sign_in_pages/login_spid_page.dart` (blutter output mirroring `package:classeviva/ui/pages/account_pages/sign_in_pages/login_spid_page.dart`)
 
 ## Snippet
 
@@ -57,25 +52,10 @@ code, see [[Android-Native-Internals]]), and `await`s the result. A textbook rea
 
 ## Notes
 
-- The `MethodChannel` instance itself (`Obj!MethodChannel@1174d71`) is a **pool constant** —
-  created once, reused for every call on this channel — see
-  [[Object-Pool-Constant-Loads]] for the same PP-relative loading idiom in a simpler function.
-- The literal `"openUrlIntent"` is the channel *method name*: on the Android side, whatever
-  `MethodCallHandler` is registered for this channel switches on exactly this string to decide what
-  native/platform action to run. This is a genuinely useful reversing shortcut — **grepping a
-  Flutter binary's recovered string table for method-channel-name-looking strings is a fast way to
-  enumerate every native capability the Dart side can invoke**, without having to first find and
-  read every `invokeMethod` call site.
-- `r0 = Await()` / `bl AwaitStub` is the suspension point — note that the very next instruction,
-  `b #0xc11038`, is **not** where execution actually resumes after suspending. It's the resumption
-  target for one particular path; the real control-flow graph around an `await` is reconstructed by
-  the surrounding suspend-state machinery, not by naive linear disassembly. Treat code
-  immediately after an `AwaitStub` call as "one possible continuation," not "the next line."
-- After resuming (at `0xc10fc4`, a different label reached via the suspended-state machinery, not
-  fallthrough), the result is checked with `branchIfSmi` + `LoadClassIdInstr` + `cmp` against a
-  specific class id (`0xa52`) — this is the generated code checking **which concrete type**
-  `invokeMethod`'s `dynamic` result turned out to be at runtime, since platform channels are
-  untyped at the Dart/native boundary.
+- The `MethodChannel` instance itself (`Obj!MethodChannel@1174d71`) is a **pool constant** — created once, reused for every call on this channel — see [[Object-Pool-Constant-Loads]] for the same PP-relative loading idiom in a simpler function.
+- The literal `"openUrlIntent"` is the channel _method name_: on the Android side, whatever `MethodCallHandler` is registered for this channel switches on exactly this string to decide what native/platform action to run. This is a genuinely useful reversing shortcut — **grepping a Flutter binary's recovered string table for method-channel-name-looking strings is a fast way to enumerate every native capability the Dart side can invoke**, without having to first find and read every `invokeMethod` call site.
+- `r0 = Await()` / `bl AwaitStub` is the suspension point — note that the very next instruction, `b #0xc11038`, is **not** where execution actually resumes after suspending. It's the resumption target for one particular path; the real control-flow graph around an `await` is reconstructed by the surrounding suspend-state machinery, not by naive linear disassembly. Treat code immediately after an `AwaitStub` call as "one possible continuation," not "the next line."
+- After resuming (at `0xc10fc4`, a different label reached via the suspended-state machinery, not fallthrough), the result is checked with `branchIfSmi` + `LoadClassIdInstr` + `cmp` against a specific class id (`0xa52`) — this is the generated code checking **which concrete type** `invokeMethod`'s `dynamic` result turned out to be at runtime, since platform channels are untyped at the Dart/native boundary.
 
 ## See also
 

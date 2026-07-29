@@ -7,8 +7,7 @@ created: 2026-07-28
 
 ## Goal
 
-Walk through every addressing mode you'll actually meet, from a plain offset load to the
-pre-/post-indexed pair that builds a stack frame. Belongs to [[Instructions]].
+Walk through every addressing mode you'll actually meet, from a plain offset load to the pre-/post-indexed pair that builds a stack frame. Belongs to [[Instructions]].
 
 ## Walkthrough
 
@@ -24,16 +23,10 @@ ldp   x29, x30, [sp], #0x10     ; post-index: load the pair from [sp], THEN sp +
 
 ## Step by step
 
-1. `ldr x0, [x1, #0x10]` reads an 8-byte field at a fixed offset from a pointer in `x1` — the
-   bread-and-butter "read an object field" or "read a local variable" instruction.
-2. `ldur` is the same idea but with an unscaled, signed 9-bit immediate offset — this is what you
-   see for **almost every Dart-object field access**, because compressed-pointer field offsets are
-   frequently not multiples of the natural access size that `ldr`'s scaled encoding requires.
-3. Register-offset forms (`[x1, x2]`, optionally `lsl #N`) implement indexing: `array[i]` compiles
-   to a base pointer plus an index register, shifted by `log2(element size)`.
-4. `stp`/`ldp` with `!` (pre-index) and trailing `, #imm` (post-index) are the two halves of a
-   **stack frame**: push both `fp` and `lr` in one instruction while also moving `sp`, then later
-   pop both while restoring `sp` — see [[Functions-And-Calling-Convention]] for the full prologue.
+1. `ldr x0, [x1, #0x10]` reads an 8-byte field at a fixed offset from a pointer in `x1` — the bread-and-butter "read an object field" or "read a local variable" instruction.
+2. `ldur` is the same idea but with an unscaled, signed 9-bit immediate offset — this is what you see for **almost every Dart-object field access**, because compressed-pointer field offsets are frequently not multiples of the natural access size that `ldr`'s scaled encoding requires.
+3. Register-offset forms (`[x1, x2]`, optionally `lsl #N`) implement indexing: `array[i]` compiles to a base pointer plus an index register, shifted by `log2(element size)`.
+4. `stp`/`ldp` with `!` (pre-index) and trailing `, #imm` (post-index) are the two halves of a **stack frame**: push both `fp` and `lr` in one instruction while also moving `sp`, then later pop both while restoring `sp` — see [[Functions-And-Calling-Convention]] for the full prologue.
 
 ## Diagram
 

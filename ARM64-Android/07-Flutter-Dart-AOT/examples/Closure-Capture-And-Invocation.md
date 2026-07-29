@@ -7,9 +7,7 @@ created: 2026-07-28
 
 ## Goal
 
-Show the two-step "capture a variable, then create a closure over it" pattern end to end,
-generalizing the real `AllocateContextStub`/`AllocateClosureStub` calls seen throughout this
-topic's [[Classeviva-Flutter-Case-Study|case study]]. Belongs to [[Flutter-Dart-AOT]].
+Show the two-step "capture a variable, then create a closure over it" pattern end to end, generalizing the real `AllocateContextStub`/`AllocateClosureStub` calls seen throughout this topic's [[Classeviva-Flutter-Case-Study|case study]]. Belongs to [[Flutter-Dart-AOT]].
 
 ## Walkthrough
 
@@ -19,8 +17,7 @@ List<double> scaleAll(List<double> xs, double factor) {
 }
 ```
 
-The lambda `(x) => x * factor` **captures** `factor` from the enclosing scope, so the compiler
-can't just hand over a bare function pointer — it needs to bundle that captured value alongside it:
+The lambda `(x) => x * factor` **captures** `factor` from the enclosing scope, so the compiler can't just hand over a bare function pointer — it needs to bundle that captured value alongside it:
 
 ```
 ; roughly, inside scaleAll's body, before the map() call:
@@ -47,18 +44,10 @@ Separately, disassembled as its own standalone block:
 
 ## Step by step
 
-1. `AllocateContextStub` builds a small heap object whose only job is holding captured variables —
-   one field per variable actually captured (not every local, only ones the closure body
-   references).
-2. The closure's own code is a **separate, already-compiled function** (shown as its own
-   `[closure] ...` block) — `AllocateClosureStub` doesn't compile anything at runtime, it just pairs
-   a pointer to that pre-existing code with the freshly-built context object into one closure value.
-3. When the closure is later invoked (here, once per element by `map`), it receives the context as
-   an implicit extra argument and loads captured variables out of it by field offset — structurally
-   identical to reading any other object's fields, per [[Memory-And-Data-Structures]].
-4. If a closure captures *nothing*, the compiler can skip the context allocation and even reuse a
-   single pre-built closure instance across calls — so the absence of `AllocateContextStub` before
-   an `AllocateClosureStub` is itself informative ("this lambda is capture-free").
+1. `AllocateContextStub` builds a small heap object whose only job is holding captured variables — one field per variable actually captured (not every local, only ones the closure body references).
+2. The closure's own code is a **separate, already-compiled function** (shown as its own `[closure] ...` block) — `AllocateClosureStub` doesn't compile anything at runtime, it just pairs a pointer to that pre-existing code with the freshly-built context object into one closure value.
+3. When the closure is later invoked (here, once per element by `map`), it receives the context as an implicit extra argument and loads captured variables out of it by field offset — structurally identical to reading any other object's fields, per [[Memory-And-Data-Structures]].
+4. If a closure captures _nothing_, the compiler can skip the context allocation and even reuse a single pre-built closure instance across calls — so the absence of `AllocateContextStub` before an `AllocateClosureStub` is itself informative ("this lambda is capture-free").
 
 ## Diagram
 

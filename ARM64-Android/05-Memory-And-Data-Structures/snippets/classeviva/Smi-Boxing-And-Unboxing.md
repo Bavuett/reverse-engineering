@@ -12,10 +12,7 @@ license_note: "Personal study/research purposes only. This is a tiny excerpt of 
 
 ## Context
 
-A small helper closure inside `GradeUtils.getSubjectAveragesForPeriods` reads a `MasterGrade`'s
-integer field and has to hand it back as a proper (potentially boxed) Dart `int` — a direct,
-real-world instance of the Smi-vs-Mint boxing decision described in
-[[Memory-And-Data-Structures#Explanation|Tagged integers]].
+A small helper closure inside `GradeUtils.getSubjectAveragesForPeriods` reads a `MasterGrade`'s integer field and has to hand it back as a proper (potentially boxed) Dart `int` — a direct, real-world instance of the Smi-vs-Mint boxing decision described in [[Memory-And-Data-Structures#Explanation|Tagged integers]].
 
 ## Original path
 
@@ -47,22 +44,10 @@ real-world instance of the Smi-vs-Mint boxing decision described in
 
 ## Notes
 
-- `field_3f` is loaded with a plain `ldur x2, [x3, #0x3f]` — a full 64-bit, **untagged** load, since
-  this particular field is declared as a raw `int` the Dart VM already knows doesn't need
-  tagging/boxing at the storage layer (a `MasterGrade.someIntField`-style field, stored unboxed
-  inside its own object for performance).
-- Converting that raw value back into a general-purpose Dart `int` (which callers might box,
-  compare, or store into a `List<int>`) requires the tag check: `sbfiz` speculatively tags it,
-  `cmp x2, x0, asr #1` verifies the round trip is lossless. This is the standard idiom regardless of
-  which specific field or method triggers it — you'll see it wherever a raw machine integer needs
-  to become a general Dart value.
-- Notice the boxing **slow path gets its own tiny prologue/epilogue** (`stp fp, lr, ...` /
-  `ldp fp, lr, ...`) around just the `bl AllocateMintSharedWithoutFPURegsStub` call — a stub call
-  needs `LR` preserved like any other call, but since the fast path never reaches this code there's
-  no cost paid unless boxing genuinely overflows a Smi.
-- Compare this to [[Object-Field-Store-With-Write-Barrier]]'s `tbz w0, #0, ...` check, which tests
-  the *opposite* direction (is a value already-tagged as a Smi) — the two idioms are mirror images
-  of the same tagged-representation trick from opposite ends.
+- `field_3f` is loaded with a plain `ldur x2, [x3, #0x3f]` — a full 64-bit, **untagged** load, since this particular field is declared as a raw `int` the Dart VM already knows doesn't need tagging/boxing at the storage layer (a `MasterGrade.someIntField`-style field, stored unboxed inside its own object for performance).
+- Converting that raw value back into a general-purpose Dart `int` (which callers might box, compare, or store into a `List<int>`) requires the tag check: `sbfiz` speculatively tags it, `cmp x2, x0, asr #1` verifies the round trip is lossless. This is the standard idiom regardless of which specific field or method triggers it — you'll see it wherever a raw machine integer needs to become a general Dart value.
+- Notice the boxing **slow path gets its own tiny prologue/epilogue** (`stp fp, lr, ...` / `ldp fp, lr, ...`) around just the `bl AllocateMintSharedWithoutFPURegsStub` call — a stub call needs `LR` preserved like any other call, but since the fast path never reaches this code there's no cost paid unless boxing genuinely overflows a Smi.
+- Compare this to [[Object-Field-Store-With-Write-Barrier]]'s `tbz w0, #0, ...` check, which tests the _opposite_ direction (is a value already-tagged as a Smi) — the two idioms are mirror images of the same tagged-representation trick from opposite ends.
 
 ## See also
 

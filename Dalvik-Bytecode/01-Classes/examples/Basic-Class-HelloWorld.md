@@ -44,8 +44,8 @@ public class HelloWorld {
 ## Step by step
 
 1. `.class public LHelloWorld;` / `.super Ljava/lang/Object;` declare the class and its superclass ([[Classes]]).
-2. The implicit default constructor becomes `<init>()V`, a *direct method* that chains to `Object`'s constructor ([[Methods]]).
-3. `print()` is a public *virtual method*; `.locals 2` reserves two local registers (`v0`, `v1`) — no parameters besides `this` ([[Registers]]).
+2. The implicit default constructor becomes `<init>()V`, a _direct method_ that chains to `Object`'s constructor ([[Methods]]).
+3. `print()` is a public _virtual method_; `.locals 2` reserves two local registers (`v0`, `v1`) — no parameters besides `this` ([[Registers]]).
 4. `sget-object` reads a **static** field (`System.out`); `const-string` loads a string literal; `invoke-virtual` calls `println`, resolved at runtime.
 
 ## Diagram

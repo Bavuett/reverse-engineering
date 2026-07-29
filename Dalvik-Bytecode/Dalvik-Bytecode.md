@@ -6,15 +6,11 @@ created: 2026-07-28
 
 # Dalvik-Bytecode
 
-Studying **Dalvik bytecode**, the assembly language of the Android virtual machine (Dalvik/ART), as
-seen in the `.smali` files produced by disassembling APKs. This topic started as an expanded,
-digitized version of a set of handwritten notes taken while first learning to read it — see this
-topic's own `README.md` for the full background story and the original scanned pages.
+Studying **Dalvik bytecode**, the assembly language of the Android virtual machine (Dalvik/ART), as seen in the `.smali` files produced by disassembling APKs. This topic started as an expanded, digitized version of a set of handwritten notes taken while first learning to read it — see this topic's own `README.md` for the full background story and the original scanned pages.
 
 > [!warning] Ethical use
-> This material is for educational and personal-research purposes around reverse engineering.
-> Reversing third-party applications should always respect licenses, terms of service, and
-> applicable local regulations.
+>
+> This material is for educational and personal-research purposes around reverse engineering. Reversing third-party applications should always respect licenses, terms of service, and applicable local regulations.
 
 ## Map of this topic
 
@@ -28,7 +24,7 @@ graph TD
 ```
 
 | Section | Covers |
-|---|---|
+| --- | --- |
 | [[Dalvik-Bytecode-Reference\|Reference]] | glossary, bibliography, type table, vault-wide opcode/example/snippet listings for this topic |
 | [[Dalvik-Bytecode-Case-Studies\|Case Studies]] | full real-app investigations |
 | [[Dalvik-Bytecode-Cheatsheets\|Cheatsheets]] | standalone quick-reference pages |
@@ -66,14 +62,10 @@ graph TD
 1. Start with [[Classes]] to see how Dalvik represents Java classes.
 2. Continue with [[Methods]] and [[Registers]].
 3. Round it off with [[Types]] and [[Dalvik-Instructions|Instructions]].
-4. Each chapter's own `examples/` subfolder has worked walkthroughs — or browse them all at once
-   via the Dataview table in [[Dalvik-Bytecode-Reference|Reference]].
-5. For a full, real-world investigation of one app at a time (rather than a small chapter-scoped
-   fragment), see [[Dalvik-Bytecode-Case-Studies|Case Studies]].
+4. Each chapter's own `examples/` subfolder has worked walkthroughs — or browse them all at once via the Dataview table in [[Dalvik-Bytecode-Reference|Reference]].
+5. For a full, real-world investigation of one app at a time (rather than a small chapter-scoped fragment), see [[Dalvik-Bytecode-Case-Studies|Case Studies]].
 
 ## See also
 
 - [[Home]]
-- [[ARM64-Android]] — the native/register-machine side of Android reverse engineering: what you're
-  reversing whenever there's no more Dalvik bytecode left to read (a JNI `.so`, or a Flutter app's
-  Dart AOT snapshot)
+- [[ARM64-Android]] — the native/register-machine side of Android reverse engineering: what you're reversing whenever there's no more Dalvik bytecode left to read (a JNI `.so`, or a Flutter app's Dart AOT snapshot)

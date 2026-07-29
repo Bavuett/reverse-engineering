@@ -7,9 +7,7 @@ created: 2026-07-28
 
 ## Goal
 
-Show the full spectrum from "no prologue at all" to "minimal prologue for local space only,"
-purely under the standard AAPCS64 convention (no runtime bookkeeping). Belongs to
-[[Functions-And-Calling-Convention]].
+Show the full spectrum from "no prologue at all" to "minimal prologue for local space only," purely under the standard AAPCS64 convention (no runtime bookkeeping). Belongs to [[Functions-And-Calling-Convention]].
 
 ## Walkthrough
 
@@ -41,15 +39,9 @@ fill_buffer:
 
 ## Step by step
 
-1. `square` calls nothing, needs no extra stack — the entire function is prologue-free. If you see
-   a function start directly with the "real work" instruction, check first whether it even *calls*
-   anything before assuming something's missing.
-2. `fill_buffer` still calls nothing (in this illustration) but needs 32 bytes of scratch space —
-   so it adjusts `SP` directly, without ever touching `X29`/`X30`, because it never needs to
-   preserve a return address across a nested call.
-3. The moment a function calls something else for real, `LR` must be saved (a nested `bl` would
-   overwrite it) — that's the trigger for the full `stp x29, x30, ...` prologue in
-   [[Stack-Frame-With-Locals]].
+1. `square` calls nothing, needs no extra stack — the entire function is prologue-free. If you see a function start directly with the "real work" instruction, check first whether it even _calls_ anything before assuming something's missing.
+2. `fill_buffer` still calls nothing (in this illustration) but needs 32 bytes of scratch space — so it adjusts `SP` directly, without ever touching `X29`/`X30`, because it never needs to preserve a return address across a nested call.
+3. The moment a function calls something else for real, `LR` must be saved (a nested `bl` would overwrite it) — that's the trigger for the full `stp x29, x30, ...` prologue in [[Stack-Frame-With-Locals]].
 
 ## Diagram
 

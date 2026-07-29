@@ -7,10 +7,7 @@ created: 2026-07-28
 
 ## Goal
 
-Restate the Dart-AOT prologue/epilogue shape from [[Functions-And-Calling-Convention]] as a
-standalone reference, annotated purely in terms of the reserved registers from
-[[Flutter-Dart-AOT]] — useful once you've internalized both and just want the compact version.
-Belongs to [[Flutter-Dart-AOT]].
+Restate the Dart-AOT prologue/epilogue shape from [[Functions-And-Calling-Convention]] as a standalone reference, annotated purely in terms of the reserved registers from [[Flutter-Dart-AOT]] — useful once you've internalized both and just want the compact version. Belongs to [[Flutter-Dart-AOT]].
 
 ## Walkthrough
 
@@ -35,14 +32,9 @@ LeaveFrame
 
 ## Step by step
 
-1. `EnterFrame`/`AllocStack` are pure AAPCS64 — a plain NDK function's prologue can look identical
-   up to this point.
-2. `CheckStackOverflow` is the tell: a `THR`-relative load at a fixed, always-identical offset,
-   compared against `SP`, is not something a hand-written C function has any reason to do — it
-   exists because Dart's stack is smaller and independently managed from the OS thread stack, and
-   every function must cooperate with growing/detecting overflow of it.
-3. Everything between `CheckStackOverflow` and `LeaveFrame` is where the actual logic — and every
-   Dart-specific idiom from [[Memory-And-Data-Structures]] and this chapter — lives.
+1. `EnterFrame`/`AllocStack` are pure AAPCS64 — a plain NDK function's prologue can look identical up to this point.
+2. `CheckStackOverflow` is the tell: a `THR`-relative load at a fixed, always-identical offset, compared against `SP`, is not something a hand-written C function has any reason to do — it exists because Dart's stack is smaller and independently managed from the OS thread stack, and every function must cooperate with growing/detecting overflow of it.
+3. Everything between `CheckStackOverflow` and `LeaveFrame` is where the actual logic — and every Dart-specific idiom from [[Memory-And-Data-Structures]] and this chapter — lives.
 4. `LeaveFrame` is the textbook AAPCS64 epilogue again, symmetric with `EnterFrame`.
 
 ## Diagram

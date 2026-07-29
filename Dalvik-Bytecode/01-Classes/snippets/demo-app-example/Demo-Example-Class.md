@@ -11,6 +11,7 @@ license_note: "Placeholder note created only to show the expected format — doe
 # Demo · ExampleClass (placeholder)
 
 > [!info] This is a demonstration note
+>
 > It doesn't come from a real app: it only shows **the recommended format** for when you eventually want to add a smali snippet actually extracted from an APK, related to this chapter's concept (classes/fields). To create a new one, use the [[New-Snippet]] template instead of copying this file.
 
 ## Context

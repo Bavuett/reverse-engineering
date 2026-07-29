@@ -8,10 +8,7 @@ created: 2026-07-28
 
 ## Question / goal
 
-Read `GradeUtils.getAvg` end to end as a first full function, confirming that the mandatory
-prologue/epilogue idiom from [[Functions-And-Calling-Convention]] and [[Flutter-Dart-AOT]] really
-is boilerplate that can be skimmed, and that the two `[closure]` blocks following it are the
-lambdas passed to `fold`.
+Read `GradeUtils.getAvg` end to end as a first full function, confirming that the mandatory prologue/epilogue idiom from [[Functions-And-Calling-Convention]] and [[Flutter-Dart-AOT]] really is boilerplate that can be skimmed, and that the two `[closure]` blocks following it are the lambdas passed to `fold`.
 
 ## Relevant source
 
@@ -41,23 +38,11 @@ static _ getAvg(/* No info */) {
 
 ## Analysis
 
-`GradeUtils.getAvg` implements a weighted-average calculation on a list of grades: it calls
-`fold()` **twice** on the same underlying list (once via each `AllocateClosure`), through the
-dynamic dispatch shown by the `LoadClassIdInstr` + `GDT[cid_x0 + 0x1490d]()` pattern (the same
-class-id-based virtual call from [[Bitfield-Class-Id-Extraction]]) — once to sum weighted grade
-values, once to sum weights, then divides the two, guarding against a zero-weight division with
-the `fcmp`/`b.eq` check right before the final `fdiv`.
+`GradeUtils.getAvg` implements a weighted-average calculation on a list of grades: it calls `fold()` **twice** on the same underlying list (once via each `AllocateClosure`), through the dynamic dispatch shown by the `LoadClassIdInstr` + `GDT[cid_x0 + 0x1490d]()` pattern (the same class-id-based virtual call from [[Bitfield-Class-Id-Extraction]]) — once to sum weighted grade values, once to sum weights, then divides the two, guarding against a zero-weight division with the `fcmp`/`b.eq` check right before the final `fdiv`.
 
-Each closure argument to `fold` shows up as its own standalone `[closure] ...` block elsewhere in
-the file (at `0xc20eb4` and `0xc20dd0`) — exactly the separation predicted in
-[[Flutter-Dart-AOT#Explanation|Closures]]. Reading the enclosing function first, *then* following
-each `AnonymousClosure: static (0xADDR)` reference out to its own block, is a much more tractable
-reading order than trying to read the file top to bottom.
+Each closure argument to `fold` shows up as its own standalone `[closure] ...` block elsewhere in the file (at `0xc20eb4` and `0xc20dd0`) — exactly the separation predicted in [[Flutter-Dart-AOT#Explanation|Closures]]. Reading the enclosing function first, _then_ following each `AnonymousClosure: static (0xADDR)` reference out to its own block, is a much more tractable reading order than trying to read the file top to bottom.
 
-The prologue (`EnterFrame`/`AllocStack`/`SetupParameters`/`CheckStackOverflow`) and epilogue
-(`LeaveFrame`/`ret`) contribute nothing to understanding *what this function computes* — skipping
-straight from `CheckStackOverflow` to the first real instruction after it lost no information, and
-is the single most time-saving habit this topic teaches.
+The prologue (`EnterFrame`/`AllocStack`/`SetupParameters`/`CheckStackOverflow`) and epilogue (`LeaveFrame`/`ret`) contribute nothing to understanding _what this function computes_ — skipping straight from `CheckStackOverflow` to the first real instruction after it lost no information, and is the single most time-saving habit this topic teaches.
 
 ## Related concepts
 
@@ -68,11 +53,8 @@ is the single most time-saving habit this topic teaches.
 
 ## Open questions / next steps
 
-- Confirm the exact `fold()` accumulator types by reading the two closures' bodies in full (already
-  excerpted in [[grade_utils.dart]]) against `dart:collection`'s `ListBase.fold` signature.
-- `getAvgForPeriod` (further down the same file) builds an `AllocateContext` + closure combination
-  over a captured period-index value — a good next read once [[Closure-Capture-And-Invocation]]'s
-  hand-authored version feels familiar, to compare against a real capturing closure.
+- Confirm the exact `fold()` accumulator types by reading the two closures' bodies in full (already excerpted in [[grade_utils.dart]]) against `dart:collection`'s `ListBase.fold` signature.
+- `getAvgForPeriod` (further down the same file) builds an `AllocateContext` + closure combination over a captured period-index value — a good next read once [[Closure-Capture-And-Invocation]]'s hand-authored version feels familiar, to compare against a real capturing closure.
 
 ## See also
 

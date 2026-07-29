@@ -12,22 +12,13 @@ finished: ""
 
 ## Why I'm reading/watching this
 
-Every native, non-Dart function on Android follows this ABI — it's the ground truth behind
-[[Functions-And-Calling-Convention]], and worth reading in full at least once rather than only ever
-absorbing it secondhand through this topic's summaries.
+Every native, non-Dart function on Android follows this ABI — it's the ground truth behind [[Functions-And-Calling-Convention]], and worth reading in full at least once rather than only ever absorbing it secondhand through this topic's summaries.
 
 ## Key takeaways
 
-- Register roles (argument/return/caller-saved/callee-saved) are exactly what
-  [[AAPCS64-Quick-Reference]] summarizes — the spec is the authority if a summary ever seems to
-  disagree with something observed in real disassembly.
-- Stack alignment (16 bytes at every public function boundary) is a *hard* requirement the spec
-  states explicitly, not just a convention — useful to cite when a frame-size calculation looks odd
-  and you want to double check rounding.
-- Variadic functions, structs passed/returned by value, and the "homogeneous floating-point
-  aggregate" rules for `V0`-`V7` are the parts most likely to look unfamiliar coming from reading
-  only integer/pointer-heavy disassembly — worth a dedicated re-read if a function's argument
-  marshalling ever doesn't match the simple table.
+- Register roles (argument/return/caller-saved/callee-saved) are exactly what [[AAPCS64-Quick-Reference]] summarizes — the spec is the authority if a summary ever seems to disagree with something observed in real disassembly.
+- Stack alignment (16 bytes at every public function boundary) is a _hard_ requirement the spec states explicitly, not just a convention — useful to cite when a frame-size calculation looks odd and you want to double check rounding.
+- Variadic functions, structs passed/returned by value, and the "homogeneous floating-point aggregate" rules for `V0`-`V7` are the parts most likely to look unfamiliar coming from reading only integer/pointer-heavy disassembly — worth a dedicated re-read if a function's argument marshalling ever doesn't match the simple table.
 
 ## Notes
 

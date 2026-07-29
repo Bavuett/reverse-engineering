@@ -7,9 +7,7 @@ created: 2026-07-28
 
 ## Goal
 
-Annotate a full JNI entry point end to end: the implicit `env`/`thiz` arguments, a callback into
-the JVM through the `JNIEnv` table, and the return-value convention. Belongs to
-[[Android-Native-Internals]].
+Annotate a full JNI entry point end to end: the implicit `env`/`thiz` arguments, a callback into the JVM through the `JNIEnv` table, and the return-value convention. Belongs to [[Android-Native-Internals]].
 
 ## Walkthrough
 
@@ -44,21 +42,11 @@ Java_com_example_app_Foo_greet:
 
 ## Step by step
 
-1. `X0` = `env`, `X1` = `thiz` (unused here, so never even read), `X2` = `name` — the Java
-   signature's *only* declared parameter lands in the *third* physical argument register, which is
-   the detail most worth internalizing from this whole chapter.
-2. `ldr x1, [x19]` dereferences `env` once to get the interface table pointer (`JNIEnv` is
-   conventionally a pointer to a pointer to the function-pointer struct — `struct JNINativeInterface
-   **env`, hence the two levels).
-3. `ldr x2, [x1, #0x298]` reads one specific function pointer out of that table at a fixed offset
-   — offsets are stable per NDK/Android API level and published in `jni.h`; a table of
-   offset→function-name is worth building once per project rather than re-deriving from scratch.
-4. `blr x2` performs the actual callback into the JVM; every JNI function call has this same
-   three-instruction shape (load env's table pointer once, load a specific entry, `blr`) — only the
-   fixed offset changes.
-5. The return value convention is unchanged from plain AAPCS64 — whatever ends up in `X0` at `ret`
-   is the method's return value, here a `jstring` (itself just an opaque reference type from the
-   JVM's point of view).
+1. `X0` = `env`, `X1` = `thiz` (unused here, so never even read), `X2` = `name` — the Java signature's _only_ declared parameter lands in the _third_ physical argument register, which is the detail most worth internalizing from this whole chapter.
+2. `ldr x1, [x19]` dereferences `env` once to get the interface table pointer (`JNIEnv` is conventionally a pointer to a pointer to the function-pointer struct — `struct JNINativeInterface **env`, hence the two levels).
+3. `ldr x2, [x1, #0x298]` reads one specific function pointer out of that table at a fixed offset — offsets are stable per NDK/Android API level and published in `jni.h`; a table of offset→function-name is worth building once per project rather than re-deriving from scratch.
+4. `blr x2` performs the actual callback into the JVM; every JNI function call has this same three-instruction shape (load env's table pointer once, load a specific entry, `blr`) — only the fixed offset changes.
+5. The return value convention is unchanged from plain AAPCS64 — whatever ends up in `X0` at `ret` is the method's return value, here a `jstring` (itself just an opaque reference type from the JVM's point of view).
 
 ## Diagram
 

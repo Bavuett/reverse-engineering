@@ -7,8 +7,7 @@ created: 2026-07-28
 
 ## Goal
 
-Walk the two ways a compiler renders the same `if`/`else`: as branches, and — when both arms are
-cheap — branchlessly. Belongs to [[Control-Flow-Patterns]].
+Walk the two ways a compiler renders the same `if`/`else`: as branches, and — when both arms are cheap — branchlessly. Belongs to [[Control-Flow-Patterns]].
 
 ## Walkthrough
 
@@ -37,17 +36,9 @@ abs_or_zero:
 
 ## Step by step
 
-1. `cmp w0, #0` / `b.ge .Lreturn_x` is the outer `if (x < 0)`, inverted: branch *past* the whole
-   `if`-body when the condition is false. This inversion (testing the opposite of the source
-   condition to jump over the body) is the default shape for `if` without `else` reachable at the
-   end — always read `b.<inverse-cond>` past a block as "this is skipping an `if`-body."
-2. `cbz w1, .Lnegate` is the inner `keep_zero ? 0 : -x` — `cbz` (compare-and-branch-if-zero) is
-   preferred over `cmp`+`b.eq` when comparing a register against literal zero, saving an
-   instruction and not touching the flags at all.
-3. Three distinct `ret`s, one per reachable exit — a giveaway that this function was *not*
-   compiled with tail-merging of the epilogue (compilers vary on whether they factor a shared
-   `ret`/epilogue into one copy or duplicate it per exit path; both are common, and duplicated
-   returns don't imply anything about the source having multiple `return` statements).
+1. `cmp w0, #0` / `b.ge .Lreturn_x` is the outer `if (x < 0)`, inverted: branch _past_ the whole `if`-body when the condition is false. This inversion (testing the opposite of the source condition to jump over the body) is the default shape for `if` without `else` reachable at the end — always read `b.<inverse-cond>` past a block as "this is skipping an `if`-body."
+2. `cbz w1, .Lnegate` is the inner `keep_zero ? 0 : -x` — `cbz` (compare-and-branch-if-zero) is preferred over `cmp`+`b.eq` when comparing a register against literal zero, saving an instruction and not touching the flags at all.
+3. Three distinct `ret`s, one per reachable exit — a giveaway that this function was _not_ compiled with tail-merging of the epilogue (compilers vary on whether they factor a shared `ret`/epilogue into one copy or duplicate it per exit path; both are common, and duplicated returns don't imply anything about the source having multiple `return` statements).
 
 ## Diagram
 

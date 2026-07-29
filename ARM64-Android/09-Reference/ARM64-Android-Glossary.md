@@ -5,11 +5,10 @@ aliases: ["ARM64-Android Glossary"]
 
 # ARM64-Android · Glossary
 
-Terminology used across this topic, in alphabetical order. Add a term as soon as you introduce it
-in a chapter note, rather than assuming it's obvious.
+Terminology used across this topic, in alphabetical order. Add a term as soon as you introduce it in a chapter note, rather than assuming it's obvious.
 
 | Term | Meaning |
-|---|---|
+| --- | --- |
 | AAPCS64 | The Procedure Call Standard for the ARM 64-bit Architecture — the standard calling convention: which registers hold arguments/return values, which are callee-saved, stack alignment rules. See [[Functions-And-Calling-Convention]]. |
 | AArch64 | The 64-bit execution state of the ARM architecture (as opposed to AArch32/Thumb). "ARM64" and "AArch64" are used interchangeably in this topic. |
 | AOT (ahead-of-time) compilation | Compiling source straight to native machine code at build time, as opposed to interpreting bytecode or JIT-compiling at run time. Flutter release builds AOT-compile Dart to ARM64. See [[Flutter-Dart-AOT]]. |

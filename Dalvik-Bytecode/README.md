@@ -1,20 +1,14 @@
 # Dalvik-Bytecode
 
-Guide on reverse engineering apps made for Android by reading the Dalvik bytecode stored in
-`.smali` files. This folder is one topic inside a larger multi-topic Obsidian vault — see the
-[repository root README](../README.md) and [`CLAUDE.md`](../CLAUDE.md) for how the vault as a whole
-is organized; this file covers only what's specific to this topic.
+Guide on reverse engineering apps made for Android by reading the Dalvik bytecode stored in `.smali` files. This folder is one topic inside a larger multi-topic Obsidian vault — see the [repository root README](../README.md) and [`CLAUDE.md`](../CLAUDE.md) for how the vault as a whole is organized; this file covers only what's specific to this topic.
 
 ## 📓 Background
 
-This topic is an expanded, digitized version of a set of handwritten notes taken while first
-learning to read Dalvik bytecode.
+This topic is an expanded, digitized version of a set of handwritten notes taken while first learning to read Dalvik bytecode.
 
 The motivation was fairly practical: in the current Android landscape, watching an app talk to its backend by intercepting network traffic has gotten a lot less reliable — certificate pinning and similar protections routinely defeat that kind of dynamic analysis. Static analysis — actually reading the disassembled `.smali` bytecode of an APK — doesn't have that problem, so I wanted to get comfortable with it. The **ClasseViva** app (an Italian school grades/register app) was the practical subject I used while working through this, cross-referencing it against the official Android/AOSP documentation on the Dalvik bytecode format.
 
-The five original scanned pages are kept in
-[`../assets/dalvik-bytecode-handwritten-notes/`](../assets/dalvik-bytecode-handwritten-notes/) as a
-record of where this started:
+The five original scanned pages are kept in [`../assets/dalvik-bytecode-handwritten-notes/`](../assets/dalvik-bytecode-handwritten-notes/) as a record of where this started:
 
 <p>
   <a href="../assets/dalvik-bytecode-handwritten-notes/page-1-classes-and-methods.jpeg"><img src="../assets/dalvik-bytecode-handwritten-notes/page-1-classes-and-methods.jpeg" width="160" alt="Handwritten notes, page 1"></a>
@@ -24,18 +18,14 @@ record of where this started:
   <a href="../assets/dalvik-bytecode-handwritten-notes/page-5-types-and-arrays.jpeg"><img src="../assets/dalvik-bytecode-handwritten-notes/page-5-types-and-arrays.jpeg" width="160" alt="Handwritten notes, page 5"></a>
 </p>
 
-Everything else in this folder — the [`01-Classes/`](01-Classes/Classes.md) through
-[`06-Reference/`](06-Reference/Dalvik-Bytecode-Reference.md) chapters — carries forward everything
-written on those pages, complemented with additional worked examples, diagrams, tables, and a
-structure meant to keep growing.
+Everything else in this folder — the [`01-Classes/`](01-Classes/Classes.md) through [`06-Reference/`](06-Reference/Dalvik-Bytecode-Reference.md) chapters — carries forward everything written on those pages, complemented with additional worked examples, diagrams, tables, and a structure meant to keep growing.
 
 ## 📚 Chapters
 
-If you're just browsing on GitHub, here they are (open the vault in [Obsidian](https://obsidian.md/)
-for the fully cross-linked, properly-rendered version — see the repository root README):
+If you're just browsing on GitHub, here they are (open the vault in [Obsidian](https://obsidian.md/) for the fully cross-linked, properly-rendered version — see the repository root README):
 
 | Chapter | Content |
-|---|---|
+| --- | --- |
 | [`01-Classes/`](01-Classes/Classes.md) | `.class`, `.super`, `.implements`, `.field`, direct vs virtual methods |
 | [`02-Methods/`](02-Methods/Methods.md) | `.method`, constructors, `<init>`/`<clinit>`, `invoke-*`, exception handling |
 | [`03-Registers/`](03-Registers/Registers.md) | `.registers`, `.locals`, `v`/`p`, `this`, wide register pairs |
@@ -44,8 +34,4 @@ for the fully cross-linked, properly-rendered version — see the repository roo
 | [`06-Reference/`](06-Reference/Dalvik-Bytecode-Reference.md) | glossary, bibliography, type table, topic-wide opcode/example/snippet listings |
 | [`Case-Studies/`](Case-Studies/Dalvik-Bytecode-Case-Studies.md) | full real-app investigations: imported source kept in its real class/package layout, plus open-ended analysis notes |
 
-Each chapter folder (`01-Classes/` … `05-Dalvik-Instructions/`) contains the concept note itself,
-plus an `examples/` subfolder (worked walkthroughs) and a `snippets/` subfolder (fragments from real
-apps), one subfolder per app. [`Case-Studies/`](Case-Studies/Dalvik-Bytecode-Case-Studies.md) is
-different: it holds one whole app's worth of imported source and analysis at a time, not scoped to
-a single chapter's concept.
+Each chapter folder (`01-Classes/` … `05-Dalvik-Instructions/`) contains the concept note itself, plus an `examples/` subfolder (worked walkthroughs) and a `snippets/` subfolder (fragments from real apps), one subfolder per app. [`Case-Studies/`](Case-Studies/Dalvik-Bytecode-Case-Studies.md) is different: it holds one whole app's worth of imported source and analysis at a time, not scoped to a single chapter's concept.

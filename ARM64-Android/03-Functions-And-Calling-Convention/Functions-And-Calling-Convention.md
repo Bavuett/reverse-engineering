@@ -8,20 +8,14 @@ created: 2026-07-28
 
 ## In short
 
-AAPCS64 is the standard ABI every plain NDK-compiled Android `.so` follows: fixed argument
-registers, a fixed frame shape, fixed callee-saved registers. The Dart VM's AOT compiler follows
-its *own* convention layered on top of the same physical register file — same `X0`-`X30`, same
-`SP`, but a different, extremely regular prologue that a `.so` compiled straight from C/C++ would
-never emit. Knowing both, and telling them apart on sight, is the single most load-bearing skill in
-this whole topic: it's how you instantly know "I'm looking at native NDK code" vs. "I'm looking at
-compiled Dart" before reading a single field access.
+AAPCS64 is the standard ABI every plain NDK-compiled Android `.so` follows: fixed argument registers, a fixed frame shape, fixed callee-saved registers. The Dart VM's AOT compiler follows its _own_ convention layered on top of the same physical register file — same `X0`-`X30`, same `SP`, but a different, extremely regular prologue that a `.so` compiled straight from C/C++ would never emit. Knowing both, and telling them apart on sight, is the single most load-bearing skill in this whole topic: it's how you instantly know "I'm looking at native NDK code" vs. "I'm looking at compiled Dart" before reading a single field access.
 
 ## Explanation
 
 ### AAPCS64: parameter passing
 
 | Registers | Hold |
-|---|---|
+| --- | --- |
 | `X0`–`X7` | Up to 8 integer/pointer arguments, in order. A 9th+ argument goes on the stack |
 | `V0`–`V7` | Up to 8 floating-point/SIMD arguments, independently of the integer ones |
 | `X8` | Hidden pointer to caller-allocated space, when the return value is a large struct that doesn't fit in registers |
@@ -42,17 +36,11 @@ my_function:
     ret
 ```
 
-A **leaf function** (calls nothing else) is free to skip all of this if it needs no stack space and
-clobbers no callee-saved register — see [[Registers-And-Data#Worked example|the leaf example]] in
-the previous chapter. The stack pointer must be 16-byte aligned at every public function boundary;
-frame sizes are rounded up accordingly.
+A **leaf function** (calls nothing else) is free to skip all of this if it needs no stack space and clobbers no callee-saved register — see [[Registers-And-Data#Worked example|the leaf example]] in the previous chapter. The stack pointer must be 16-byte aligned at every public function boundary; frame sizes are rounded up accordingly.
 
 ### The Dart AOT convention: a different, more rigid prologue
 
-Nearly every function the Dart AOT compiler emits opens with the *same four-part sequence*,
-regardless of what the function actually does — this consistency is itself a huge static-analysis
-shortcut, and it's the first thing to learn to skip past mentally so the interesting body stands
-out:
+Nearly every function the Dart AOT compiler emits opens with the _same four-part sequence_, regardless of what the function actually does — this consistency is itself a huge static-analysis shortcut, and it's the first thing to learn to skip past mentally so the interesting body stands out:
 
 ```
 EnterFrame
@@ -70,28 +58,25 @@ CheckStackOverflow
 
 Four things are worth internalizing here:
 
-1. **`EnterFrame`/`LeaveFrame` always looks identical** — `stp fp, lr, [SP, #-0x10]!` / `mov fp,
-   SP` and, at the end, `mov SP, fp` / `ldp fp, lr, [SP], #0x10` / `ret`. Every Dart function has a
-   frame, even ones a hand-written AAPCS64 leaf function wouldn't bother with — the VM needs a
-   walkable frame for every function for stack-map-based GC and stack traces.
-2. **`CheckStackOverflow` is not optional and not your code's logic** — it's boilerplate the
-   compiler inserts into *every* function to cooperate with Dart's (comparatively small,
-   growable-via-slow-path) stack. Seeing it is a strong signal you're looking at Dart-AOT output,
-   not NDK C/C++.
-3. **Parameter passing still uses `X0`-onward**, but "`SetupParameters`" often immediately spills
-   arguments into the frame (`stur x1, [fp, #-8]`) rather than keeping them live in registers,
-   because Dart's register allocator runs per-function against its own IR, not against a
-   source-level notion of "this variable lives in a register for its whole scope."
-4. The **return convention still matches AAPCS64** (`X0`/`V0`) — Dart's compiler reuses the
-   physical calling convention for arguments/return values, it just adds mandatory bookkeeping
-   around it. See [[Flutter-Dart-AOT]] for the reserved registers (`THR`, `PP`, ...) this prologue
-   leans on.
+1. **`EnterFrame`/`LeaveFrame` always looks identical** — `stp fp, lr, [SP, #-0x10]!` / `mov fp, SP` and, at the end, `mov SP, fp` / `ldp fp, lr, [SP], #0x10` / `ret`. Every Dart function has a frame, even ones a hand-written AAPCS64 leaf function wouldn't bother with — the VM needs a walkable frame for every function for stack-map-based GC and stack traces.
+2. **`CheckStackOverflow` is not optional and not your code's logic** — it's boilerplate the compiler inserts into _every_ function to cooperate with Dart's (comparatively small, growable-via-slow-path) stack. Seeing it is a strong signal you're looking at Dart-AOT output, not NDK C/C++.
+3. **Parameter passing still uses `X0`-onward**, but "`SetupParameters`" often immediately spills arguments into the frame (`stur x1, [fp, #-8]`) rather than keeping them live in registers, because Dart's register allocator runs per-function against its own IR, not against a source-level notion of "this variable lives in a register for its whole scope."
+4. The **return convention still matches AAPCS64** (`X0`/`V0`) — Dart's compiler reuses the physical calling convention for arguments/return values, it just adds mandatory bookkeeping around it. See [[Flutter-Dart-AOT]] for the reserved registers (`THR`, `PP`, ...) this prologue leans on.
+
+### Reading what a stack slot actually holds
+
+Everything so far explains how a frame gets _built_. The skill you actually need for static analysis is the reverse operation: given a `stur`/`ldur ..., [fp, #-N]` in the middle of a function, figuring out _what value lives there_ — which parameter, which local, which `this`. The technique is the same whether you're looking at Dart-AOT output or a plain NDK function, and it doesn't require a decompiler:
+
+1. **Anchor at the prologue.** `SetupParameters(...)` (in Dart-AOT output) or, in raw disassembly with no such comment, the first few instructions after `EnterFrame`/`stp fp,lr,...` tell you which incoming argument register got spilled to which offset — e.g. `stur x1, [fp, #-0xc8]` right after entry means "whatever arrived in `X1` (the receiver, for an instance method, per [[Registers-And-Data]]) now lives at `fp-0xc8` for the rest of this function."
+2. **Follow every later reference to that same offset.** Every subsequent `ldur reg, [fp, #-0xc8]` is "read that value back out"; every subsequent `stur reg, [fp, #-0xc8]` is "overwrite it." Building a small table as you go — offset → current meaning — turns a page of otherwise anonymous `fp`-relative loads into a readable data-flow trace.
+3. **Watch for slot reuse.** The compiler is free to reuse a stack slot for a second, unrelated value once the first one's last use has passed — nothing marks this in the disassembly itself, it just starts getting written with something else. The tell is a `stur` to an offset you'd already logged a _different_ meaning for; from that instruction on, the table entry changes. This is common enough in Dart-AOT output that assuming "one offset, one meaning, for the whole function" is a frequent source of misreading — see [[Tracking-A-Stack-Slots-Meaning]] and the real, considerably richer version of this exact pattern in this topic's [[Login-Network-Request|Classeviva case study]].
+4. **A register can carry a value forward even after its slot is overwritten.** A very common compiler trick: load the old value out of a slot into a register _right before_ overwriting that same slot with something new, then use the register (not the slot) for the next instruction or two. Reading purely "what's currently in this stack slot" without also tracking live registers will miss this.
+
+This same anchor-then-follow method is exactly how you'd reconstruct a variable's identity in a _stripped_ NDK `.so` too (see [[Android-Native-Internals]]) — there's no `SetupParameters` comment to start from, but the very first `stur`/`str` of an argument register after the prologue is the same anchor point, found by hand instead of read off an annotation.
 
 ## Worked example
 
-A real prologue from this topic's [[Classeviva-Flutter-Case-Study|Classeviva case study]]
-(`GradeUtils.getAvg`, see the full excerpt in this chapter's
-[[Dart-Function-Prologue-In-The-Wild|snippets]]):
+A real prologue from this topic's [[Classeviva-Flutter-Case-Study|Classeviva case study]] (`GradeUtils.getAvg`, see the full excerpt in this chapter's [[Dart-Function-Prologue-In-The-Wild|snippets]]):
 
 ```
 // 0xc20cdc: EnterFrame
@@ -108,17 +93,13 @@ A real prologue from this topic's [[Classeviva-Flutter-Case-Study|Classeviva cas
 //     0xc20cf8: b.ls            #0xc20dc8
 ```
 
-Reading this cold: `EnterFrame` and `CheckStackOverflow` are pure boilerplate — skip them.
-`AllocStack(0x30)` says "this function needs 0x30 bytes of locals," which is a useful *size* signal
-(bigger stack frame ⇒ more locals/temporaries ⇒ probably a longer/more complex function) even before
-reading the body. `SetupParameters` tells you the one incoming argument (`r1`, since this is a
-static method with an implicit nothing-in-`r0`... actually here `r1` holds the sole real argument)
-gets copied to `x0` *and* spilled to `[fp, #-8]` — it's used both immediately and later.
+Reading this cold: `EnterFrame` and `CheckStackOverflow` are pure boilerplate — skip them. `AllocStack(0x30)` says "this function needs 0x30 bytes of locals," which is a useful _size_ signal (bigger stack frame ⇒ more locals/temporaries ⇒ probably a longer/more complex function) even before reading the body. `SetupParameters` tells you the one incoming argument (`r1`, since this is a static method with an implicit nothing-in-`r0`... actually here `r1` holds the sole real argument) gets copied to `x0` _and_ spilled to `[fp, #-8]` — it's used both immediately and later.
 
 ## More examples
 
 - [[Leaf-Function-Prologue-Epilogue]] — the AAPCS64 side: when a prologue is skipped entirely
 - [[Stack-Frame-With-Locals]] — a non-leaf AAPCS64 function spilling callee-saved registers
+- [[Tracking-A-Stack-Slots-Meaning]] — anchoring at `SetupParameters` and following a stack slot's meaning (and reuse) through a function body
 
 ## See also
 

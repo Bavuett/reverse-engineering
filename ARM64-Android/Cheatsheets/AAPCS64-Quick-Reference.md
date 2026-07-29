@@ -11,7 +11,7 @@ Quick lookup — not a full explanation. See [[Functions-And-Calling-Convention]
 ## Quick reference
 
 | Register | Role |
-|---|---|
+| --- | --- |
 | `X0`–`X7` | Integer/pointer args 1–8; `X0` (+`X1`) also holds the return value |
 | `V0`–`V7` | FP/SIMD args 1–8 |
 | `X8` | Hidden pointer for large struct returns |
@@ -30,13 +30,9 @@ Quick lookup — not a full explanation. See [[Functions-And-Calling-Convention]
 
 ## Common pitfalls
 
-- Don't assume `X0` on entry is "the first argument" for a Dart-AOT function — it frequently isn't
-  the receiver/argument you'd expect; check `SetupParameters` annotations or trace what's actually
-  moved where. See [[Flutter-Dart-AOT]].
-- A JNI native method's *first Java-visible parameter* is in `X2`, not `X0`/`X1` — see
-  [[Android-Native-Internals]].
-- `X18` showing up as "just another scratch register" in your disassembler's output is a strong
-  signal you're looking at a non-Android target, or a stripped/misidentified ABI.
+- Don't assume `X0` on entry is "the first argument" for a Dart-AOT function — it frequently isn't the receiver/argument you'd expect; check `SetupParameters` annotations or trace what's actually moved where. See [[Flutter-Dart-AOT]].
+- A JNI native method's _first Java-visible parameter_ is in `X2`, not `X0`/`X1` — see [[Android-Native-Internals]].
+- `X18` showing up as "just another scratch register" in your disassembler's output is a strong signal you're looking at a non-Android target, or a stripped/misidentified ABI.
 
 ## See also
 

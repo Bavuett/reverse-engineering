@@ -8,19 +8,14 @@ created: 2026-07-28
 
 ## In short
 
-You don't need all ~1500 pages of the Arm Architecture Reference Manual to read compiled Android
-code. In practice, static analysis lives on a few dozen instructions from five families: data
-processing (arithmetic/logic/shift/move), load/store, compare, branch, and conditional-select. This
-chapter is a working vocabulary of exactly those, biased toward the forms that actually show up in
-real disassembly (including the Dart-AOT dumps used throughout this topic's
-[[Classeviva-Flutter-Case-Study|case study]]).
+You don't need all ~1500 pages of the Arm Architecture Reference Manual to read compiled Android code. In practice, static analysis lives on a few dozen instructions from five families: data processing (arithmetic/logic/shift/move), load/store, compare, branch, and conditional-select. This chapter is a working vocabulary of exactly those, biased toward the forms that actually show up in real disassembly (including the Dart-AOT dumps used throughout this topic's [[Classeviva-Flutter-Case-Study|case study]]).
 
 ## Explanation
 
 ### Data processing
 
 | Instruction | Meaning |
-|---|---|
+| --- | --- |
 | `add`/`sub` (`Xd, Xn, Xm`\|`#imm`) | `Xd = Xn + Xm` (or `+ imm`) |
 | `adds`/`subs` | Same, and update NZCV flags — the form `cmp` is an alias of (`subs` with the result discarded) |
 | `mul`, `sdiv`/`udiv` | Multiply, signed/unsigned divide (no integer division exception on ARM — divide by zero yields 0) |
@@ -34,9 +29,9 @@ real disassembly (including the Dart-AOT dumps used throughout this topic's
 ### Load/store
 
 | Instruction | Meaning |
-|---|---|
+| --- | --- |
 | `ldr`/`str` `Xt, [Xn, #imm]` | Load/store a register from/to `[base + offset]` |
-| `ldur`/`stur` | The *unscaled*-offset forms — offset is a raw signed byte count (`-256`..`255`), not scaled by access size. Dart-AOT-compiled code prefers these almost exclusively for field access, because compressed-pointer field offsets aren't always multiples of the access size |
+| `ldur`/`stur` | The _unscaled_-offset forms — offset is a raw signed byte count (`-256`..`255`), not scaled by access size. Dart-AOT-compiled code prefers these almost exclusively for field access, because compressed-pointer field offsets aren't always multiples of the access size |
 | `ldp`/`stp` `Xt1, Xt2, [Xn, #imm]` | Load/store **pair** — two registers in one instruction. The canonical function prologue/epilogue idiom `stp fp, lr, [SP, #-0x10]!` / `ldp fp, lr, [SP], #0x10` is this |
 | `ldrb`/`ldrh`/`ldrsb`/`ldrsh`/`ldrsw` | Sub-word loads, zero- or sign-extending — see [[Register-Width-And-Sign-Extension]] |
 | `!` suffix (pre-index) | Compute the address, use it, **then** write it back into the base register (`[SP, #-0x10]!` decrements SP first, then stores) |
@@ -46,7 +41,7 @@ real disassembly (including the Dart-AOT dumps used throughout this topic's
 ### Compare, branch, conditional select
 
 | Instruction | Meaning |
-|---|---|
+| --- | --- |
 | `cmp Xn, Xm`\|`#imm` | `subs xzr, Xn, Xm` — compare and set flags, discard the result |
 | `cbz`/`cbnz Xt, label` | Branch if register is/isn't zero — no flags needed, common for null checks |
 | `tbz`/`tbnz Xt, #bit, label` | Branch on a single bit — common for tag-bit checks (Smi vs. heap pointer: `tbz w0, #0, <is_smi>`) |
@@ -60,7 +55,7 @@ real disassembly (including the Dart-AOT dumps used throughout this topic's
 ### Condition codes at a glance
 
 | Code | True when | Typical use |
-|---|---|---|
+| --- | --- | --- |
 | `eq`/`ne` | Z=1 / Z=0 | equality |
 | `lt`/`le`/`gt`/`ge` | signed less-than/etc. | signed comparisons |
 | `lo`(`cc`)/`ls`/`hi`/`hs`(`cs`) | unsigned less-than/etc. | unsigned comparisons — **watch for `b.ls` guarding a stack/heap-limit check**, that's an unsigned "at or below" |
@@ -79,8 +74,8 @@ int clamp_or_double(int x) {
 ```asm
 clamp_or_double:
     cmp     w0, #0
-    b.lt    .Lret_zero
-    lsl     w0, w0, #1
+    b.lt    .Lret_zero     ; b = branch, lt = larger than
+    lsl     w0, w0, #1     ; w1 = x * 2, computed conditionally
     ret
 .Lret_zero:
     mov     w0, #0
@@ -97,17 +92,12 @@ clamp_or_double:
     ret
 ```
 
-Both are correct translations of the same C; which one a real compiler picks depends on
-optimization level and how cheap the "wrong" branch's work is. Recognizing the `csel` form as an
-`if`/`else` in disguise is one of the most valuable pattern-matches in this whole topic — see
-[[Control-Flow-Patterns]].
+Both are correct translations of the same C; which one a real compiler picks depends on optimization level and how cheap the "wrong" branch's work is. Recognizing the `csel` form as an `if`/`else` in disguise is one of the most valuable pattern-matches in this whole topic — see [[Control-Flow-Patterns]].
 
 ## More examples
 
-- [[Load-Store-Addressing-Modes]] — pre-/post-index, `ldp`/`stp`, and why unscaled `ldur` dominates
-  Dart-compiled field access
-- [[Compare-And-Conditional-Select]] — building booleans and doing three-way comparisons without
-  branching
+- [[Load-Store-Addressing-Modes]] — pre-/post-index, `ldp`/`stp`, and why unscaled `ldur` dominates Dart-compiled field access
+- [[Compare-And-Conditional-Select]] — building booleans and doing three-way comparisons without branching
 
 ## See also
 

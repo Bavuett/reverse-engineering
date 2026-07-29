@@ -7,8 +7,7 @@ created: 2026-07-28
 
 ## Goal
 
-Show a `for` loop compiled with the common "test rotated to the bottom" shape, so the loop body
-only pays for one branch per iteration instead of two. Belongs to [[Control-Flow-Patterns]].
+Show a `for` loop compiled with the common "test rotated to the bottom" shape, so the loop body only pays for one branch per iteration instead of two. Belongs to [[Control-Flow-Patterns]].
 
 ## Walkthrough
 
@@ -38,18 +37,9 @@ sum_range:
 
 ## Step by step
 
-1. The initial `cmp w2, w0` / `b.ge .Ldone` **before** the loop body is the "does this loop run at
-   all" guard — without it, `n <= 0` would incorrectly execute the body once. Its presence is a
-   strong hint the source loop's exit condition is checked *before* every iteration (`while`/`for`,
-   not `do/while`).
-2. Inside `.Lloop`, the body runs, then increments, then re-tests, then `b.lt .Lloop` branches
-   **backward** — this single instruction is the entire "is this a loop" signal; nothing else
-   distinguishes a loop body from any other block of straight-line code.
-3. This "test at the bottom, guard before the top" shape is called **loop rotation**: it costs one
-   extra guard branch overall but only one branch per iteration thereafter, instead of a naive
-   test-at-the-top translation that would branch twice per iteration (once to check, once to jump
-   back). Seeing a near-duplicate comparison both before `.Lloop` and at the bottom of it is the
-   signature of this optimization, not of two different loops.
+1. The initial `cmp w2, w0` / `b.ge .Ldone` **before** the loop body is the "does this loop run at all" guard — without it, `n <= 0` would incorrectly execute the body once. Its presence is a strong hint the source loop's exit condition is checked _before_ every iteration (`while`/`for`, not `do/while`).
+2. Inside `.Lloop`, the body runs, then increments, then re-tests, then `b.lt .Lloop` branches **backward** — this single instruction is the entire "is this a loop" signal; nothing else distinguishes a loop body from any other block of straight-line code.
+3. This "test at the bottom, guard before the top" shape is called **loop rotation**: it costs one extra guard branch overall but only one branch per iteration thereafter, instead of a naive test-at-the-top translation that would branch twice per iteration (once to check, once to jump back). Seeing a near-duplicate comparison both before `.Lloop` and at the bottom of it is the signature of this optimization, not of two different loops.
 
 ## Diagram
 

@@ -7,8 +7,7 @@ created: 2026-07-28
 
 ## Goal
 
-Walk a full non-leaf AAPCS64 function: callee-saved register spills, a nested call, and correct
-teardown. Belongs to [[Functions-And-Calling-Convention]].
+Walk a full non-leaf AAPCS64 function: callee-saved register spills, a nested call, and correct teardown. Belongs to [[Functions-And-Calling-Convention]].
 
 ## Walkthrough
 
@@ -49,16 +48,10 @@ sum_then_scale:
 
 ## Step by step
 
-1. `stp x29, x30, [sp, #-0x20]!` does two jobs at once: allocates the frame (`SP -= 0x20`) and
-   saves both `FP` and `LR` into it, in a single instruction — this pairing is universal enough
-   that seeing `stp x29, x30, [sp, #-N]!` is essentially synonymous with "function entry."
-2. Any callee-saved register (`X19`-`X28`) the function plans to overwrite gets spilled right after
-   — the ABI's promise to the caller ("I'll put these back") has to be kept explicitly.
-3. The `bl helper_scale` in the middle is exactly why this function needed to save `LR` in the
-   first place: without the earlier `stp`, this call would have clobbered the *original* caller's
-   return address.
-4. Teardown is the mirror image, in reverse order: restore callee-saved registers, then restore
-   `FP`/`LR` and deallocate the frame in one `ldp ..., [sp], #0x20`, then `ret`.
+1. `stp x29, x30, [sp, #-0x20]!` does two jobs at once: allocates the frame (`SP -= 0x20`) and saves both `FP` and `LR` into it, in a single instruction — this pairing is universal enough that seeing `stp x29, x30, [sp, #-N]!` is essentially synonymous with "function entry."
+2. Any callee-saved register (`X19`-`X28`) the function plans to overwrite gets spilled right after — the ABI's promise to the caller ("I'll put these back") has to be kept explicitly.
+3. The `bl helper_scale` in the middle is exactly why this function needed to save `LR` in the first place: without the earlier `stp`, this call would have clobbered the _original_ caller's return address.
+4. Teardown is the mirror image, in reverse order: restore callee-saved registers, then restore `FP`/`LR` and deallocate the frame in one `ldp ..., [sp], #0x20`, then `ret`.
 
 ## Diagram
 

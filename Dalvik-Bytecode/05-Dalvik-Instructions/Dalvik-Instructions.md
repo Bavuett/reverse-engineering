@@ -10,7 +10,7 @@ Once [[Classes]], [[Methods]], [[Registers]] and [[Types]] are familiar, reading
 ## Constants and data movement
 
 | Family | Purpose |
-|---|---|
+| --- | --- |
 | `const`, `const/4`, `const/16`, `const/high16` | load a small/large 32-bit literal into a register |
 | `const-wide`, `const-wide/16`, `const-wide/high16` | load a 64-bit literal into a register pair |
 | `const-string` | load a reference to an interned `String` literal |
@@ -21,7 +21,7 @@ Once [[Classes]], [[Methods]], [[Registers]] and [[Types]] are familiar, reading
 ## Field access
 
 | Family | Purpose |
-|---|---|
+| --- | --- |
 | `iget`, `iput` (+ `-wide`, `-object`, `-boolean`, `-byte`, `-char`, `-short`) | read/write an **instance** field |
 | `sget`, `sput` (+ same suffixes) | read/write a **static** field |
 
@@ -33,7 +33,7 @@ sput v0, LCounter;->total:I       # Counter.total = v0
 ## Array access
 
 | Family | Purpose |
-|---|---|
+| --- | --- |
 | `array-length` | store an array's length into a register |
 | `new-array` | allocate a new single-dimension array |
 | `filled-new-array` / `filled-new-array/range` | allocate and initialize a small array in one step |
@@ -44,7 +44,7 @@ See [[Multidimensional-Arrays]] for how these compose to model `int[][]`-style t
 ## Method invocation
 
 | Family | Purpose |
-|---|---|
+| --- | --- |
 | `invoke-direct` | constructors, `private` methods (see [[Methods]]) |
 | `invoke-static` | `static` methods |
 | `invoke-virtual` | public/protected instance methods, dynamic dispatch |
@@ -55,7 +55,7 @@ See [[Multidimensional-Arrays]] for how these compose to model `int[][]`-style t
 ## Object and array creation
 
 | Family | Purpose |
-|---|---|
+| --- | --- |
 | `new-instance` | allocate an (uninitialized) object of a given class — must be followed by a call to `<init>` |
 | `new-array` | allocate an array (see above) |
 | `check-cast` | verify (and narrow) a reference's type, throwing `ClassCastException` on mismatch |
@@ -64,7 +64,7 @@ See [[Multidimensional-Arrays]] for how these compose to model `int[][]`-style t
 ## Arithmetic and conversion
 
 | Family | Purpose |
-|---|---|
+| --- | --- |
 | `add-`, `sub-`, `mul-`, `div-`, `rem-` (`int`/`long`/`float`/`double`) | binary arithmetic |
 | `and-`, `or-`, `xor-`, `shl-`, `shr-`, `ushr-` (`int`/`long`) | bitwise operations |
 | `neg-`, `not-` | unary negation / bitwise complement |
@@ -74,7 +74,7 @@ See [[Multidimensional-Arrays]] for how these compose to model `int[][]`-style t
 ## Comparisons and control flow
 
 | Family | Purpose |
-|---|---|
+| --- | --- |
 | `if-eq`, `if-ne`, `if-lt`, `if-ge`, `if-gt`, `if-le` | two-register conditional branch |
 | `if-eqz`, `if-nez`, `if-ltz`, `if-gez`, `if-gtz`, `if-lez` | compare a single register against zero |
 | `cmp-long`, `cmpg-float`, `cmpl-float`, `cmpg-double`, `cmpl-double` | three-way compare, result fed into an `if-*z` |
@@ -91,7 +91,7 @@ if-lt v0, v1, :cond_0
 ## Returning and exceptions
 
 | Family | Purpose |
-|---|---|
+| --- | --- |
 | `return-void` | return with no value |
 | `return` | return a 32-bit primitive |
 | `return-wide` | return a 64-bit primitive (`long`/`double`) |

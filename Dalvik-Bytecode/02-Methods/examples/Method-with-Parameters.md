@@ -53,6 +53,7 @@ public class Example {
 4. `return-object` returns a reference (used for `String`/`Object`/any reference type), as opposed to `return` (32-bit primitives) or `return-wide` (64-bit primitives, `long`/`double`).
 
 > [!tip] The `return-*` family
+>
 > `return-void` (no value), `return` (primitive ≤32 bit), `return-wide` (`long`/`double`), `return-object` (reference). Pick the one matching the return type declared in the signature — see [[Dalvik-Instructions|Instructions]].
 
 ## Diagram

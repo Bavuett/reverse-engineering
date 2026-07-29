@@ -16,7 +16,7 @@ Each register holds up to 32 bits of data. Whenever a value needs 64 bits (`long
 add-long v0, v2, v4     # v0-v1 = (v2-v3) + (v4-v5)
 ```
 
-Because of this pairing, once a wide value occupies `v2`-`v3`, the next *free* register is `v4`, not `v3` — a common source of off-by-one confusion when hand-editing smali.
+Because of this pairing, once a wide value occupies `v2`-`v3`, the next _free_ register is `v4`, not `v3` — a common source of off-by-one confusion when hand-editing smali.
 
 ## `.registers` — total register count
 
@@ -24,7 +24,7 @@ Because of this pairing, once a wide value occupies `v2`-`v3`, the next *free* r
 .registers <NUM_REGISTERS>
 ```
 
-Declares the **total** number of registers used by the method, parameters included. When a method has parameters, they occupy the *last* N registers of this total.
+Declares the **total** number of registers used by the method, parameters included. When a method has parameters, they occupy the _last_ N registers of this total.
 
 ## `.locals` — local-only count (the common case)
 
@@ -32,7 +32,7 @@ Declares the **total** number of registers used by the method, parameters includ
 .locals <NUM_REGISTERS>
 ```
 
-Declares only the number of **local** registers — the ones that do *not* hold parameters. Parameters are still available, addressed separately as `p0, p1, ...`, and are not counted here. This is by far the more common directive, since it doesn't require recomputing indices when the parameter list changes.
+Declares only the number of **local** registers — the ones that do _not_ hold parameters. Parameters are still available, addressed separately as `p0, p1, ...`, and are not counted here. This is by far the more common directive, since it doesn't require recomputing indices when the parameter list changes.
 
 ```
 v0, v1, v2, v3, v<N>...
@@ -46,7 +46,7 @@ p0, p1, p2, p3, p<N>...
 When `.registers` is used instead of `.locals`, parameters are stored in the **last** N `v` registers. For example, a method with one local variable and two parameters, declared with `.registers 4`, occupies `v0`-`v3` as follows:
 
 | Register | Role | Notes |
-|---|---|---|
+| --- | --- | --- |
 | `v0` | `this` | object reference (absent for `static` methods) |
 | `v1` | local variable | free for the method's own use |
 | `v2` | first parameter (`p1`) | mapped automatically by `.registers` |
@@ -61,6 +61,7 @@ graph LR
 ```
 
 > [!warning] Changing `.registers` shifts every index
+>
 > If you go from `.registers 4` to `.registers 5` to make room for one more local variable, **the parameters' indices shift** — because they always sit in the last N registers. Every reference to a parameter or pre-existing local must be updated consistently; forgetting this is one of the most common bugs when hand-patching smali.
 
 ### `.locals` — the same example, the common way
@@ -102,7 +103,7 @@ Being `static`, there is no `this`: `p0` is already the first real parameter (no
 Values don't automatically flow between registers — an explicit `move` is required whenever a value needs to be relocated, e.g. after a method call whose result must be read out of the "result register":
 
 | Instruction | Moves |
-|---|---|
+| --- | --- |
 | `move` | a 32-bit value between two registers |
 | `move-wide` | a 64-bit value between two register pairs |
 | `move-object` | an object reference between two registers |

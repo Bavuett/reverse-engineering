@@ -11,7 +11,7 @@ Quick lookup — not a full explanation. See [[Flutter-Dart-AOT]] for the "why".
 ## Quick reference
 
 | Symbol | Meaning |
-|---|---|
+| --- | --- |
 | `THR` | Current `Thread*` — `+0x38` stack limit, `+0x50` bump-alloc top/end, `+0x68` static field table |
 | `PP` | Current object pool — constants loaded via `add x, PP, #page, lsl #12` / `ldr x, [x, #off]` |
 | `x21` (GDT) | Global dispatch table base — virtual calls via `ldr lr, [x21, idx, lsl #3]` / `blr lr` |
@@ -33,12 +33,9 @@ Quick lookup — not a full explanation. See [[Flutter-Dart-AOT]] for the "why".
 
 ## Common pitfalls
 
-- `CheckStackOverflow` and `EnterFrame`/`LeaveFrame` are boilerplate on **every** function — don't
-  spend time on them; jump straight to what's between `CheckStackOverflow` and `LeaveFrame`.
-- A stub call is not application logic — recognize the name and move on, per
-  [[Flutter-Dart-AOT#Explanation|Stubs]].
-- Two different `Obj!SomeEnum@<address>` annotations are two different **instances** (variants),
-  not the same value shown twice — see [[Enum-Switch-Via-Pointer-Comparison]].
+- `CheckStackOverflow` and `EnterFrame`/`LeaveFrame` are boilerplate on **every** function — don't spend time on them; jump straight to what's between `CheckStackOverflow` and `LeaveFrame`.
+- A stub call is not application logic — recognize the name and move on, per [[Flutter-Dart-AOT#Explanation|Stubs]].
+- Two different `Obj!SomeEnum@<address>` annotations are two different **instances** (variants), not the same value shown twice — see [[Enum-Switch-Via-Pointer-Comparison]].
 
 ## See also
 

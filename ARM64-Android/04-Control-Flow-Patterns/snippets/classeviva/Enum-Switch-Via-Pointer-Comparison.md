@@ -12,15 +12,11 @@ license_note: "Personal study/research purposes only. This is a tiny excerpt of 
 
 ## Context
 
-`AbsenceLocalizations.absenceAbbreviationName` picks a localized label depending on which variant
-of an `AbsenceType` enum it's given — source-level, almost certainly a `switch (type) { case
-AbsenceType.x: ...; case AbsenceType.y: ...; }`. Its disassembly is a clean real-world instance of
-the cascading-compare `switch` shape from [[Control-Flow-Patterns]].
+`AbsenceLocalizations.absenceAbbreviationName` picks a localized label depending on which variant of an `AbsenceType` enum it's given — source-level, almost certainly a `switch (type) { case AbsenceType.x: ...; case AbsenceType.y: ...; }`. Its disassembly is a clean real-world instance of the cascading-compare `switch` shape from [[Control-Flow-Patterns]].
 
 ## Original path
 
-`domains/absence/models/absence.dart` (blutter output mirroring
-`package:classeviva/domains/absence/models/absence.dart`)
+`domains/absence/models/absence.dart` (blutter output mirroring `package:classeviva/domains/absence/models/absence.dart`)
 
 ## Snippet
 
@@ -48,21 +44,10 @@ the cascading-compare `switch` shape from [[Control-Flow-Patterns]].
 
 ## Notes
 
-- The enum field is loaded **once** (`LoadField: r2 = r1->field_f`, then `DecompressPointer`) and
-  reused across every comparison — the compiler doesn't reload it per `case`.
-- Each `case` loads a *different* enum singleton's address from the object pool
-  (`Obj!AbsenceType@<address>` — the `@...` is the blutter-recovered heap address of that
-  particular canonical instance) and compares by pointer/reference equality, not by an integer
-  index — see [[Control-Flow-Patterns#Explanation|why this can't be a jump table]].
-- The `b.ne <next-case-address>` chain means: to find how many `case`s exist, just keep following
-  the `b.ne` targets until you land somewhere that stops looking like "load a singleton, compare,
-  branch" — that final fall-through is the `default`/`else` arm (or, in a real `switch` with no
-  `default` and exhaustive enum coverage, code the compiler proved unreachable but still had to
-  emit for soundness).
-- Each surviving branch (`b.eq`, implicit — i.e. *not* taking the `b.ne`) leads into a block that
-  calls `CvvAppLocalizations::of()` and does per-locale string selection — worth reading fully once
-  this dispatch shape itself is comfortable; see this chapter's parent for the full picture and
-  [[Classeviva-Flutter-Case-Study]] for the complete function.
+- The enum field is loaded **once** (`LoadField: r2 = r1->field_f`, then `DecompressPointer`) and reused across every comparison — the compiler doesn't reload it per `case`.
+- Each `case` loads a _different_ enum singleton's address from the object pool (`Obj!AbsenceType@<address>` — the `@...` is the blutter-recovered heap address of that particular canonical instance) and compares by pointer/reference equality, not by an integer index — see [[Control-Flow-Patterns#Explanation|why this can't be a jump table]].
+- The `b.ne <next-case-address>` chain means: to find how many `case`s exist, just keep following the `b.ne` targets until you land somewhere that stops looking like "load a singleton, compare, branch" — that final fall-through is the `default`/`else` arm (or, in a real `switch` with no `default` and exhaustive enum coverage, code the compiler proved unreachable but still had to emit for soundness).
+- Each surviving branch (`b.eq`, implicit — i.e. _not_ taking the `b.ne`) leads into a block that calls `CvvAppLocalizations::of()` and does per-locale string selection — worth reading fully once this dispatch shape itself is comfortable; see this chapter's parent for the full picture and [[Classeviva-Flutter-Case-Study]] for the complete function.
 
 ## See also
 
