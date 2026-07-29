@@ -1,11 +1,9 @@
-<%*
-const topicSegment = tp.file.folder(true).split("/")[0];
--%>
 ---
 tags: [tool]
 tool_name: ""
 homepage: ""
 version: ""
+topics: []
 created: <% tp.date.now("YYYY-MM-DD") %>
 ---
 
@@ -33,8 +31,10 @@ What this tool is for, and when you'd reach for it over alternatives.
 
 ## See also
 
-- [[<% topicSegment %>]]
+Link the topic(s) this applies to (matching the `topics` field above), e.g. `[[SomeTopic]]`.
+
+-
 
 ## References
 
-- [[<% topicSegment %>-Bibliography|Bibliography]]
+- [[SomeTopic-Bibliography|Bibliography]]

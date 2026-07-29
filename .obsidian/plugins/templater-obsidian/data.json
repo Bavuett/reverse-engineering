@@ -12,347 +12,299 @@
   "enable_folder_templates": true,
   "folder_templates": [
     {
-      "folder": "ARM64-Android/01-Registers-And-Data",
+      "folder": "01-Dalvik-Bytecode/01-Classes",
       "template": "Templates/New-Concept.md"
     },
     {
-      "folder": "ARM64-Android/01-Registers-And-Data/examples",
+      "folder": "01-Dalvik-Bytecode/01-Classes/examples",
       "template": "Templates/New-Example.md"
     },
     {
-      "folder": "ARM64-Android/01-Registers-And-Data/snippets",
+      "folder": "01-Dalvik-Bytecode/01-Classes/snippets",
       "template": "Templates/New-Snippet.md"
     },
     {
-      "folder": "ARM64-Android/02-Instructions",
+      "folder": "01-Dalvik-Bytecode/02-Methods",
       "template": "Templates/New-Concept.md"
     },
     {
-      "folder": "ARM64-Android/02-Instructions/examples",
+      "folder": "01-Dalvik-Bytecode/02-Methods/examples",
       "template": "Templates/New-Example.md"
     },
     {
-      "folder": "ARM64-Android/02-Instructions/snippets",
+      "folder": "01-Dalvik-Bytecode/02-Methods/snippets",
       "template": "Templates/New-Snippet.md"
     },
     {
-      "folder": "ARM64-Android/03-Functions-And-Calling-Convention",
+      "folder": "01-Dalvik-Bytecode/03-Registers",
       "template": "Templates/New-Concept.md"
     },
     {
-      "folder": "ARM64-Android/03-Functions-And-Calling-Convention/examples",
+      "folder": "01-Dalvik-Bytecode/03-Registers/examples",
       "template": "Templates/New-Example.md"
     },
     {
-      "folder": "ARM64-Android/03-Functions-And-Calling-Convention/snippets",
+      "folder": "01-Dalvik-Bytecode/03-Registers/snippets",
       "template": "Templates/New-Snippet.md"
     },
     {
-      "folder": "ARM64-Android/04-Control-Flow-Patterns",
+      "folder": "01-Dalvik-Bytecode/04-Types",
       "template": "Templates/New-Concept.md"
     },
     {
-      "folder": "ARM64-Android/04-Control-Flow-Patterns/examples",
+      "folder": "01-Dalvik-Bytecode/04-Types/examples",
       "template": "Templates/New-Example.md"
     },
     {
-      "folder": "ARM64-Android/04-Control-Flow-Patterns/snippets",
+      "folder": "01-Dalvik-Bytecode/04-Types/snippets",
       "template": "Templates/New-Snippet.md"
     },
     {
-      "folder": "ARM64-Android/05-Memory-And-Data-Structures",
+      "folder": "01-Dalvik-Bytecode/05-Dalvik-Instructions",
       "template": "Templates/New-Concept.md"
     },
     {
-      "folder": "ARM64-Android/05-Memory-And-Data-Structures/examples",
+      "folder": "01-Dalvik-Bytecode/05-Dalvik-Instructions/examples",
       "template": "Templates/New-Example.md"
     },
     {
-      "folder": "ARM64-Android/05-Memory-And-Data-Structures/snippets",
-      "template": "Templates/New-Snippet.md"
-    },
-    {
-      "folder": "ARM64-Android/06-Android-Native-Internals",
-      "template": "Templates/New-Concept.md"
-    },
-    {
-      "folder": "ARM64-Android/06-Android-Native-Internals/examples",
-      "template": "Templates/New-Example.md"
-    },
-    {
-      "folder": "ARM64-Android/06-Android-Native-Internals/snippets",
-      "template": "Templates/New-Snippet.md"
-    },
-    {
-      "folder": "ARM64-Android/07-Flutter-Dart-AOT",
-      "template": "Templates/New-Concept.md"
-    },
-    {
-      "folder": "ARM64-Android/07-Flutter-Dart-AOT/examples",
-      "template": "Templates/New-Example.md"
-    },
-    {
-      "folder": "ARM64-Android/07-Flutter-Dart-AOT/snippets",
-      "template": "Templates/New-Snippet.md"
-    },
-    {
-      "folder": "ARM64-Android/08-Reading-Raw-Disassembly",
-      "template": "Templates/New-Concept.md"
-    },
-    {
-      "folder": "ARM64-Android/08-Reading-Raw-Disassembly/examples",
-      "template": "Templates/New-Example.md"
-    },
-    {
-      "folder": "ARM64-Android/08-Reading-Raw-Disassembly/snippets",
-      "template": "Templates/New-Snippet.md"
-    },
-    {
-      "folder": "ARM64-Android/09-Reference",
+      "folder": "01-Dalvik-Bytecode/06-Reference",
       "template": "Templates/New-Reference-Entry.md"
     },
     {
-      "folder": "ARM64-Android/Case-Studies",
+      "folder": "02-ARM64-Android/01-Registers-And-Data",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "02-ARM64-Android/01-Registers-And-Data/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "02-ARM64-Android/01-Registers-And-Data/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "02-ARM64-Android/02-Instructions",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "02-ARM64-Android/02-Instructions/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "02-ARM64-Android/02-Instructions/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "02-ARM64-Android/03-Functions-And-Calling-Convention",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "02-ARM64-Android/03-Functions-And-Calling-Convention/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "02-ARM64-Android/03-Functions-And-Calling-Convention/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "02-ARM64-Android/04-Control-Flow-Patterns",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "02-ARM64-Android/04-Control-Flow-Patterns/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "02-ARM64-Android/04-Control-Flow-Patterns/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "02-ARM64-Android/05-Memory-And-Data-Structures",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "02-ARM64-Android/05-Memory-And-Data-Structures/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "02-ARM64-Android/05-Memory-And-Data-Structures/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "02-ARM64-Android/06-Android-Native-Internals",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "02-ARM64-Android/06-Android-Native-Internals/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "02-ARM64-Android/06-Android-Native-Internals/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "02-ARM64-Android/07-Flutter-Dart-AOT",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "02-ARM64-Android/07-Flutter-Dart-AOT/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "02-ARM64-Android/07-Flutter-Dart-AOT/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "02-ARM64-Android/08-Reading-Raw-Disassembly",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "02-ARM64-Android/08-Reading-Raw-Disassembly/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "02-ARM64-Android/08-Reading-Raw-Disassembly/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "02-ARM64-Android/09-Reference",
+      "template": "Templates/New-Reference-Entry.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/01-Frida-Fundamentals",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/01-Frida-Fundamentals/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/01-Frida-Fundamentals/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/02-Java-Layer-Hooking",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/02-Java-Layer-Hooking/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/02-Java-Layer-Hooking/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/03-Native-Memory-And-ARM64",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/03-Native-Memory-And-ARM64/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/03-Native-Memory-And-ARM64/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/04-Network-Interception",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/04-Network-Interception/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/04-Network-Interception/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/05-Stalker-And-Code-Tracing",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/05-Stalker-And-Code-Tracing/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/05-Stalker-And-Code-Tracing/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/06-Memory-Patching-And-Code-Redirection",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/06-Memory-Patching-And-Code-Redirection/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/06-Memory-Patching-And-Code-Redirection/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/07-Anti-Detection-And-Gadget-Mode",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/07-Anti-Detection-And-Gadget-Mode/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/07-Anti-Detection-And-Gadget-Mode/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/08-Static-Dynamic-Integration",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/08-Static-Dynamic-Integration/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/08-Static-Dynamic-Integration/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/09-Android-ABIs-And-Emulation",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/09-Android-ABIs-And-Emulation/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/09-Android-ABIs-And-Emulation/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "03-Frida-Dynamic-Instrumentation/10-Reference",
+      "template": "Templates/New-Reference-Entry.md"
+    },
+    {
+      "folder": "Case-Studies",
       "template": "Templates/New-Case-Study.md"
     },
     {
-      "folder": "ARM64-Android/Case-Studies/classeviva-flutter/notes",
+      "folder": "Case-Studies/tua/notes",
       "template": "Templates/New-Case-Study-Note.md"
     },
     {
-      "folder": "ARM64-Android/Cheatsheets",
+      "folder": "Cheatsheets",
       "template": "Templates/New-Cheatsheet.md"
     },
     {
-      "folder": "ARM64-Android/Tools",
+      "folder": "Tools",
       "template": "Templates/New-Tool-Note.md"
     },
     {
-      "folder": "ARM64-Android/Reading-Notes",
+      "folder": "Reading-Notes",
       "template": "Templates/New-Reading-Note.md"
     },
     {
-      "folder": "ARM64-Android/Projects",
-      "template": "Templates/New-Project-Note.md"
-    },
-    {
-      "folder": "Dalvik-Bytecode/01-Classes",
-      "template": "Templates/New-Concept.md"
-    },
-    {
-      "folder": "Dalvik-Bytecode/01-Classes/examples",
-      "template": "Templates/New-Example.md"
-    },
-    {
-      "folder": "Dalvik-Bytecode/01-Classes/snippets",
-      "template": "Templates/New-Snippet.md"
-    },
-    {
-      "folder": "Dalvik-Bytecode/02-Methods",
-      "template": "Templates/New-Concept.md"
-    },
-    {
-      "folder": "Dalvik-Bytecode/02-Methods/examples",
-      "template": "Templates/New-Example.md"
-    },
-    {
-      "folder": "Dalvik-Bytecode/02-Methods/snippets",
-      "template": "Templates/New-Snippet.md"
-    },
-    {
-      "folder": "Dalvik-Bytecode/03-Registers",
-      "template": "Templates/New-Concept.md"
-    },
-    {
-      "folder": "Dalvik-Bytecode/03-Registers/examples",
-      "template": "Templates/New-Example.md"
-    },
-    {
-      "folder": "Dalvik-Bytecode/03-Registers/snippets",
-      "template": "Templates/New-Snippet.md"
-    },
-    {
-      "folder": "Dalvik-Bytecode/04-Types",
-      "template": "Templates/New-Concept.md"
-    },
-    {
-      "folder": "Dalvik-Bytecode/04-Types/examples",
-      "template": "Templates/New-Example.md"
-    },
-    {
-      "folder": "Dalvik-Bytecode/04-Types/snippets",
-      "template": "Templates/New-Snippet.md"
-    },
-    {
-      "folder": "Dalvik-Bytecode/05-Dalvik-Instructions",
-      "template": "Templates/New-Concept.md"
-    },
-    {
-      "folder": "Dalvik-Bytecode/05-Dalvik-Instructions/examples",
-      "template": "Templates/New-Example.md"
-    },
-    {
-      "folder": "Dalvik-Bytecode/05-Dalvik-Instructions/snippets",
-      "template": "Templates/New-Snippet.md"
-    },
-    {
-      "folder": "Dalvik-Bytecode/06-Reference",
-      "template": "Templates/New-Reference-Entry.md"
-    },
-    {
-      "folder": "Dalvik-Bytecode/Case-Studies",
-      "template": "Templates/New-Case-Study.md"
-    },
-    {
-      "folder": "Dalvik-Bytecode/Cheatsheets",
-      "template": "Templates/New-Cheatsheet.md"
-    },
-    {
-      "folder": "Dalvik-Bytecode/Tools",
-      "template": "Templates/New-Tool-Note.md"
-    },
-    {
-      "folder": "Dalvik-Bytecode/Reading-Notes",
-      "template": "Templates/New-Reading-Note.md"
-    },
-    {
-      "folder": "Dalvik-Bytecode/Projects",
-      "template": "Templates/New-Project-Note.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/01-Frida-Fundamentals",
-      "template": "Templates/New-Concept.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/01-Frida-Fundamentals/examples",
-      "template": "Templates/New-Example.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/01-Frida-Fundamentals/snippets",
-      "template": "Templates/New-Snippet.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/02-Java-Layer-Hooking",
-      "template": "Templates/New-Concept.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/02-Java-Layer-Hooking/examples",
-      "template": "Templates/New-Example.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/02-Java-Layer-Hooking/snippets",
-      "template": "Templates/New-Snippet.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/03-Native-Memory-And-ARM64",
-      "template": "Templates/New-Concept.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/03-Native-Memory-And-ARM64/examples",
-      "template": "Templates/New-Example.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/03-Native-Memory-And-ARM64/snippets",
-      "template": "Templates/New-Snippet.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/04-Network-Interception",
-      "template": "Templates/New-Concept.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/04-Network-Interception/examples",
-      "template": "Templates/New-Example.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/04-Network-Interception/snippets",
-      "template": "Templates/New-Snippet.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/05-Stalker-And-Code-Tracing",
-      "template": "Templates/New-Concept.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/05-Stalker-And-Code-Tracing/examples",
-      "template": "Templates/New-Example.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/05-Stalker-And-Code-Tracing/snippets",
-      "template": "Templates/New-Snippet.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/06-Memory-Patching-And-Code-Redirection",
-      "template": "Templates/New-Concept.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/06-Memory-Patching-And-Code-Redirection/examples",
-      "template": "Templates/New-Example.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/06-Memory-Patching-And-Code-Redirection/snippets",
-      "template": "Templates/New-Snippet.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/07-Anti-Detection-And-Gadget-Mode",
-      "template": "Templates/New-Concept.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/07-Anti-Detection-And-Gadget-Mode/examples",
-      "template": "Templates/New-Example.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/07-Anti-Detection-And-Gadget-Mode/snippets",
-      "template": "Templates/New-Snippet.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/08-Static-Dynamic-Integration",
-      "template": "Templates/New-Concept.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/08-Static-Dynamic-Integration/examples",
-      "template": "Templates/New-Example.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/08-Static-Dynamic-Integration/snippets",
-      "template": "Templates/New-Snippet.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/09-Android-ABIs-And-Emulation",
-      "template": "Templates/New-Concept.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/09-Android-ABIs-And-Emulation/examples",
-      "template": "Templates/New-Example.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/09-Android-ABIs-And-Emulation/snippets",
-      "template": "Templates/New-Snippet.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/10-Reference",
-      "template": "Templates/New-Reference-Entry.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/Case-Studies",
-      "template": "Templates/New-Case-Study.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/Case-Studies/classeviva-dynamic-analysis/notes",
-      "template": "Templates/New-Case-Study-Note.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/Cheatsheets",
-      "template": "Templates/New-Cheatsheet.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/Tools",
-      "template": "Templates/New-Tool-Note.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/Reading-Notes",
-      "template": "Templates/New-Reading-Note.md"
-    },
-    {
-      "folder": "Frida-Dynamic-Instrumentation/Projects",
+      "folder": "Projects",
       "template": "Templates/New-Project-Note.md"
     }
   ],

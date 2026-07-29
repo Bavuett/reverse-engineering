@@ -2,7 +2,7 @@
 
 A GitHub template repository for a multi-topic **Obsidian vault** of public study notes on reverse engineering, coding, programming languages, and adjacent CS topics — one self-contained topic folder per subject, all sharing the same structure and tooling.
 
-Each topic mirrors the shape of `reversing-dalvik-bytecode`: topic-centric chapters, self-updating Dataview indices, Templater scaffolding for every note type, and a small set of standalone note types (cheatsheets, tool notes, reading notes, project logs) for things that don't belong to one chapter. Topics are top-level folders at the repository root — so the vault can hold as many as you're studying, side by side.
+Each topic mirrors the shape of `reversing-dalvik-bytecode`: topic-centric chapters and self-updating Dataview indices, with Templater scaffolding for every note type. Topics are top-level folders at the repository root, numbered in the order they're added — so the vault can hold as many as you're studying, side by side. A small set of standalone note types (case studies, cheatsheets, tool notes, reading notes, project logs) covers things that don't belong to one chapter — and don't belong to one topic either, so they live once, shared vault-wide, at the repository root rather than inside any topic folder.
 
 ## 📓 Using this template
 
@@ -20,27 +20,25 @@ Each topic mirrors the shape of `reversing-dalvik-bytecode`: topic-centric chapt
 
 | Path | Content |
 | --- | --- |
-| `<TopicName>/` (one per topic) | everything for that subject, at the repository root |
-| `_Topic-Skeleton/` | copy-source for a new topic's `Reference`/`Case-Studies`/`Cheatsheets`/`Tools`/`Reading-Notes`/`Projects` folders, including a fictional `demo-project-case-study/` showing the expected case-study shape |
+| `<NN>-<TopicName>/` (one per topic, numbered by add order) | everything for that subject, at the repository root |
+| `Case-Studies/`, `Cheatsheets/`, `Tools/`, `Reading-Notes/`, `Projects/` | standalone note types shared vault-wide across every topic — see below |
+| `_Topic-Skeleton/` | copy-source for a new topic's `01-Reference/` folder |
 | `Templates/` | every Templater template, used vault-wide across all topics |
 | `assets/` | non-note files (scans, screenshots, exported diagrams), not topic-specific |
 
-Topic folders sit directly at the root alongside these three — don't use `Templates`, `_Topic-Skeleton`, or `assets` as a topic name. Each topic follows this internal shape:
+Topic folders sit directly at the root alongside these — don't use `Templates`, `_Topic-Skeleton`, `assets`, or any of the five shared-folder names above as a topic name, and don't number the shared folders (the number prefix is exclusively a topic-folder marker). Each topic follows this internal shape:
 
 ```
-<TopicName>/
+<NN>-<TopicName>/
 ├── <TopicName>.md      <- topic home/MOC
 ├── 01-ChapterName/       <- numbered concept chapters, added as you go
 │   ├── ChapterName.md
 │   ├── examples/
 │   └── snippets/
-├── 0N-Reference/          <- always the highest-numbered chapter
-├── Case-Studies/
-├── Cheatsheets/
-├── Tools/
-├── Reading-Notes/
-└── Projects/
+└── 0N-Reference/          <- always the highest-numbered chapter
 ```
+
+`Case-Studies/` also ships with a fictional `demo-project-case-study/` showing the expected case-study shape (overview note, imported `source/`, analysis `notes/`), tagged `placeholder` so it's excluded from the real listing.
 
 See [`CLAUDE.md`](CLAUDE.md) for the complete structuring convention — including the vault-wide filename-uniqueness rule Obsidian's bare `[[wikilinks]]` depend on — read it before adding a new topic, chapter, note type, or top-level folder.
 
@@ -49,7 +47,7 @@ See [`CLAUDE.md`](CLAUDE.md) for the complete structuring convention — includi
 - Notes are cross-linked with Obsidian's `[[wikilink]]` syntax, which powers the graph view and backlinks panel (see the tip above about reading this in Obsidian).
 - Diagrams use [Mermaid](https://mermaid.js.org/), rendered natively by both Obsidian and GitHub.
 - New notes of any kind should be created from the files in [`Templates/`](Templates/New-Concept.md), via the **Templater** community plugin (recommended) or the core "Templates" plugin.
-- Every topic's `Reference`, `Case-Studies`, `Cheatsheets`, `Tools`, `Reading-Notes`, and `Projects` index notes include **Dataview** queries that automatically list every matching note in that topic as it's added.
+- Every topic's `Reference` index note, and the vault-wide `Case-Studies`, `Cheatsheets`, `Tools`, `Reading-Notes`, and `Projects` index notes, include **Dataview** queries that automatically list every matching note as it's added.
 
 ## License
 

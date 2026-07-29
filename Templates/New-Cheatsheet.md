@@ -1,9 +1,7 @@
-<%*
-const topicSegment = tp.file.folder(true).split("/")[0];
--%>
 ---
 tags: [cheatsheet]
 subject: ""
+topics: []
 created: <% tp.date.now("YYYY-MM-DD") %>
 ---
 
@@ -23,8 +21,10 @@ Quick lookup — not a full explanation. Link to the relevant chapter concept fo
 
 ## See also
 
-- [[<% topicSegment %>]]
+Link the topic(s) this applies to (matching the `topics` field above), e.g. `[[SomeTopic]]`.
+
+-
 
 ## References
 
-- [[<% topicSegment %>-Bibliography|Bibliography]]
+- [[SomeTopic-Bibliography|Bibliography]]

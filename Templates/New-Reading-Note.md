@@ -1,6 +1,3 @@
-<%*
-const topicSegment = tp.file.folder(true).split("/")[0];
--%>
 ---
 tags: [reading-note]
 title: ""
@@ -9,6 +6,7 @@ type: "book"
 status: "in-progress"
 started: <% tp.date.now("YYYY-MM-DD") %>
 finished: ""
+topics: []
 ---
 
 # <% tp.file.title %>
@@ -35,4 +33,7 @@ Links back to the relevant chapter(s), e.g. `[[SomeConcept]]`.
 
 ## See also
 
-- [[<% topicSegment %>-Bibliography|Bibliography]]
+Link the topic(s) this applies to (matching the `topics` field above) and their Bibliography,
+e.g. `[[SomeTopic-Bibliography|Bibliography]]`.
+
+-

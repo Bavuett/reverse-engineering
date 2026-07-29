@@ -55,8 +55,9 @@ SORT project ASC, file.name ASC
 ## Full case studies
 
 For a full project-by-project investigation (imported source kept in its real file/module layout,
-plus open-ended analysis notes not scoped to a single chapter), see
-[[TOPIC-Case-Studies|Case Studies]] rather than the per-chapter `snippets/` above.
+plus open-ended analysis notes not scoped to a single chapter), see the vault-wide [[Case-Studies]]
+rather than the per-chapter `snippets/` above — case studies aren't scoped to a single topic, so
+they live at the repository root instead of inside this topic folder.
 
 ## Extending this section
 

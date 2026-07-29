@@ -1,5 +1,5 @@
 <%*
-const topicSegment = tp.file.folder(true).split("/")[0];
+const topicSegment = tp.file.folder(true).split("/")[0].replace(/^\d+-/, "");
 -%>
 ---
 tags: [fundamentals]

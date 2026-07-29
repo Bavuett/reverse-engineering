@@ -1,8 +1,9 @@
 <%*
-const topicName = await tp.system.prompt("Topic this chapter belongs to (must match an existing top-level topic folder exactly)", "", true);
+const topicFolder = await tp.system.prompt("Topic this chapter belongs to — the exact existing top-level folder, e.g. 02-ARM64-Android", "", true);
+const topicName = topicFolder.replace(/^\d+-/, "");
 const chapterNumber = await tp.system.prompt("Chapter number (new chapters go right before this topic's Reference chapter, which then gets renumbered)", "02", true);
 const chapterName = await tp.system.prompt("Chapter name — a single PascalCase word, e.g. Ownership, BufferOverflows", "", true);
-const folderName = topicName + "/" + chapterNumber + "-" + chapterName;
+const folderName = topicFolder + "/" + chapterNumber + "-" + chapterName;
 await tp.file.move(folderName + "/" + chapterName);
 -%>
 ---
@@ -42,7 +43,7 @@ created: <% tp.date.now("YYYY-MM-DD") %>
 > [!todo] Finish setting up this chapter (see `CLAUDE.md` → "Adding a new chapter")
 > This template just created `<% folderName %>/<% tp.file.title %>.md` for you. Still to do by hand:
 > - [ ] Add `<% chapterNumber %>-<% chapterName %>` to the chapter list and Mermaid diagram in this
->   topic's home note (`<% topicName %>/<% topicName %>.md`)
+>   topic's home note (`<% topicFolder %>/<% topicName %>.md`)
 > - [ ] If `<% chapterNumber %>` was already taken by this topic's Reference chapter, rename that
 >   folder to the next free number, fix up its own internal `0X-` references, and update its
 >   `folder_templates` path in `.obsidian/plugins/templater-obsidian/data.json`
