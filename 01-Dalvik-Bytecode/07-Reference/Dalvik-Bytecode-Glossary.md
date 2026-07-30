@@ -81,7 +81,7 @@ Most instruction *families* below appear under several suffixed names — the su
 | `array-length` | Store an array's length into a register |
 | `new-array` | Allocate a new single-dimension array of a given length |
 | `filled-new-array`, `filled-new-array/range` | Allocate and populate a small array in one instruction, result read out via `move-result-object` |
-| `fill-array-data` | Populate an already-allocated primitive array from a literal `.array-data <width> ... .end array-data` block — see [[Encrypted-String-Table-Array-Data]] for a real-app instance |
+| `fill-array-data` | Populate an already-allocated primitive array from a literal `.array-data <width> ... .end array-data` block, rather than individual `aput`s — rare enough to be easy to forget the syntax of; see [[Dalvik-Instructions|Instructions]], [[Dalvik-Bytecode-Bibliography\|Bibliography]], and [[Encrypted-String-Table-Array-Data]] for a real-app instance |
 | `aget`, `aput` (+ `-wide`/`-object`/`-boolean`/`-byte`/`-char`/`-short`) | Read/write one array element |
 
 ### Method invocation
@@ -107,7 +107,8 @@ Most instruction *families* below appear under several suffixed names — the su
 | Instruction | Meaning |
 | --- | --- |
 | `add-int`, `sub-int`, `mul-int`, `div-int`, `rem-int` (+ `int`→`long`/`float`/`double` variants, `/2addr`, `/lit8`, `/lit16`) | Binary arithmetic; `div-int .../lit8 ..., 0x0` always throws `ArithmeticException` — see [[Reading-Raw-Dalvik]] |
-| `and-int`, `or-int`, `xor-int`, `shl-int`, `shr-int`, `ushr-int` (+ `-long` variants, `/2addr`, `/lit8`, `/lit16`) | Bitwise AND/OR/XOR and left/arithmetic-right/logical-right shift |
+| `rsub-int`, `rsub-int/lit8` | **Reverse** subtract, `literal - register` — the only way to subtract a register from a literal, easy to misread as ordinary subtraction; see [[Dalvik-Instructions|Instructions]] and [[Dalvik-Bytecode-Bibliography\|Bibliography]] |
+| `and-int`, `or-int`, `xor-int`, `shl-int`, `shr-int`, `ushr-int` (+ `-long` variants, `/2addr`, `/lit8`, `/lit16`) | Bitwise AND/OR/XOR and left/arithmetic-right/logical-right shift; a `shl`/`xor`/`ushr`/`xor`/`shl`/`xor` sequence on one accumulator is the classic xorshift PRNG mixer — see [[Reading-Raw-Dalvik]] |
 | `neg-int`, `neg-long`, `neg-float`, `neg-double` | Unary negation |
 | `not-int`, `not-long` | Bitwise complement |
 | `int-to-long`, `int-to-float`, `int-to-double`, `long-to-int`, `float-to-int`, `double-to-long`, ... | Explicit numeric conversions between primitive types |
@@ -120,10 +121,10 @@ Most instruction *families* below appear under several suffixed names — the su
 | `if-eq`, `if-ne`, `if-lt`, `if-ge`, `if-gt`, `if-le` | Two-register conditional branch |
 | `if-eqz`, `if-nez`, `if-ltz`, `if-gez`, `if-gtz`, `if-lez` | Compare a single register against zero (also used for reference null-checks, `if-eqz`/`if-nez`) |
 | `cmp-long` | Three-way compare of two `long`s (`-1`/`0`/`1`), result fed into a following `if-*z` |
-| `cmpl-float`, `cmpg-float`, `cmpl-double`, `cmpg-double` | Three-way float/double compare; the `l`/`g` suffix picks which result (`-1` or `1`) `NaN` produces |
+| `cmpl-float`, `cmpg-float`, `cmpl-double`, `cmpg-double` | Three-way float/double compare; the `l`/`g` suffix picks which result (`-1` or `1`) `NaN` produces — a genuinely obscure distinction, see [[Dalvik-Bytecode-Bibliography\|Bibliography]] |
 | `goto`, `goto/16`, `goto/32` | Unconditional jump, in increasingly wide encodings |
-| `packed-switch` | Multi-way branch over a dense, contiguous range of `int` values (compiled `switch`) |
-| `sparse-switch` | Multi-way branch over an arbitrary, non-contiguous set of `int` values |
+| `packed-switch` | Multi-way branch over a dense, contiguous range of `int` values (compiled `switch`), reading its case targets from a `.packed-switch <first-value> ... .end packed-switch` literal block, the control-flow analog of `fill-array-data`'s `.array-data` — see [[Dalvik-Bytecode-Bibliography\|Bibliography]] |
+| `sparse-switch` | Same, but the case values are an arbitrary, non-contiguous set, listed in a `.sparse-switch ... .end sparse-switch` block instead |
 
 ### Returning, exceptions, and synchronization
 

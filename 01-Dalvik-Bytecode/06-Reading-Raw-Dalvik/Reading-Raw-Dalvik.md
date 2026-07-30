@@ -34,7 +34,7 @@ Nothing below claims to divine a decoded string's exact contents from the arithm
 
 ```smali
 .method public static onMessageChannelReady()I
-    .locals 2
+    .locals 2                             # v0, v1: no parameters, this is a static method
     sget v0, Lnet/pluservice/plugins/DeviceInformation/DeviceIdProvider;->onNavigationEvent:I   # v0 = call counter (starts at 0, never reset)
     const v1, 0x944f68                    # v1 = 9,762,664 (an odd, specific modulus)
     rem-int v1, v0, v1                    # v1 = v0 mod 9762664
@@ -42,13 +42,13 @@ Nothing below claims to divine a decoded string's exact contents from the arithm
     sput v0, Lnet/pluservice/plugins/DeviceInformation/DeviceIdProvider;->onNavigationEvent:I   # persist the incremented counter
     if-eqz v1, :cond_0                    # first call (v0 was 0, so v0 mod anything == 0) -> recompute
     sget v0, Lnet/pluservice/plugins/DeviceInformation/DeviceIdProvider;->onMessageChannelReady:I  # every later call -> return the cached value
-    return v0
+    return v0                             # return the cached value
     :cond_0
-    invoke-static {}, Landroid/os/Process;->getElapsedCpuTime()J
-    move-result-wide v0
-    long-to-int v0, v0
+    invoke-static {}, Landroid/os/Process;->getElapsedCpuTime()J   # real work: read the elapsed CPU time once
+    move-result-wide v0                   # v0-v1 = that 64-bit result
+    long-to-int v0, v0                    # v0 = truncated to a 32-bit int
     sput v0, Lnet/pluservice/plugins/DeviceInformation/DeviceIdProvider;->onMessageChannelReady:I  # cache it
-    return v0
+    return v0                             # return the freshly-computed value
 .end method
 ```
 
@@ -64,44 +64,44 @@ Four methods from `MainActivity.smali`, all overriding `CordovaActivity` lifecyc
 
 ```smali
 .method public onCreate(Landroid/os/Bundle;)V
-    .locals 3
-    const/4 v0, 0x2
+    .locals 3                              # v0 = constant 2, v1/v2 = bookkeeping scratch
+    const/4 v0, 0x2                        # v0 = 2, the modulus used by every quadruple below
     rem-int v1, v0, v0                     # v1 = 0, dead: overwritten below before any read
-    invoke-super {p0, p1}, Lorg/apache/cordova/CordovaActivity;->onCreate(Landroid/os/Bundle;)V
-    invoke-virtual {p0}, Lnet/pluservice/tua/MainActivity;->getIntent()Landroid/content/Intent;
-    move-result-object p1
-    invoke-virtual {p1}, Landroid/content/Intent;->getExtras()Landroid/os/Bundle;
-    move-result-object p1
+    invoke-super {p0, p1}, Lorg/apache/cordova/CordovaActivity;->onCreate(Landroid/os/Bundle;)V   # real work: call the real onCreate
+    invoke-virtual {p0}, Lnet/pluservice/tua/MainActivity;->getIntent()Landroid/content/Intent;   # real work: this.getIntent()
+    move-result-object p1                  # p1 = the Intent
+    invoke-virtual {p1}, Landroid/content/Intent;->getExtras()Landroid/os/Bundle;   # real work: intent.getExtras()
+    move-result-object p1                  # p1 = the Bundle of extras, or null
     if-eqz p1, :cond_1                     # <- the one REAL branch in this method: "were there extras at all?"
-    sget v1, Lnet/pluservice/tua/MainActivity;->extraCallbackWithResult:I
-    add-int/lit8 v1, v1, 0x69
-    rem-int/lit16 v2, v1, 0x80
-    sput v2, Lnet/pluservice/tua/MainActivity;->ICustomTabsCallbackStub:I
+    sget v1, Lnet/pluservice/tua/MainActivity;->extraCallbackWithResult:I   # dead bookkeeping: load counter
+    add-int/lit8 v1, v1, 0x69              # dead bookkeeping: counter += 0x69
+    rem-int/lit16 v2, v1, 0x80             # dead bookkeeping: counter mod 128
+    sput v2, Lnet/pluservice/tua/MainActivity;->ICustomTabsCallbackStub:I   # dead bookkeeping: persist it
     rem-int/2addr v1, v0                   # v1 computed... and never read: overwritten by the next line
     const-string v1, "cdvStartInBackground" # <- the real work starts here
-    const/4 v2, 0x0
-    invoke-virtual {p1, v1, v2}, Landroid/os/Bundle;->getBoolean(Ljava/lang/String;Z)Z
-    move-result p1
-    const/4 v1, 0x1
+    const/4 v2, 0x0                        # v2 = false, the default for getBoolean
+    invoke-virtual {p1, v1, v2}, Landroid/os/Bundle;->getBoolean(Ljava/lang/String;Z)Z   # real work: extras.getBoolean("cdvStartInBackground", false)
+    move-result p1                         # p1 = that boolean, as 0 or 1
+    const/4 v1, 0x1                        # v1 = true, for the comparison below
     if-eq p1, v1, :cond_0                  # <- the other REAL branch: "was that extra true?"
-    goto :goto_0
+    goto :goto_0                           # extra was false: skip moveTaskToBack
     :cond_0
-    sget p1, Lnet/pluservice/tua/MainActivity;->extraCallbackWithResult:I
-    add-int/lit8 p1, p1, 0x2b
-    rem-int/lit16 v2, p1, 0x80
-    sput v2, Lnet/pluservice/tua/MainActivity;->ICustomTabsCallbackStub:I
+    sget p1, Lnet/pluservice/tua/MainActivity;->extraCallbackWithResult:I   # dead bookkeeping again
+    add-int/lit8 p1, p1, 0x2b              # dead bookkeeping: counter += 0x2b
+    rem-int/lit16 v2, p1, 0x80             # dead bookkeeping: counter mod 128
+    sput v2, Lnet/pluservice/tua/MainActivity;->ICustomTabsCallbackStub:I   # dead bookkeeping: persist it
     rem-int/2addr p1, v0                   # again dead: p1 is overwritten right after
-    invoke-virtual {p0, v1}, Lnet/pluservice/tua/MainActivity;->moveTaskToBack(Z)Z
+    invoke-virtual {p0, v1}, Lnet/pluservice/tua/MainActivity;->moveTaskToBack(Z)Z   # real work: moveTaskToBack(true)
     :cond_1
     :goto_0
-    iget-object p1, p0, Lnet/pluservice/tua/MainActivity;->launchUrl:Ljava/lang/String;
-    invoke-virtual {p0, p1}, Lnet/pluservice/tua/MainActivity;->loadUrl(Ljava/lang/String;)V
-    sget p1, Lnet/pluservice/tua/MainActivity;->extraCallbackWithResult:I
-    add-int/lit8 p1, p1, 0x55
-    rem-int/lit16 v1, p1, 0x80
-    sput v1, Lnet/pluservice/tua/MainActivity;->ICustomTabsCallbackStub:I
+    iget-object p1, p0, Lnet/pluservice/tua/MainActivity;->launchUrl:Ljava/lang/String;   # real work: this.launchUrl
+    invoke-virtual {p0, p1}, Lnet/pluservice/tua/MainActivity;->loadUrl(Ljava/lang/String;)V   # real work: loadUrl(launchUrl)
+    sget p1, Lnet/pluservice/tua/MainActivity;->extraCallbackWithResult:I   # dead bookkeeping, third and final instance
+    add-int/lit8 p1, p1, 0x55              # dead bookkeeping: counter += 0x55
+    rem-int/lit16 v1, p1, 0x80             # dead bookkeeping: counter mod 128
+    sput v1, Lnet/pluservice/tua/MainActivity;->ICustomTabsCallbackStub:I   # dead bookkeeping: persist it
     rem-int/2addr p1, v0                   # dead a third time: the method returns immediately after
-    return-void
+    return-void                            # done
 .end method
 ```
 
@@ -111,67 +111,67 @@ The actual logic here is ordinary Cordova boilerplate — read the `cdvStartInBa
 
 ```smali
 .method public onPause()V
-    .locals 3
-    const/4 v0, 0x2
-    rem-int v1, v0, v0
-    sget v1, Lnet/pluservice/tua/MainActivity;->ICustomTabsCallbackStub:I
-    add-int/lit8 v1, v1, 0x4f
-    rem-int/lit16 v2, v1, 0x80
-    sput v2, Lnet/pluservice/tua/MainActivity;->extraCallbackWithResult:I
+    .locals 3                              # v0 = constant 2, v1/v2 = bookkeeping/trap scratch
+    const/4 v0, 0x2                        # v0 = 2, the modulus
+    rem-int v1, v0, v0                     # v1 = 0, dead: overwritten below
+    sget v1, Lnet/pluservice/tua/MainActivity;->ICustomTabsCallbackStub:I   # v1 = counter
+    add-int/lit8 v1, v1, 0x4f              # v1 += 0x4f
+    rem-int/lit16 v2, v1, 0x80             # v2 = v1 mod 128
+    sput v2, Lnet/pluservice/tua/MainActivity;->extraCallbackWithResult:I   # persist it
     rem-int/2addr v1, v0                   # v1 IS read next -- this quadruple is live
-    invoke-super {p0}, Lorg/apache/cordova/CordovaActivity;->onPause()V
-    if-eqz v1, :cond_0
-    const/16 v1, 0x21
+    invoke-super {p0}, Lorg/apache/cordova/CordovaActivity;->onPause()V   # real work: call the real onPause
+    if-eqz v1, :cond_0                     # branch on the mod-2 result computed above
+    const/16 v1, 0x21                      # v1 = 0x21, an operand with no further meaning
     div-int/lit8 v1, v1, 0x0                # ArithmeticException: divide by zero, unconditionally on this path
     :cond_0
-    sget v1, Lnet/pluservice/tua/MainActivity;->ICustomTabsCallbackStub:I
-    add-int/lit8 v1, v1, 0x1f
-    rem-int/lit16 v2, v1, 0x80
-    sput v2, Lnet/pluservice/tua/MainActivity;->extraCallbackWithResult:I
+    sget v1, Lnet/pluservice/tua/MainActivity;->ICustomTabsCallbackStub:I   # dead bookkeeping, second instance
+    add-int/lit8 v1, v1, 0x1f              # dead bookkeeping: counter += 0x1f
+    rem-int/lit16 v2, v1, 0x80             # dead bookkeeping: counter mod 128
+    sput v2, Lnet/pluservice/tua/MainActivity;->extraCallbackWithResult:I   # dead bookkeeping: persist it
     rem-int/2addr v1, v0                    # dead: method returns right after
-    return-void
+    return-void                             # done
 .end method
 ```
 
 ```smali
 .method public onResume()V
-    .locals 3
-    const/4 v0, 0x2
-    rem-int v1, v0, v0
-    sget v1, Lnet/pluservice/tua/MainActivity;->extraCallbackWithResult:I
-    add-int/lit8 v1, v1, 0x65
-    rem-int/lit16 v2, v1, 0x80
-    sput v2, Lnet/pluservice/tua/MainActivity;->ICustomTabsCallbackStub:I
+    .locals 3                              # v0 = constant 2, v1 = bookkeeping/trap register
+    const/4 v0, 0x2                        # v0 = 2, the modulus
+    rem-int v1, v0, v0                     # v1 = 0, dead: overwritten below
+    sget v1, Lnet/pluservice/tua/MainActivity;->extraCallbackWithResult:I   # v1 = counter
+    add-int/lit8 v1, v1, 0x65              # v1 += 0x65
+    rem-int/lit16 v2, v1, 0x80             # v2 = v1 mod 128
+    sput v2, Lnet/pluservice/tua/MainActivity;->ICustomTabsCallbackStub:I   # persist it
     rem-int/2addr v1, v0                    # live
-    invoke-super {p0}, Lorg/apache/cordova/CordovaActivity;->onResume()V
-    if-eqz v1, :cond_0
-    return-void
+    invoke-super {p0}, Lorg/apache/cordova/CordovaActivity;->onResume()V   # real work: call the real onResume
+    if-eqz v1, :cond_0                      # branch on the mod-2 result
+    return-void                             # normal, untrapped exit
     :cond_0
-    const/4 v0, 0x0
+    const/4 v0, 0x0                         # v0 = null
     throw v0                                 # NullPointerException: throwing a null reference directly
 .end method
 ```
 
 ```smali
 .method public onStart()V
-    .locals 3
-    const/4 v0, 0x2
-    rem-int v1, v0, v0
-    sget v1, Lnet/pluservice/tua/MainActivity;->extraCallbackWithResult:I
-    add-int/lit8 v1, v1, 0xb
-    rem-int/lit16 v2, v1, 0x80
-    sput v2, Lnet/pluservice/tua/MainActivity;->ICustomTabsCallbackStub:I
+    .locals 3                               # v0 = constant 2, v1/v2 = bookkeeping/trap scratch
+    const/4 v0, 0x2                         # v0 = 2, the modulus
+    rem-int v1, v0, v0                      # v1 = 0, dead: overwritten below
+    sget v1, Lnet/pluservice/tua/MainActivity;->extraCallbackWithResult:I   # v1 = counter (first read)
+    add-int/lit8 v1, v1, 0xb                # v1 += 0xb
+    rem-int/lit16 v2, v1, 0x80              # v2 = v1 mod 128
+    sput v2, Lnet/pluservice/tua/MainActivity;->ICustomTabsCallbackStub:I   # persist it
     rem-int/2addr v1, v0                     # dead: v1 is overwritten by the very next sget
-    invoke-super {p0}, Lorg/apache/cordova/CordovaActivity;->onStart()V
-    sget v1, Lnet/pluservice/tua/MainActivity;->ICustomTabsCallbackStub:I
-    add-int/lit8 v1, v1, 0x19
-    rem-int/lit16 v2, v1, 0x80
-    sput v2, Lnet/pluservice/tua/MainActivity;->extraCallbackWithResult:I
+    invoke-super {p0}, Lorg/apache/cordova/CordovaActivity;->onStart()V   # real work: call the real onStart
+    sget v1, Lnet/pluservice/tua/MainActivity;->ICustomTabsCallbackStub:I   # v1 = counter (second read)
+    add-int/lit8 v1, v1, 0x19                # v1 += 0x19
+    rem-int/lit16 v2, v1, 0x80               # v2 = v1 mod 128
+    sput v2, Lnet/pluservice/tua/MainActivity;->extraCallbackWithResult:I   # persist it
     rem-int/2addr v1, v0                     # this SECOND quadruple is the live one
-    if-nez v1, :cond_0
-    return-void
+    if-nez v1, :cond_0                       # branch on the mod-2 result
+    return-void                              # normal, untrapped exit
     :cond_0
-    const/4 v0, 0x0
+    const/4 v0, 0x0                          # v0 = null
     invoke-virtual {v0}, Ljava/lang/Object;->hashCode()I  # NullPointerException fires HERE, on the virtual call
     throw v0                                 # unreachable: control never gets here, the line above already threw
 .end method
@@ -187,7 +187,7 @@ Reading these cold in sequence is the actual exercise: `onPause` and `onResume` 
 
 ```smali
 .method private static $$i(ISB)Ljava/lang/String;
-    .locals 6
+    .locals 6                       # v0-v5: output array, key table, index, temp byte, two swap scratches
     mul-int/lit8 p1, p1, 0x2        # p1 *= 2         )
     rsub-int/lit8 v0, p1, 0x1       # v0 = 1 - p1     ) cheap linear disguise --
     mul-int/lit8 p2, p2, 0x2        # p2 *= 2         ) v0/p2/p0 are really just
@@ -196,12 +196,12 @@ Reading these cold in sequence is the actual exercise: `onPause` and `onResume` 
     rsub-int/lit8 p0, p0, 0x3       # p0 = 3 - p0     )
     sget-object v1, Lnet/pluservice/tua/MainActivity;->$$c:[B   # v1 = the static key/delta table (private static final)
     new-array v0, v0, [B            # output = new byte[v0]        <- v0 is the disguised length
-    const/4 v2, 0x0
+    const/4 v2, 0x0                 # v2 = 0, used both as a constant and (renamed) as the output start index
     rsub-int/lit8 p1, p1, 0x0       # p1 = -p1                     <- loop-termination value
     if-nez v1, :cond_0              # ALWAYS taken: v1 is a private static final field, set once in <clinit>
-    move v4, p2
-    move v3, v2
-    move p2, p0
+    move v4, p2                     # dead path: v4 = value (mirrors the live path's roles)
+    move v3, v2                     # dead path: v3 = 0 (output index)
+    move p2, p0                     # dead path: p2 = seed
     goto :goto_1                    # dead path -- register-shuffling twin of the live one below, never reached
     :cond_0
     move v3, v2                     # v3 = 0 (output write index) -- the real entry point
@@ -210,21 +210,21 @@ Reading these cold in sequence is the actual exercise: `onPause` and `onResume` 
     int-to-byte v4, p2               # truncate the running value to a byte
     aput-byte v4, v0, v3             # output[v3] = that byte
     if-ne v3, p1, :cond_1            # loop until the write index reaches the (disguised) length
-    new-instance p0, Ljava/lang/String;
-    invoke-direct {p0, v0, v2}, Ljava/lang/String;-><init>([BI)V
-    return-object p0
+    new-instance p0, Ljava/lang/String;              # allocate the result String (uninitialized)
+    invoke-direct {p0, v0, v2}, Ljava/lang/String;-><init>([BI)V   # String(byte[] output, int hibyte=0)
+    return-object p0                 # return the decoded String
     :cond_1
-    add-int/lit8 v3, v3, 0x1
+    add-int/lit8 v3, v3, 0x1         # advance the output index
     aget-byte v4, v1, p0             # read the NEXT delta from the key table, at the CURSOR just advanced above
-    move v5, p2
-    move p2, p0
-    move p0, v5                      # register reshuffle to realign with the :goto_1 join point
+    move v5, p2                      # )
+    move p2, p0                      # ) swap: p2 <- cursor, p0 <- running value
+    move p0, v5                      # )
     :goto_1
     add-int/2addr p0, v4              # running value += delta just read
-    move v5, p2
-    move p2, p0
-    move p0, v5
-    goto :goto_0
+    move v5, p2                       # )
+    move p2, p0                       # ) swap back: p2 <- new running value, p0 <- cursor
+    move p0, v5                       # )
+    goto :goto_0                      # next iteration
 .end method
 ```
 
@@ -273,19 +273,19 @@ Two excerpts, both showing checklist item #3 in the wild: first a single reflect
 ```smali
 const v0, 0x2f51eb39                          # opaque literal: a memoization key, not a meaningful constant
 invoke-static {v0}, Lo/ResultReceiver;->extraCallbackWithResult(I)Ljava/lang/Object;   # step 1: cache lookup by that key
-move-result-object v0
+move-result-object v0                         # v0 = cached Field, or null on a miss
 if-nez v0, :cond_0                            # cache hit -> skip straight to step 2's result
-    invoke-static {}, Landroid/view/ViewConfiguration;->getMaximumFlingVelocity()I
-    move-result v0
-    shr-int/2addr v0, v5
-    add-int/2addr v0, v2
+    invoke-static {}, Landroid/view/ViewConfiguration;->getMaximumFlingVelocity()I   # junk call, only its return value is used
+    move-result v0                            # v0 = that junk return value
+    shr-int/2addr v0, v5                      # v0 >>= v5 -- more disguise arithmetic
+    add-int/2addr v0, v2                      # v0 += v2 -- folds into one of the resolver's arguments below
     int-to-char v9, v0                         # )
     ...                                         # ) build the resolver's CIIIZ + decoded-String + Class[] arguments
     invoke-static {v1, v2, v0, v3}, Lnet/pluservice/tua/MainActivity;->a(BBI[Ljava/lang/Object;)V  # decode a name (checklist #2)
-    aget-object v0, v3, v8
-    check-cast v14, Ljava/lang/String;
+    aget-object v0, v3, v8                     # v0 = the decoded String, out of the out-parameter array
+    check-cast v14, Ljava/lang/String;         # narrow the decoded name to String for the call below
     invoke-static/range {v9 .. v15}, Lo/ResultReceiver;->onMessageChannelReady(CIIIZLjava/lang/String;[Ljava/lang/Class;)Ljava/lang/Object;  # step 2: the real resolver
-    move-result-object v0
+    move-result-object v0                      # v0 = the freshly-resolved Field
 :cond_0
 check-cast v0, Ljava/lang/reflect/Field;       # either way, v0 is now a reflective Field
 invoke-virtual {v0, v6}, Ljava/lang/reflect/Field;->getLong(Ljava/lang/Object;)J   # step 3: actually use it
@@ -298,18 +298,18 @@ The same three-step shape (cache-check, resolve-if-miss, then act on the resolve
 `PlusNetworking.post()` reuses the *decoder* half of the same instinct (checklist #2, not #3) for something unrelated — building HTTP request headers — repeating one shape once per header:
 
 ```smali
-new-array v11, v3, [C
+new-array v11, v3, [C                    # allocate a char[] for the first literal
 fill-array-data v11, :array_0          # )
 ...                                      # ) four char[] literals + assorted int noise:
 new-array v13, v9, [C                    # ) the exact argument shape j([CI[CC[C[Ljava/lang/Object;)V expects
 fill-array-data v13, :array_1            # )
-...
-invoke-static/range {v11 .. v16}, Lnet/pluservice/plusnetworking/PlusNetworking;->j([CI[CC[C[Ljava/lang/Object;)V
-aget-object v4, v3, v10
-check-cast v4, Ljava/lang/String;
-invoke-virtual {v4}, Ljava/lang/String;->intern()Ljava/lang/String;
-move-result-object v4
-...
+...                                      # (two more char[] literals, same shape, elided)
+invoke-static/range {v11 .. v16}, Lnet/pluservice/plusnetworking/PlusNetworking;->j([CI[CC[C[Ljava/lang/Object;)V   # run the decoder
+aget-object v4, v3, v10                  # v4 = the decoded String, out of the out-parameter array
+check-cast v4, Ljava/lang/String;        # narrow it to String
+invoke-virtual {v4}, Ljava/lang/String;->intern()Ljava/lang/String;   # intern it (so repeated headers share one instance)
+move-result-object v4                    # v4 = the interned String
+...                                      # (this whole block repeats once per header, only the literals differing)
 invoke-virtual {v2, v3, v4}, Lokhttp3/Request$Builder;->header(Ljava/lang/String;Ljava/lang/String;)Lokhttp3/Request$Builder;   # <- the only line that differs in intent across repetitions
 ```
 
@@ -323,20 +323,20 @@ This block — build four `char[]` literals via `fill-array-data`, call `j(...)`
 
 ```smali
 .method static ICustomTabsCallback()V
-    .locals 2
-    const-wide v0, -0x120f87db1000b25bL
+    .locals 2                              # v0 = scratch, v1 unused here
+    const-wide v0, -0x120f87db1000b25bL    # v0-v1 = a 64-bit literal
     sput-wide v0, Lnet/pluservice/plusnetworking/PlusNetworking;->ICustomTabsCallback:J   # 64-bit key material
-    const v0, -0x36134583
+    const v0, -0x36134583                  # v0 = a 32-bit literal
     sput v0, Lnet/pluservice/plusnetworking/PlusNetworking;->onMessageChannelReady:I       # 32-bit key material
-    const v0, 0xba7d
+    const v0, 0xba7d                       # v0 = a 16-bit-range literal
     sput-char v0, Lnet/pluservice/plusnetworking/PlusNetworking;->onNavigationEvent:C      # 16-bit key material
-    const/16 v0, 0x19
-    new-array v0, v0, [C
-    fill-array-data v0, :array_0
+    const/16 v0, 0x19                      # v0 = 25 (the table length)
+    new-array v0, v0, [C                   # allocate a 25-element char[]
+    fill-array-data v0, :array_0           # populate it from the literal table
     sput-object v0, Lnet/pluservice/plusnetworking/PlusNetworking;->extraCallbackWithResult:[C   # a 25-char lookup table
-    const v0, 0xeb67
+    const v0, 0xeb67                       # v0 = another 16-bit-range literal
     sput-char v0, Lnet/pluservice/plusnetworking/PlusNetworking;->extraCallback:C          # another 16-bit key
-    return-void
+    return-void                            # done
 .end method
 ```
 
@@ -346,37 +346,37 @@ Inside `j()`'s per-character loop, a XOR cascade against exactly those five fiel
 
 ```smali
 iget-char v5, v4, Lo/getLifecycle;->extraCallbackWithResult:C   # v5 = a per-character value resolved via reflection (see below)
-aput-char v5, v6, v3
+aput-char v5, v6, v3                                              # v6[i] = v5 (stash it in the second working array)
 
 iget v5, v4, Lo/getLifecycle;->onNavigationEvent:I               # v5 = loop index i
 iget v7, v4, Lo/getLifecycle;->onNavigationEvent:I                # v7 = i again
 aget-char v7, v0, v7                                              # v7 = input[i]  (p0, the caller's own char[])
-aget-char v3, v6, v3                                               # v3 = the value just written above
-xor-int/2addr v3, v7                                               # v3 = input[i] XOR that value
+aget-char v3, v6, v3                                               # v3 = the value just written above (v6[i])
+xor-int/2addr v3, v7                                               # v3 = input[i] XOR v6[i]
 int-to-long v9, v3                                                 # widen into the running accumulator v9-v10
 
-sget-wide v11, Lnet/pluservice/plusnetworking/PlusNetworking;->ICustomTabsCallback:J
+sget-wide v11, Lnet/pluservice/plusnetworking/PlusNetworking;->ICustomTabsCallback:J   # v11-v12 = key material #1
 const-wide v13, 0x10516a81c9ecba7dL                                # a fixed 64-bit magic constant
-xor-long/2addr v11, v13
+xor-long/2addr v11, v13                                            # v11-v12 ^= magic
 xor-long/2addr v9, v11                                             # accumulator ^= (key1 ^ magic)
 
-sget v3, Lnet/pluservice/plusnetworking/PlusNetworking;->onMessageChannelReady:I
-int-to-long v11, v3
-xor-long/2addr v11, v13
-long-to-int v3, v11
-int-to-long v11, v3
+sget v3, Lnet/pluservice/plusnetworking/PlusNetworking;->onMessageChannelReady:I   # v3 = key material #2 (32-bit)
+int-to-long v11, v3                                                # widen to a long
+xor-long/2addr v11, v13                                            # ^= magic
+long-to-int v3, v11                                                # truncate back to a 32-bit int
+int-to-long v11, v3                                                # re-widen for the XOR below
 xor-long/2addr v9, v11                                             # accumulator ^= truncate32(key2 ^ magic)
 
-sget-char v3, Lnet/pluservice/plusnetworking/PlusNetworking;->onNavigationEvent:C
-int-to-long v11, v3
-xor-long/2addr v11, v13
-long-to-int v3, v11
-int-to-char v3, v3
-int-to-long v11, v3
+sget-char v3, Lnet/pluservice/plusnetworking/PlusNetworking;->onNavigationEvent:C   # v3 = key material #3 (16-bit)
+int-to-long v11, v3                                                # widen to a long
+xor-long/2addr v11, v13                                            # ^= magic
+long-to-int v3, v11                                                # truncate to a 32-bit int
+int-to-char v3, v3                                                 # further truncate to a char
+int-to-long v11, v3                                                # re-widen for the XOR below
 xor-long/2addr v9, v11                                             # accumulator ^= truncate16(key3 ^ magic)
 
-long-to-int v3, v9
-int-to-char v3, v3
+long-to-int v3, v9                                                 # narrow the final accumulator to a 32-bit int
+int-to-char v3, v3                                                 # narrow it further to a char
 aput-char v3, v2, v5                                                # output[i] = accumulator, truncated to char
 ```
 
@@ -385,6 +385,85 @@ Reading it cold: this is a plain XOR cascade, not a Feistel-style mixing round �
 `v6[i]` — the one genuinely per-character input — comes from `iget-char v5, v4, Lo/getLifecycle;->extraCallbackWithResult:C`, a field on the loop's own small per-call helper object (`Lo/getLifecycle`, itself a borrowed, unrelated Android name), populated earlier in the same iteration by the reflection-indirection idiom from checklist item #3 and worked example 5: cache-check via `Lo/ResultReceiver;->extraCallbackWithResult(I)`, resolve-on-miss via `Lo/ResultReceiver;->onMessageChannelReady(CIIIZLjava/lang/String;[Ljava/lang/Class;)`, `check-cast` to `Ljava/lang/reflect/Method`, `.invoke`, `check-cast` the result to `Ljava/lang/Character`, `.charValue()`. The difference from every earlier instance of that idiom in this chapter is *where* it sits: in `attachBaseContext` it runs once per resolved class member; here it runs **once per output character**, inside the hot loop — the same three-step shape, just paid for at a completely different rate.
 
 **Shape-only conclusion:** `j()` XORs each input character against a per-character, reflectively-resolved value and three constant, loop-invariant quantities derived from static fields that borrow real Android API names — the same names [[Anti-Tampering-Pattern-Workflow]] already found playing a counter role elsewhere in this app, here playing a key-material role instead. **Needs a lookup:** what the per-character reflective call actually invokes (worked example 5's caution about resolving `attachBaseContext`'s reflection chain applies here too, at a higher multiplicity — once per character instead of once per member), and the real values behind `ICustomTabsCallback:J`/`onMessageChannelReady:I`/`onNavigationEvent:C`/`extraCallback:C`/`extraCallbackWithResult:[C` — all static, so a debugger breakpoint or a one-line Frida field read (`Java.use("...PlusNetworking").ICustomTabsCallback.value`, once the class has loaded) settles them without touching the decode loop at all.
+
+## Worked example 7 (medium): a certificate-pinning setup loop, dead bookkeeping included
+
+`PlusNetworking`'s private constructor builds its `OkHttpClient` conditionally on whether the caller passed any `CertificatePinningRule`s — a genuinely intermediate example: no decoders, no reflection, just an array loop with one more dead instance of worked example 2's counter quadruple mixed in:
+
+```smali
+if-eqz v1, :cond_1                     # v1 = p4, the CertificatePinningRule[] argument -- skip pinning entirely if null
+new-instance v4, Lokhttp3/CertificatePinner$Builder;              # allocate the builder (uninitialized)
+invoke-direct {v4}, Lokhttp3/CertificatePinner$Builder;-><init>()V   # initialize it
+array-length v5, v1                    # v5 = number of rules
+move v6, v9                            # v6 = 0 (loop index; v9 was zeroed earlier in the constructor)
+:goto_0
+if-ge v6, v5, :cond_0                  # loop while v6 < v5
+sget v7, Lnet/pluservice/plusnetworking/PlusNetworking;->asBinder:I   # dead bookkeeping: load counter
+add-int/lit8 v7, v7, 0x19              # dead bookkeeping: counter += 0x19
+rem-int/lit16 v8, v7, 0x80             # dead bookkeeping: counter mod 128
+sput v8, Lnet/pluservice/plusnetworking/PlusNetworking;->onRelationshipValidationResult:I   # dead bookkeeping: persist it
+rem-int/2addr v7, v3                   # dead: v7 is overwritten by the next line before ever being read
+aget-object v7, v1, v6                 # v7 = rules[v6], the current CertificatePinningRule
+iget-object v8, v7, Lnet/pluservice/plusnetworking/CertificatePinningRule;->a:Ljava/lang/String;   # v8 = rule.hostnamePattern
+iget-object v7, v7, Lnet/pluservice/plusnetworking/CertificatePinningRule;->b:[Ljava/lang/String;   # v7 = rule.pins
+invoke-virtual {v4, v8, v7}, Lokhttp3/CertificatePinner$Builder;->add(Ljava/lang/String;[Ljava/lang/String;)Lokhttp3/CertificatePinner$Builder;   # builder.add(hostname, pins)
+add-int/lit8 v6, v6, 0x1               # v6 += 1 (next rule)
+goto :goto_0                           # loop
+:cond_0
+invoke-virtual {v4}, Lokhttp3/CertificatePinner$Builder;->build()Lokhttp3/CertificatePinner;   # finalize the CertificatePinner
+move-result-object v1                  # v1 = the built CertificatePinner (reusing the now-dead array reference)
+invoke-virtual {v2, v1}, Lokhttp3/OkHttpClient$Builder;->certificatePinner(Lokhttp3/CertificatePinner;)Lokhttp3/OkHttpClient$Builder;   # attach it to the client builder
+rem-int v1, v3, v3                     # dead: v1 = 2 mod 2 = 0, never read (v1 is reassigned again below)
+:cond_1
+invoke-virtual {v2}, Lokhttp3/OkHttpClient$Builder;->build()Lokhttp3/OkHttpClient;   # build the client either way
+```
+
+Reading it cold: the whole block is gated by a single `if-eqz v1, :cond_1` on the constructor's own `[Lnet/pluservice/plusnetworking/CertificatePinningRule;` parameter — no pins supplied, no `CertificatePinner` gets attached, and `OkHttpClient$Builder.build()` runs with whatever default (permissive) trust the platform provides. When rules *are* supplied, the loop is entirely ordinary: `array-length`, a zero-initialized index, `if-ge` as the loop guard, one `CertificatePinningRule` pulled out per iteration and split into its two fields (`a` = hostname pattern, `b` = pin list) for `CertificatePinner$Builder.add(String, String[])`. The one thing worth pausing on is the `sget`/`add-int/lit8`/`rem-int/lit16`/`sput`/`rem-int/2addr` quadruple sitting inside the loop body, using `asBinder`/`onRelationshipValidationResult` this time instead of `MainActivity`'s `extraCallbackWithResult`/`ICustomTabsCallbackStub` — same shape, same fields-borrowed-from-real-APIs idiom, same verdict once you check whether `v7` survives to a read afterward: it doesn't, `aget-object v7, v1, v6` overwrites it unconditionally on the very next line, so this is dead camouflage, not a gate, confirming the pattern from worked example 2 now in a *fourth* location and a *second* class.
+
+**Shape-only conclusion:** certificate pinning in this app is entirely conditional on the caller passing pinning rules to this constructor — an ordinary, undisguised `if` — with one more dead bookkeeping quadruple riding along inside the loop for no functional reason. **Needs a lookup:** which callers actually pass a non-null, non-empty `CertificatePinningRule[]` (only those get pinning at all); that's a static grep for `PlusNetworking;-><init>` call sites with a fourth argument, or a Frida log on this constructor, not something this method alone can answer. Patch 6, further down, uses this exact branch as its target.
+
+## Worked example 8 (expert): a named mixing function hiding in plain sight
+
+Deep inside `MainActivity.attachBaseContext`, several branches build a small `int[]` array and, right before storing into one of its slots, run the exact same six-instruction tail:
+
+```smali
+invoke-static/range {p0 .. p0}, Ljava/lang/System;->identityHashCode(Ljava/lang/Object;)I   # v0 = identityHashCode(this) -- a real, unpredictable-looking seed
+move-result v0                          # v0 = that hash code
+const v1, -0x237483c4                   # v1 = an opaque 32-bit literal
+or-int/2addr v1, v0                     # v1 |= v0
+not-int v1, v1                          # v1 = ~v1
+const v9, 0x207480c3                    # v9 = another opaque literal
+or-int/2addr v1, v9                     # v1 |= v9
+not-int v9, v0                          # v9 = ~v0
+const v10, 0x3f76a7fb                   # v10 = another opaque literal
+or-int/2addr v9, v10                    # v9 |= v10
+not-int v9, v9                          # v9 = ~v9
+or-int/2addr v1, v9                     # v1 |= v9
+mul-int/lit16 v1, v1, -0x1d6            # v1 *= -0x1d6
+const v10, -0xa307140                   # v10 = another opaque literal
+add-int/2addr v10, v1                   # v10 += v1  (running total, call it T)
+const v1, -0x3000301                    # v1 = another opaque literal
+or-int/2addr v0, v1                     # v0 |= v1
+not-int v0, v0                          # v0 = ~v0
+or-int/2addr v0, v9                     # v0 |= v9  (reusing v9 from above)
+mul-int/lit16 v0, v0, 0x1d6             # v0 *= 0x1d6
+add-int/2addr v10, v0                   # T += v0
+const v0, -0x23a52826                   # v0 = one more opaque literal
+add-int/2addr v10, v0                   # T += v0  -- T is now the finalizer's input
+shl-int/lit8 v0, v10, 0xd               # v0 = T << 13
+xor-int/2addr v0, v10                   # v0 = T ^ (T << 13)
+ushr-int/lit8 v1, v0, 0x11              # v1 = v0 >>> 17
+xor-int/2addr v0, v1                    # v0 ^= v1
+shl-int/lit8 v1, v0, 0x5                # v1 = v0 << 5
+xor-int/2addr v0, v1                    # v0 ^= v1  -- v0 is the final mixed value
+aget-object v1, v2, v7                  # v1 = one slot of the surrounding int[] array
+check-cast v1, [I                       # narrow it to int[] before indexing it
+aput v0, v1, v8                         # array[...][0] = v0, the mixed value
+```
+
+Reading it cold: the `or-int`/`not-int`/`mul-int/lit16` chain feeding into `T` is exactly the kind of "expensive-looking arithmetic on an opaque seed" that's easy to wave away as "some hash," but the six-instruction tail is worth naming precisely: `x ^= x << 13; x ^= x >>> 17; x ^= x << 5` (here spread across `shl-int/lit8`/`xor-int/2addr`/`ushr-int/lit8`/`xor-int/2addr`/`shl-int/lit8`/`xor-int/2addr`, operating on `v0`/`T`) is the **xorshift(13, 17, 5)** mixing function — George Marsaglia's classic xorshift PRNG step, not a bespoke or accidental sequence. Recognizing it doesn't require decoding the earlier `or`/`not`/`mul` chain at all: xorshift's three shift-and-XOR steps are a fixed, nameable idiom regardless of what feeds them, the same way [[Reading-Raw-Disassembly]] treats a class-id-extraction-into-computed-`blr` as always dispatch regardless of which method ends up called. `System.identityHashCode(p0)` — the JVM/ART object identity hash, which is stable for the object's lifetime but otherwise unpredictable from outside — is what makes `T`, and therefore the whole mixed value, differ from run to run and from install to install, which is a real, if modest, obstacle to comparing a hard-coded "expected" value against this array slot across two different runs of the app.
+
+**Shape-only conclusion:** this tail is a named, standard PRNG mixing step (xorshift 13/17/5) applied to a value ultimately seeded by `System.identityHashCode(p0)` and several opaque constants, with the result stored into an `int[]` slot inside a larger array structure built across `attachBaseContext`. **Needs a lookup:** what that `int[]` array as a whole represents and what later code compares this particular slot against (the surrounding structure — `aget-object v1, v2, v7` reaching into one of several parallel arrays — is itself worth a full pass with checklist item #5's register-aliasing caution in mind, not attempted further here) — a question for dynamic tracing (breakpoint or Frida hook right after this `aput`, per [[Frida-Dynamic-Instrumentation]]) rather than more static reading, since `identityHashCode`'s own unpredictability means no amount of hand-tracing recovers the concrete number a real run would produce.
 
 ## More patterns worked cold
 
@@ -444,12 +523,12 @@ The verifier is a dataflow type-checker, not a behavior-checker — it rejects e
 The cheapest, safest edit: turn a conditional gate into an unconditional jump to its "safe" arm, leaving everything else byte-for-byte identical. Neutralizing `onPause`'s div/0 trap from worked example 2:
 
 ```diff
-     rem-int/2addr v1, v0
-     invoke-super {p0}, Lorg/apache/cordova/CordovaActivity;->onPause()V
--    if-eqz v1, :cond_0
--    const/16 v1, 0x21
--    div-int/lit8 v1, v1, 0x0
-+    goto :cond_0
+     rem-int/2addr v1, v0                    # counter mod 2 (unchanged)
+     invoke-super {p0}, Lorg/apache/cordova/CordovaActivity;->onPause()V   # unchanged
+-    if-eqz v1, :cond_0                      # removed: the conditional gate
+-    const/16 v1, 0x21                       # removed: trap setup
+-    div-int/lit8 v1, v1, 0x0                # removed: the div/0 trap itself
++    goto :cond_0                            # added: unconditional jump to the same target
      :cond_0
 ```
 
@@ -460,10 +539,10 @@ The cheapest, safest edit: turn a conditional gate into an unconditional jump to
 The same technique generalizes to checks whose *result* feeds a comparison rather than a direct trap. `attachBaseContext` repeatedly does `cmp-long` / `if-ltz` (or `if-eqz`) on a reflectively-read `long` against a threshold derived from a `Resources.getString(...)` computation — for example:
 
 ```smali
-invoke-virtual {v9}, Ljava/lang/Long;->longValue()J
-move-result-wide v9
-cmp-long v0, v0, v9
-if-ltz v0, :cond_4
+invoke-virtual {v9}, Ljava/lang/Long;->longValue()J    # unbox the reflectively-read Long
+move-result-wide v9                                     # v9-v10 = that primitive long
+cmp-long v0, v0, v9                                      # compare against the threshold already in v0-v1
+if-ltz v0, :cond_4                                       # branch if the threshold value is less: the "check passed" arm
 ```
 
 Patching the branch itself, exactly as in patch 1, is preferable to trying to spoof the reflectively-read `long` at its source: the source is buried behind a `check-cast Ljava/lang/reflect/Field;` / `.getLong(Object)` pair whose arguments are themselves obfuscated (worked example 4), so intercepting *that* would mean re-deriving the whole resolve chain, while the comparison that consumes its result is a single two-instruction `cmp-long`/`if-*` pair with an obvious "did the check pass" semantics regardless of what it's actually comparing. Forcing `if-ltz v0, :cond_4` to `goto :cond_4` (or the inverse target, depending on which arm is the non-tampered one — confirmed dynamically first, per checklist item #6's advice, never assumed) bypasses whatever the comparison was checking without needing to understand the reflective read that fed it at all — the same principle [[Anti-Tampering-Pattern-Workflow]] applies by hooking `Log`/`Runtime.exit` instead of reverse-engineering each hideout's internals: neutralize at the narrowest point where the check's *outcome*, not its *mechanism*, is legible.
@@ -473,11 +552,11 @@ Patching the branch itself, exactly as in patch 1, is preferable to trying to sp
 Adding new code, rather than removing/redirecting existing code, has to respect the register-range constraint from the table above. Logging every string `$$i` decodes, right before its existing `return-object p0`:
 
 ```diff
-     new-instance p0, Ljava/lang/String;
-     invoke-direct {p0, v0, v2}, Ljava/lang/String;-><init>([BI)V
-+    const-string v3, "tua-decode"
-+    invoke-static {v3, p0}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
-     return-object p0
+     new-instance p0, Ljava/lang/String;                                # unchanged: allocate the result String
+     invoke-direct {p0, v0, v2}, Ljava/lang/String;-><init>([BI)V        # unchanged: initialize it from the decoded bytes
++    const-string v3, "tua-decode"                                      # added: log tag, reusing dead register v3
++    invoke-static {v3, p0}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I   # added: log the decoded string
+     return-object p0                                                    # unchanged: return the decoded String
  .end method
 ```
 
@@ -489,19 +568,19 @@ The most invasive edit replaces a method's body wholesale rather than redirectin
 
 ```diff
  .method private static getDeviceID(Landroid/content/Context;)Ljava/lang/String;
--    .locals 6
--    const-string v0, "android.permission.READ_PHONE_STATE"
--    invoke-static {p0, v0}, Lo/MediaMetadataCompatBitmapKey;->checkSelfPermission(Landroid/content/Context;Ljava/lang/String;)I
--    ...
--    :catch_0
--    move-exception p0
--    ...
--    throw p0
--    :cond_1
--    return-object v3
-+    .locals 1
-+    const-string v0, "00000000-0000-0000-0000-000000000000"
-+    return-object v0
+-    .locals 6                                                          # removed: 6 temporaries the old body needed
+-    const-string v0, "android.permission.READ_PHONE_STATE"             # removed: permission-check setup
+-    invoke-static {p0, v0}, Lo/MediaMetadataCompatBitmapKey;->checkSelfPermission(Landroid/content/Context;Ljava/lang/String;)I   # removed: the real permission check
+-    ...                                                                 # removed: the rest of the real ID-building logic
+-    :catch_0                                                            # removed: exception handler entry
+-    move-exception p0                                                   # removed: capture the SecurityException
+-    ...                                                                 # removed: logging the exception
+-    throw p0                                                            # removed: re-throw
+-    :cond_1                                                             # removed: the no-permission fallback label
+-    return-object v3                                                    # removed: return "" on that fallback
++    .locals 1                                                          # added: only one temporary needed now
++    const-string v0, "00000000-0000-0000-0000-000000000000"           # added: a fixed placeholder ID
++    return-object v0                                                   # added: always return that placeholder
  .end method
 ```
 
@@ -513,15 +592,30 @@ Worked example 4's fifteen `(JJ)V` hideout candidates are the sharpest case for 
 
 ```diff
  .method public static onMessageChannelReady(JJ)V
--    ...unknown body...
-+    .locals 0
-+    return-void
+-    ...unknown body...                # removed: whatever the real hideout does (never imported)
++    .locals 0                         # added: no temporaries needed
++    return-void                       # added: unconditional no-op
  .end method
 ```
 
 satisfies every caller unconditionally — a `void` return has no value for any caller to receive and possibly misuse, unlike patch 4's `getDeviceID`, where swapping in the wrong *kind* of placeholder (`null` instead of a real string) broke a downstream caller in a way the verifier couldn't flag. That asymmetry is worth internalizing on its own: **a `void`-returning method is the single safest target for a wholesale static body replacement anywhere in this chapter's toolkit**, precisely because there is no return value for any caller to misuse.
 
 This is the static, permanent counterpart of `Case-Studies/tua/source/combined.js`'s `HIDDEN_CHECKS.forEach(...)` block, which does exactly the same thing at runtime — one Frida `overload('long', 'long').implementation = function (a, b) { ... }` per class/method pair, for the same fifteen targets — replacing each body with a no-op, for every method sharing the confirmed signature, without needing any of their real bodies either. The tradeoffs run in opposite directions: the Frida version needs `frida-server` (or Gadget, see [[Anti-Detection-And-Gadget-Mode]]) attached before `FirebaseInitProvider.onCreate()` ever runs — which is why `combined.js`'s own header insists on spawn mode (`-f`), not attach — and has to be reinstalled every launch; fifteen static edits, once applied and the APK rebuilt and re-signed (see "The edit-reassemble-resign loop" above), remove the `RunningOnRootedDeviceException`/`AppDebuggableException` crash source permanently, with no companion process required afterward, at the one-time cost of the rebuild-resign cycle and losing the ability to install over the original app (different signing certificate — see [[Anti-Detection-And-Gadget-Mode]]'s note on the same tradeoff for Gadget repackaging). Point 5 of [[Anti-Tampering-Pattern-Workflow]]'s general workflow — verify each change in isolation via Frida first, only port to static `.smali` once confirmed — applies directly here: `neutralize_root_check.js` validates the *first* hideout (`UPCEANExtension2Support`) alone before `combined.js` generalizes to all fifteen at once, and that same order — confirm dynamically, generalize by signature, then patch statically — is the right one to follow before batch-editing fifteen `.smali` files from a grep result whose individual members were never confirmed to fire at all, per worked example 4's own "needs a lookup" caveat. The generic `isDeviceRooted` template in [[Memory-Patching-And-Code-Redirection]] is the same idea one layer down: when the equivalent check lives in a native `.so` instead of a `.dex`, `Interceptor.replace` plays the role `return-void` plays here — full-body replacement, without needing the original implementation either.
+
+### Patch 6 (medium): statically disable certificate pinning at its setup site
+
+Worked example 7's `if-eqz v1, :cond_1` is a cleaner target than either of `okhttp3.CertificatePinner`'s own methods (never imported into this case study — the class itself is a third-party library, not part of `net.pluservice.*`): forcing that branch to always take the "no pinning rules" arm skips the entire `CertificatePinner$Builder` loop, so `OkHttpClient$Builder.certificatePinner(...)` is simply never called, and the resulting client trusts whatever certificate the platform's normal TLS trust store accepts:
+
+```diff
+     new-instance v2, Lokhttp3/OkHttpClient$Builder;         # unchanged: allocate the client builder
+     invoke-direct {v2}, Lokhttp3/OkHttpClient$Builder;-><init>()V   # unchanged: initialize it
+     const/4 v3, 0x2                         # unchanged: unrelated constant used later in the method
+-    if-eqz v1, :cond_1                      # removed: the "were rules supplied" gate
++    goto :cond_1                            # added: unconditionally skip pinning setup
+     new-instance v4, Lokhttp3/CertificatePinner$Builder;    # now unreachable: the pinning builder is never built
+```
+
+This is the same patch 1 technique — conditional-to-unconditional-jump, nothing deleted, no register renumbering — applied at a completely different kind of target: not a crash trap, but a security *feature* being turned off at its one call site, entirely inside code this case study actually has. It's also the static counterpart of a bypass already in this vault: `Case-Studies/tua/source/combined.js` neutralizes pinning at runtime by overriding `okhttp3.CertificatePinner.check(String, List)` to a no-op (needed there specifically to let mitmproxy intercept traffic during the dynamic investigation — see the script's own comment on why the mitmproxy CA still has to be installed separately for WebView traffic, which doesn't go through this `OkHttpClient` at all). The two patches neutralize pinning at different points in the same call chain — `combined.js` inside the library method that *enforces* the pin, this patch at the app's own call site that *configures* one — and only this one survives a rebuild without Frida attached; `combined.js`'s approach is strictly more general in one respect, since it would also catch pinning configured anywhere else in the app that this constructor doesn't cover, if such a place existed.
 
 ## See also
 
@@ -548,3 +642,5 @@ Why is redirecting a branch (patch 1/2) generally preferable to reimplementing a
 Why is a `public static (JJ)V` method inside `com.google.zxing.RGBLuminanceSource` (or a resource class like `R$anim`) worth investigating, when the signature itself is unremarkable?::The signature paired with the class is the signal, not the signature alone — a barcode pixel-source class or a resource class (which should hold only `int` constants) has no legitimate reason to declare a method taking two opaque `long`s and returning nothing; it's the mismatch between what the class is *for* and what it *contains* that makes it worth grepping for as a sibling of an already-confirmed hideout.
 Why is a `void`-returning method the single safest target for a wholesale static body replacement?::A `void` return has no value for any caller to receive and potentially misuse — unlike a method returning `String`/`long`/etc., where swapping in a placeholder of the wrong shape (`null` instead of a real string, say) can pass the verifier and still crash a caller at runtime; a `void` method's callers only ever depend on it *not throwing*, which `return-void` alone guarantees.
 The same five field names (`onMessageChannelReady`, `onNavigationEvent`, `ICustomTabsCallback`, `extraCallback`, `extraCallbackWithResult`) show up as mod-128 opaque-predicate counters in `MainActivity` and as fixed XOR key material in `PlusNetworking`. What does this tell you about reading a reused, Android-API-borrowed field name?::The name alone never tells you the field's role in a given class — only how it's actually read/written there does; the same handful of borrowed names get reused for structurally unrelated jobs throughout the app, which is itself the camouflage strategy, not an exception to it.
+What six-instruction shape is `shl-int/lit8 v0, v10, 0xd` / `xor-int/2addr v0, v10` / `ushr-int/lit8 v1, v0, 0x11` / `xor-int/2addr v0, v1` / `shl-int/lit8 v1, v0, 0x5` / `xor-int/2addr v0, v1` an instance of, and why is naming it useful even without decoding the arithmetic that feeds it?::It's the xorshift(13, 17, 5) PRNG mixing step — a fixed, widely-known idiom recognizable purely from its three shift-and-XOR operations, independent of whatever value or constants feed into it; naming it lets you skip re-deriving "some kind of hash" from scratch and move straight to what actually varies (the seed) and what the result is used for.
+Why is patching `PlusNetworking`'s own `if-eqz v1, :cond_1` (guarding whether `CertificatePinner$Builder` runs) a better static target than patching `okhttp3.CertificatePinner.check()` itself?::`CertificatePinner.check()` lives in a third-party library class never imported into this case study, while the app's own constructor and its pinning-setup branch are real, available code — the same principle as patch 2's "neutralize at the narrowest legible point," here applied to a feature being disabled rather than a trap being bypassed.
