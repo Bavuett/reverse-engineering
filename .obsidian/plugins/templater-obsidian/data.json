@@ -80,7 +80,11 @@
       "template": "Templates/New-Snippet.md"
     },
     {
-      "folder": "01-Dalvik-Bytecode/07-Reference",
+      "folder": "01-Dalvik-Bytecode/07-Reflection-and-Runtime-Internals",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "01-Dalvik-Bytecode/08-Reference",
       "template": "Templates/New-Reference-Entry.md"
     },
     {

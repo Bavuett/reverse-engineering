@@ -18,7 +18,7 @@ The five original scanned pages are kept in [`../assets/dalvik-bytecode-handwrit
   <a href="../assets/dalvik-bytecode-handwritten-notes/page-5-types-and-arrays.jpeg"><img src="../assets/dalvik-bytecode-handwritten-notes/page-5-types-and-arrays.jpeg" width="160" alt="Handwritten notes, page 5"></a>
 </p>
 
-Everything else in this folder — the [`01-Classes/`](01-Classes/Classes.md) through [`07-Reference/`](07-Reference/Dalvik-Bytecode-Reference.md) chapters — carries forward everything written on those pages, complemented with additional worked examples, diagrams, tables, and a structure meant to keep growing.
+Everything else in this folder — the [`01-Classes/`](01-Classes/Classes.md) through [`08-Reference/`](08-Reference/Dalvik-Bytecode-Reference.md) chapters — carries forward everything written on those pages, complemented with additional worked examples, diagrams, tables, and a structure meant to keep growing.
 
 ## 📚 Chapters
 
@@ -32,8 +32,9 @@ If you're just browsing on GitHub, here they are (open the vault in [Obsidian](h
 | [`04-Types/`](04-Types/Types.md) | primitive types, arrays, method descriptors |
 | [`05-Dalvik-Instructions/`](05-Dalvik-Instructions/Dalvik-Instructions.md) | catalogue of instruction families |
 | [`06-Reading-Raw-Dalvik/`](06-Reading-Raw-Dalvik/Reading-Raw-Dalvik.md) | reading obfuscated smali cold (no annotations), and hand-patching Dalvik methods |
-| [`07-Reference/`](07-Reference/Dalvik-Bytecode-Reference.md) | glossary, bibliography, type table, topic-wide opcode/example/snippet listings |
+| [`07-Reflection-and-Runtime-Internals/`](07-Reflection-and-Runtime-Internals/Reflection-and-Runtime-Internals.md) | reflection as an anti-analysis technique, JVM/ART runtime architecture, method dispatch internals, memory management |
+| [`08-Reference/`](08-Reference/Dalvik-Bytecode-Reference.md) | glossary, bibliography, type table, topic-wide opcode/example/snippet listings |
 
-Each chapter folder (`01-Classes/` … `06-Reading-Raw-Dalvik/`) contains the concept note itself, plus an `examples/` subfolder (worked walkthroughs) and a `snippets/` subfolder (fragments from real apps), one subfolder per app.
+Each chapter folder (`01-Classes/` … `07-Reflection-and-Runtime-Internals/`) contains the concept note itself, plus an `examples/` subfolder (worked walkthroughs) and a `snippets/` subfolder (fragments from real apps), one subfolder per app, once either has content worth adding.
 
 Full real-app investigations — one whole app's worth of imported source and analysis at a time, not scoped to a single chapter's concept — live in the vault-wide [`Case-Studies/`](../Case-Studies/Case-Studies.md) instead of inside this topic folder, since a real investigation is rarely scoped to just one topic.

@@ -12,6 +12,8 @@ Sources used as a reference for this topic, and for further study of Android rev
 - Android Open Source Project — _Dalvik bytecode_. https://source.android.com/docs/core/runtime/dalvik-bytecode The official reference for the Dalvik instruction set: formats, opcodes, semantics.
 - Android Open Source Project — _Dalvik Executable (DEX) format_. https://source.android.com/docs/core/runtime/dex-format Binary layout of the `.dex` file that packages the bytecode.
 - Android Open Source Project — _ART and Dalvik_. https://source.android.com/docs/core/runtime Overview of the evolution from the Dalvik VM to the Android Runtime (ART).
+- Lindholm, T.; Yellin, F.; Bracha, G.; Buckley, A.; Smith, D. — _The Java Virtual Machine Specification_ (SE 21 edition). Oracle. https://docs.oracle.com/javase/specs/jvms/se21/html/index.html Reference for the JVM concepts (class loading, stack frames, `invoke*` instructions, runtime data areas) that [[Reflection-and-Runtime-Internals]] draws on and contrasts against ART's own implementation.
+- Oracle — _java.lang.reflect package documentation_. https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/reflect/package-summary.html Official reference for `Class`, `Method`, `Field`, `Proxy`, and the rest of the reflection API.
 
 ## Tools
 

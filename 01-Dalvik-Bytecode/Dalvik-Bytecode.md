@@ -23,6 +23,7 @@ graph TD
 | Section | Covers |
 | --- | --- |
 | [[Reading-Raw-Dalvik\|Reading Raw Dalvik]] | reading obfuscated smali with no comments, and hand-patching Dalvik methods |
+| [[Reflection-and-Runtime-Internals\|Reflection and Runtime Internals]] | reflection as an anti-analysis technique, JVM/ART runtime architecture, method dispatch, memory management |
 | [[Dalvik-Bytecode-Reference\|Reference]] | glossary, bibliography, type table, vault-wide opcode/example/snippet listings for this topic |
 
 ## Relevant standalone notes
@@ -47,8 +48,9 @@ graph TD
     C3 --> C5
     C4 --> C5
     C1 & C2 & C3 & C4 & C5 --> C6[06 - Reading Raw Dalvik]
-    C1 & C2 & C3 & C4 & C5 & C6 --> R[07 - Reference]
-    C1 & C2 & C3 & C4 & C5 & C6 --> CS[Case Studies]
+    C1 & C2 & C6 --> C7[07 - Reflection and Runtime Internals]
+    C1 & C2 & C3 & C4 & C5 & C6 & C7 --> R[08 - Reference]
+    C1 & C2 & C3 & C4 & C5 & C6 & C7 --> CS[Case Studies]
 ```
 
 1. [[Classes]] (`01-Classes/`) — `.class`, `.super`, `.implements`, `.field`, direct vs virtual methods
@@ -57,7 +59,8 @@ graph TD
 4. [[Types]] (`04-Types/`) — primitive types, arrays, method descriptors
 5. [[Dalvik-Instructions|Instructions]] (`05-Dalvik-Instructions/`) — catalogue of instruction families
 6. [[Reading-Raw-Dalvik|Reading Raw Dalvik]] (`06-Reading-Raw-Dalvik/`) — reading obfuscated smali cold, and hand-patching Dalvik methods
-7. [[Dalvik-Bytecode-Reference|Reference]] (`07-Reference/`) — glossary, bibliography, type table, vault-wide opcode/example/snippet listings
+7. [[Reflection-and-Runtime-Internals|Reflection and Runtime Internals]] (`07-Reflection-and-Runtime-Internals/`) — reflection as an anti-analysis technique, JVM/ART runtime architecture, method dispatch internals, memory management
+8. [[Dalvik-Bytecode-Reference|Reference]] (`08-Reference/`) — glossary, bibliography, type table, vault-wide opcode/example/snippet listings
 
 ## Where to start
 
@@ -66,7 +69,8 @@ graph TD
 3. Round it off with [[Types]] and [[Dalvik-Instructions|Instructions]].
 4. Each chapter's own `examples/` subfolder has worked walkthroughs — or browse them all at once via the Dataview table in [[Dalvik-Bytecode-Reference|Reference]].
 5. Once the fundamentals feel solid, [[Reading-Raw-Dalvik|Reading Raw Dalvik]] puts them all to work on real, heavily obfuscated smali, and covers how to hand-patch a method once you understand it.
-6. For a full, real-world investigation of one app at a time (rather than a small chapter-scoped fragment), see [[Case-Studies]].
+6. [[Reflection-and-Runtime-Internals|Reflection and Runtime Internals]] goes one level deeper, into what the runtime (JVM concepts, and how ART actually implements them) does with a method call — and why that's exactly what reflection-based obfuscation exploits to hide calls from static analysis.
+7. For a full, real-world investigation of one app at a time (rather than a small chapter-scoped fragment), see [[Case-Studies]].
 
 ## See also
 

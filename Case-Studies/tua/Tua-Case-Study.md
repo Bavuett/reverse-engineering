@@ -36,6 +36,7 @@ What to review before diving into `notes/`:
 
 - [[Dalvik-Bytecode]] — smali syntax, reading `.method`/`.field` declarations and instruction shapes, needed to recognize the div/0 and reflection-hiding patterns by eye once you know what to look for.
 - [[Reading-Raw-Dalvik]] — reads several of this app's own methods cold, with no annotations, to derive the same shapes (opaque predicates, string decoders, reflection indirection) the dynamic investigation below eventually confirmed; also covers how to hand-patch a `.smali` method once you've recognized what it does.
+- [[Reflection-and-Runtime-Internals]] — why reflection hides a call from static analysis in the first place (the target becomes a runtime string instead of a bytecode operand), and the runtime internals (JVM/ART class loading, method dispatch, `Method.invoke`) behind it — the general concept this app's reflection-hidden checks are one concrete, real-world instance of.
 - [[Frida-Dynamic-Instrumentation]] — specifically hooking `android.util.Log`/`Runtime.exit` and reading a Java stack trace from a hook, which is how the real culprits were found here instead of by blind static search.
 
 ## Findings
