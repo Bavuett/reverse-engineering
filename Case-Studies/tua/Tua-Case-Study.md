@@ -2,9 +2,9 @@
 tags: [case-study]
 project: "TUA (net.pluservice.tua)"
 source: "net.pluservice.tua — Cordova/Android hybrid app, decompiled to smali from the APK"
-version: "unknown (not recorded alongside the imported script)"
+version: "11.26.4 (base APK; distributed as a split bundle, tua.xapk, with 19 additional config.*.apk splits)"
 obtained_via: "APK decompiled to smali (apktool-style) for static analysis; Frida attached to the running app for dynamic triage of the anti-tampering/root-detection layer."
-tools_used: "Frida, adb logcat, grep/ripgrep, apktool (smali decompilation)"
+tools_used: "Frida, adb logcat, grep/ripgrep, apktool (smali decompilation), dexdump (build-tools), uber-apk-signer"
 topics: ["Dalvik-Bytecode", "Frida-Dynamic-Instrumentation"]
 date_started: 2026-07-28
 status: "in-progress"
@@ -15,7 +15,7 @@ license_note: "Personal study/research purposes only. Only import the fragments 
 
 ## Overview
 
-**TUA** (`net.pluservice.tua`) is a real, hardened Cordova/Android hybrid app whose release build ships several layers of anti-tampering and anti-debugging defenses: encrypted string literals, reflection-hidden root/debuggable checks disguised as unrelated Android API methods, and `div/0` traps injected mechanically into both first-party and third-party code at build time. It's a genuine, unmodified real-world instance of the obfuscation/hardening patterns discussed in [[Dalvik-Bytecode]] and the dynamic-triage workflow in [[Frida-Dynamic-Instrumentation]] — not a synthetic example built to be easy.
+**TUA** (`net.pluservice.tua`) is a real, hardened Cordova/Android hybrid app whose release build ships several layers of anti-tampering and anti-debugging defenses: encrypted string literals, reflection-hidden root/debuggable checks disguised as unrelated Android API methods, `div/0` traps injected mechanically into both first-party and third-party code at build time, and — discovered in a later session, after the first set of known checks was neutralized and the app still crashed — a second layer of the same reflection-hidden checks living entirely inside a `.dex` payload loaded at runtime via `InMemoryDexClassLoader`, never present on disk in cleartext. It's a genuine, unmodified real-world instance of the obfuscation/hardening patterns discussed in [[Dalvik-Bytecode]] (including [[Reflection-and-Runtime-Internals]]'s treatment of dynamic class loading) and the dynamic-triage workflow in [[Frida-Dynamic-Instrumentation]] — not a synthetic example built to be easy.
 
 This project exists to document the **general workflow** used to find these patterns (not just the specific findings for this one app) — see [[Anti-Tampering-Pattern-Workflow]] for the full write-up, including the investigative dead ends and how each dynamic finding was generalized into a static grep pattern.
 
@@ -42,6 +42,7 @@ What to review before diving into `notes/`:
 ## Findings
 
 - [[Anti-Tampering-Pattern-Workflow]] — the full investigative workflow: how blind keyword grepping failed, how dynamic triage (Frida + logcat) found the actual root-detection/debuggable-detection/`div-by-zero` traps, how each finding was generalized into a static grep pattern to find sibling instances across the whole smali tree, and the name-reuse camouflage technique the obfuscator uses throughout this app.
+- [[In-Memory-Dex-Loading]] — a later session: after the 15 known static stubs were neutralized and the app still crashed, chasing the surviving check first led to a plausible-but-falsified native-library hypothesis, then via Frida to a class that doesn't exist anywhere on disk — recovered by hooking `InMemoryDexClassLoader` and dumping the decrypted `.dex` payload straight out of memory, revealing a second, dynamically-loaded set of the same reflection-hidden decoys, and tracing the real static call site back to a shared resolver-cache class (`Lo/ResultReceiver`) reused throughout the app.
 
 ## See also
 
