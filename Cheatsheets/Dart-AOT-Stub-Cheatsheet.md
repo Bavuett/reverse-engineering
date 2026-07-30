@@ -28,6 +28,12 @@ Quick lookup — not a full explanation. See [[Flutter-Dart-AOT]] for the "why".
 | `NullErrorSharedWithoutFPURegsStub` | Implicit null-check failure |
 | `ArrayWriteBarrierStub` | GC write-barrier slow path after a pointer store |
 | `AwaitStub` | Suspend at an `await`; see [[Flutter-Dart-AOT]] |
+| `InitAsyncStub` | Entry-side counterpart of `AwaitStub` — sets up an `async` function's `Future` right after its first `CheckStackOverflow`, before any suspend point |
+| `Sentinel` (a `PP`-loaded pool constant, not `NULL`) | Marks a Dart `late` field as not-yet-initialized; a field read `cmp`'d against it (not against `NULL`) is a guarded/lazy field access, per [[Reading-Raw-Disassembly]] |
+| `LateInitializationErrorSharedWith[out]FPURegsStub` | Thrown when a `late` field is read while still holding `Sentinel` |
+| `NullCastErrorSharedWith[out]FPURegsStub` | Implicit non-null cast failure (e.g. `expr!`), distinct from `NullErrorSharedWithoutFPURegsStub`'s implicit null-check |
+| `ReThrowStub` | Propagates an in-flight exception out of the current frame (`sub SP, fp, #N` then `bl ReThrowStub`, often followed by `brk #0`) |
+| `ReturnAsyncNotFutureStub` | Completes an `async` function's `Future` with a plain value, in place of an ordinary `ret` |
 | `sbfiz x, x, #1, #0x1f` + round-trip `cmp` | Smi tagging attempt (boxing) |
 | `sbfx x, x, #1, #0x1f` | Smi untagging |
 | `ubfx x, x, #0xc, #0x14` after `ldur x, [x, #-1]` | Class-id extraction from an object header |
@@ -37,10 +43,12 @@ Quick lookup — not a full explanation. See [[Flutter-Dart-AOT]] for the "why".
 - `CheckStackOverflow` and `EnterFrame`/`LeaveFrame` are boilerplate on **every** function — don't spend time on them; jump straight to what's between `CheckStackOverflow` and `LeaveFrame`.
 - A stub call is not application logic — recognize the name and move on, per [[Flutter-Dart-AOT#Explanation|Stubs]].
 - Two different `Obj!SomeEnum@<address>` annotations are two different **instances** (variants), not the same value shown twice — see [[Enum-Switch-Via-Pointer-Comparison]].
+- Don't conflate a `late`-field guard with an ordinary null check: both are a `cmp` + `b.eq` to a call-only tail, but the guard compares against `Sentinel` (a specific `PP` constant), while a real null check compares against the `NULL` register — see [[Reading-Raw-Disassembly]]'s worked example 4.
 
 ## See also
 
 - [[Flutter-Dart-AOT]]
+- [[Reading-Raw-Disassembly]]
 - [[ARM64-Android]]
 
 ## References

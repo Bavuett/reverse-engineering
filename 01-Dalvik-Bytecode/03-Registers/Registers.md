@@ -116,6 +116,8 @@ Values don't automatically flow between registers — an explicit `move` is requ
 
 - [[Constructor-and-Fields]] — an explicit `.registers` layout in practice
 
+Real-world fragments illustrating this chapter live in `snippets/` — see [[Device-Id-Wide-Register-Uuid]] for a real app packing two 32-bit hash codes into one 64-bit `UUID` constructor call via `shl-long/2addr`.
+
 ## See also
 
 - [[Classes]] — direct vs virtual methods

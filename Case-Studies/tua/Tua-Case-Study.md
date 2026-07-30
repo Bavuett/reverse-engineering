@@ -21,17 +21,21 @@ This project exists to document the **general workflow** used to find these patt
 
 ## Source layout
 
-`source/` holds the validated Frida script produced by this investigation:
+`source/` holds the validated Frida script produced by this investigation, plus the smali excerpts worth preserving verbatim:
 
 - `investigate.js` — neutralizes the `MainActivity.onPause`/`onResume` div/0 trap (by delegating to `CordovaActivity`'s real implementation) and instruments `EncryptionProvider.encrypt`/`decrypt`/`decryptRecovery`/`decryptDataWithKey` to log plaintext/ciphertext in and out.
+- `smali/net/pluservice/tua/MainActivity.smali` — the full class: the `onPause`/`onResume`/`onStart` lifecycle traps (opaque-predicate-gated `div-int/lit8 ..., 0x0` and `throw`), the three string-decoder helpers (`$$i`, `a`, `b`, `c`), and `attachBaseContext`, the most heavily reflection-obfuscated method found in this app.
+- `smali/net/pluservice/plugins/DeviceInformation/DeviceIdProvider.smali` — mostly plain, unobfuscated smali (device-ID/SHA1 helpers), useful as a baseline for what *un*-obfuscated code in this same app looks like; its one interesting method, `onMessageChannelReady()`, is a modulus-gated lazy-init cache, not a security check — see [[Reading-Raw-Dalvik]] for why that distinction matters.
+- `smali/net/pluservice/plusnetworking/PlusNetworking.smali` — the networking layer: string decoding (`j`, `k`, `$$c`) feeding HTTP header names and a request-signing call (`a.a()`), in `post()`.
 
-Only the fragments actually needed were imported — no full smali tree is checked in here. If specific smali excerpts (e.g. the `(JJ)V`-signature hideout methods, or a `div-int/lit8 ..., 0x0` trap) are worth preserving verbatim for later reference, add them under `source/smali/`, mirroring their original path inside the decompiled APK (e.g. `source/smali/net/pluservice/tua/MainActivity.smali`).
+Only the fragments actually needed were imported, not a wholesale dump of the decompiled tree — but each file above is kept in full (not trimmed to a single method) since [[Reading-Raw-Dalvik]] walks several different methods out of each one, and trimming would have hidden how the obfuscated helpers, the static state-machine fields, and the lifecycle overrides all relate to each other within one class.
 
 ## Relevant topics & background
 
 What to review before diving into `notes/`:
 
 - [[Dalvik-Bytecode]] — smali syntax, reading `.method`/`.field` declarations and instruction shapes, needed to recognize the div/0 and reflection-hiding patterns by eye once you know what to look for.
+- [[Reading-Raw-Dalvik]] — reads several of this app's own methods cold, with no annotations, to derive the same shapes (opaque predicates, string decoders, reflection indirection) the dynamic investigation below eventually confirmed; also covers how to hand-patch a `.smali` method once you've recognized what it does.
 - [[Frida-Dynamic-Instrumentation]] — specifically hooking `android.util.Log`/`Runtime.exit` and reading a Java stack trace from a hook, which is how the real culprits were found here instead of by blind static search.
 
 ## Findings

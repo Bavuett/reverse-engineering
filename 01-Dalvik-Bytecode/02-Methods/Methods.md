@@ -183,7 +183,7 @@ A Java static block (`static { ... }`) compiles down to the special method `<cli
 - [[Method-with-Parameters]] — multiple parameter types and a reference return type
 - [[Exception-Handling]] — `.catch`/`.catchall` in practice
 
-Real-world fragments illustrating this chapter (once added) live in `snippets/` — see [[Demo-Example-Class]] for the expected format.
+Real-world fragments illustrating this chapter live in `snippets/` — see [[Hashed-Device-Id-Multi-Catch]] for a real app's two-`.catch` method on one `try` block, or [[Demo-Example-Class]] for the expected format of a new one.
 
 ## See also
 

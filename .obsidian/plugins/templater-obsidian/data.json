@@ -68,7 +68,19 @@
       "template": "Templates/New-Example.md"
     },
     {
-      "folder": "01-Dalvik-Bytecode/06-Reference",
+      "folder": "01-Dalvik-Bytecode/06-Reading-Raw-Dalvik",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "01-Dalvik-Bytecode/06-Reading-Raw-Dalvik/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "01-Dalvik-Bytecode/06-Reading-Raw-Dalvik/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "01-Dalvik-Bytecode/07-Reference",
       "template": "Templates/New-Reference-Entry.md"
     },
     {
@@ -289,6 +301,10 @@
     },
     {
       "folder": "Case-Studies/tua/notes",
+      "template": "Templates/New-Case-Study-Note.md"
+    },
+    {
+      "folder": "Case-Studies/classeviva/notes",
       "template": "Templates/New-Case-Study-Note.md"
     },
     {

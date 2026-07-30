@@ -171,6 +171,141 @@ Reading it cold, slowly: `fp-0xc8` gets `X1` immediately — either `this` or a 
 
 **Shape-only conclusion:** two ordinary arguments (one arrived via a register swap) plus a third input reachable only through an unanchored register pointing at a caller-supplied object — probed field by field, one field checked against an expected value, and depending on the outcome either a computed, data-dependent stack location gets read or `NULL` is used. An input that _may or may not_ have been supplied, resolved by inspecting call metadata rather than a fixed register. **Needs a lookup:** the pool constant's contents and what kind of object `X4` really is — in the original investigation this came from, `X4` turned out to be the caller's named-argument descriptor and the constant the literal `"oldToken"`, confirming this whole sequence is how Dart resolves an optional named parameter with no register of its own. The shape-only read above never needed that answer to be useful.
 
+## Worked example 4 (expert): continuing into an async network request, assembled field by field
+
+Same function as example 3, `AuthenticationService.login`, picking up exactly where that one left off (`0x724a28`'s `b.ls` into the stack-overflow slow path) and running to the end of the function — the deepest excerpt in this topic, stripped down the same way:
+
+```
+0x724a2c: add   x0, PP, #0x1e, lsl #12
+0x724a30: ldr   x0, [x0, #0xb0]         ; pool object, TypeArguments-shaped
+0x724a34: bl    #0x7e86ec               ; call A: takes one arg, nothing from it used further
+0x724a38: ldr   x16, [PP, #0x2050]      ; pool const H
+0x724a3c: ldr   lr, [THR, #0x90]        ; a THR-relative constant
+0x724a40: stp   lr, x16, [SP]
+0x724a44: bl    #0x6e0e60               ; call B: args (const, const H) -> object #1 in x0
+0x724a48: stur  x0, [fp, #-0xd8]        ; anchor: fp-0xd8 = object #1 (untouched for a long time)
+0x724a4c: ldr   x16, [PP, #0x2050]      ; same const H again
+0x724a50: ldr   lr, [THR, #0x90]
+0x724a54: stp   lr, x16, [SP]
+0x724a58: bl    #0x6e0e60               ; call B again, same args -> object #2 in x0
+0x724a5c: add   x1, PP, #0x1e, lsl #12
+0x724a60: ldr   x1, [x1, #0xb8]         ; pool: a fixed code/function reference
+0x724a64: mov   x2, NULL
+0x724a68: stur  x0, [fp, #-0xe0]        ; anchor: fp-0xe0 = object #2
+0x724a6c: bl    #0x10cb178              ; closure-build shape (fn ref + NULL context), per the pattern above
+0x724a70: ldur  x1, [fp, #-0xe0]        ; reload object #2
+0x724a74: mov   x2, x0                  ; x2 = the closure just built
+0x724a78: bl    #0x725920               ; call taking (object #2, closure) -> result discarded
+0x724a7c: mov   x1, NULL
+0x724a80: movz  x2, #0x4
+0x724a84: bl    #0x10cbe44              ; AllocateArray shape, length 4 (two key/value slots)
+0x724a88: add   x16, PP, #0x1d, lsl #12
+0x724a8c: ldr   x16, [x16, #0xc80]      ; pool const I
+0x724a90: stur  w16, [x0, #0xf]         ; array[0] = const I
+0x724a94: ldur  x1, [fp, #-0xc0]        ; reload the value anchored back in worked example 3 (fp-0xc0)
+0x724a98: stur  w1, [x0, #0x13]         ; array[1] = that value
+0x724a9c: ldr   x16, [PP, #0x2050]      ; const H, yet again
+0x724aa0: stp   x0, x16, [SP]           ; pass (array, const H)
+0x724aa4: bl    #0x6e0e60               ; call B a third time, fed the 4-slot array -> object #3
+0x724aa8: add   x1, PP, #0x1e, lsl #12
+0x724aac: ldr   x1, [x1, #0xc0]         ; pool: the same fixed code reference as before
+0x724ab0: mov   x2, NULL
+0x724ab4: stur  x0, [fp, #-0xc0]        ; anchor: fp-0xc0 reused = object #3
+0x724ab8: bl    #0x10cb178              ; closure-build again, same underlying function
+0x724abc: ldur  x1, [fp, #-0xc0]        ; reload object #3
+0x724ac0: mov   x2, x0
+0x724ac4: bl    #0x725920               ; the same call as before, on object #3 this time
+0x724ac8: ldr   x16, [PP, #0x2050]
+0x724acc: ldr   lr, [THR, #0x90]
+0x724ad0: stp   lr, x16, [SP]
+0x724ad4: bl    #0x6e0e60               ; call B a fourth time, empty args again -> object #4
+0x724ad8: ldur  x1, [fp, #-0xd0]        ; reload the OTHER argument anchored in example 3 (fp-0xd0)
+0x724adc: stur  x0, [fp, #-0xd0]        ; anchor: fp-0xd0 overwritten with object #4
+0x724ae0: bl    #0x725870               ; call taking that argument alone -> a new value in x0
+0x724ae4: ldur  x1, [fp, #-0xd0]        ; reload object #4
+0x724ae8: mov   x2, x0
+0x724aec: bl    #0x1098f0c              ; call taking (object #4, that value) -> result discarded
+0x724af0: bl    #0x75b7fc               ; allocation shape, no populated args visible beforehand
+0x724af4: mov   x1, x0
+0x724af8: add   x0, PP, #0x1e, lsl #12
+0x724afc: ldr   x0, [x0, #0xc8]         ; pool const J
+0x724b00: stur  w0, [x1, #7]            ; field(+7) = const J
+0x724b04: ldur  x0, [fp, #-0xd8]        ; reload object #1 -- first use since 0x724a48
+0x724b08: stur  w0, [x1, #0x2b]         ; field(+0x2b) = object #1, untouched
+0x724b0c: ldur  x0, [fp, #-0xc0]        ; reload object #3 (post its own call at 0x724ac4)
+0x724b10: stur  w0, [x1, #0xb]          ; field(+0xb) = object #3
+0x724b14: ldur  x0, [fp, #-0xc8]        ; reload the arg anchored fp-0xc8 in example 3
+0x724b18: ldur  w4, [x0, #7]            ; field(+7) of that
+0x724b1c: add   x4, x4, HEAP, lsl #32   ; decompress -> a heap pointer
+0x724b20: stur  x4, [fp, #-0xc0]        ; anchor: fp-0xc0 reused again = this new pointer
+0x724b24: ldur  w2, [x4, #7]            ; field(+7) of THAT pointer
+0x724b28: add   x2, x2, HEAP, lsl #32
+0x724b2c: ldr   x16, [PP, #0x40]        ; a specific, recurring pool constant
+0x724b30: cmp   w2, w16
+0x724b34: b.eq  #0x724bf8               ; equal -> one of the tail cases below
+0x724b38: ldur  x5, [fp, #-0xd0]        ; reload object #4 (now populated via the call at 0x724aec)
+0x724b3c: ldur  x6, [fp, #-0xe0]        ; reload object #2 (post its own call at 0x724a78)
+0x724b40: add   x3, PP, #0x1e, lsl #12
+0x724b44: ldr   x3, [x3, #0xd0]         ; pool: a literal string
+0x724b48: ldr   x4, [PP, #0x1310]       ; pool: a small fixed-shape constant list
+0x724b4c: bl    #0x752c40               ; call taking (x1, x2, x3, x4, x5, x6) -> x0
+0x724b50: mov   x1, x0
+0x724b54: ldur  x0, [fp, #-0xc0]        ; reload the pointer anchored at 0x724b20
+0x724b58: ldur  w2, [x0, #7]            ; the SAME field(+7) read again
+0x724b5c: add   x2, x2, HEAP, lsl #32
+0x724b60: ldur  w3, [x2, #0x47]         ; a field of THAT pointer
+0x724b64: add   x3, x3, HEAP, lsl #32
+0x724b68: ldr   x16, [PP, #0x40]        ; the SAME recurring pool constant as before
+0x724b6c: cmp   w3, w16
+0x724b70: b.eq  #0x724c04               ; equal -> a different tail case
+0x724b74: str   x3, [SP]
+0x724b78: add   x4, PP, #0x1d, lsl #12
+0x724b7c: ldr   x4, [x4, #0x988]        ; pool: another small fixed-shape constant list
+0x724b80: bl    #0x7176c8               ; call taking (x1, x3-via-SP, x4) -> x0
+0x724b84: add   x16, PP, #0x1e, lsl #12
+0x724b88: ldr   x16, [x16, #0xb0]       ; pool object, TypeArguments-shaped again
+0x724b8c: ldur  lr, [fp, #-0xc8]        ; reload the arg anchored fp-0xc8 (example 3)
+0x724b90: stp   lr, x16, [SP, #8]
+0x724b94: str   x0, [SP]
+0x724b98: ldr   x4, [PP, #0x48]         ; yet another small fixed-shape constant list
+0x724b9c: bl    #0x725730               ; call taking (that arg, x0) -> a new x0
+0x724ba0: ldr   x16, [PP, #0xc0]        ; pool object, TypeArguments-shaped
+0x724ba4: ldur  lr, [fp, #-0xc0]        ; reload the pointer from 0x724b20 yet again
+0x724ba8: stp   lr, x16, [SP, #8]
+0x724bac: str   x0, [SP]
+0x724bb0: ldr   x4, [PP, #0x48]         ; the same constant list as the previous call
+0x724bb4: bl    #0x71a7a4               ; call taking (that pointer, x0) -> a Future in x0
+0x724bb8: mov   x1, x0
+0x724bbc: stur  x1, [fp, #-0xc0]        ; anchor: fp-0xc0 reused = the Future
+0x724bc0: bl    #0x7e84ac               ; suspend-and-resume shape, cf. Flutter-Dart-AOT
+0x724bc4: stur  x0, [fp, #-0xc0]        ; anchor: fp-0xc0 reused = the resolved value
+0x724bc8: ldur  w2, [x0, #0xb]          ; field(+0xb) of the resolved value
+0x724bcc: add   x2, x2, HEAP, lsl #32
+0x724bd0: cmp   w2, NULL                ; a REAL null check -- against NULL, not a pool constant
+0x724bd4: b.eq  #0x724c10               ; null -> a tail case
+0x724bd8: mov   x1, NULL
+0x724bdc: bl    #0x724c5c               ; call taking (NULL, that field) -> the function's real result
+0x724be0: b     #0x7e8334               ; async-return shape, matches example 3's InitAsync note
+0x724be4: sub   SP, fp, #0xf8           ; unwind straight to the frame base -- exception path
+0x724be8: bl    #0x10ca0a0
+0x724bec: brk   #0                      ; unreachable trap
+0x724bf0: bl    #0x10cbf4c              ; overflow slow path
+0x724bf4: b     #0x724a2c               ; retry from the start of this excerpt
+0x724bf8: add   x9, PP, #0x1d, lsl #12
+0x724bfc: ldr   x9, [x9, #0x990]        ; pool: some extra value, unused elsewhere
+0x724c00: bl    #0x10cc85c              ; error-stub shape -- never returns
+0x724c04: add   x9, PP, #0x1d, lsl #12
+0x724c08: ldr   x9, [x9, #0x998]        ; a DIFFERENT pool value, identical shape to the above
+0x724c0c: bl    #0x10cc85c              ; the SAME error-stub target as 0x724c00
+0x724c10: bl    #0x10cc5d4              ; a THIRD, distinct error-stub target
+```
+
+Reading it cold: right after the stack-overflow check completes — the same position `AwaitStub` occupies later in this same excerpt — a call takes exactly one pool object shaped like a `TypeArguments` (per [[Flutter-Dart-AOT]]) and nothing from it is ever used again; positionally and structurally that's an async-continuation setup, the counterpart of the suspend point further down, even though naming it needs a symbol table. What follows is four calls to the same target (`0x6e0e60`), each preceded by either an empty two-slot `SP` push or a populated one — an allocation shape repeated four times, giving four containers (labeled #1-#4 above only for this walkthrough). Three of those four immediately feed into the exact closure-then-call idiom from "Closures: build, then feed to a call" earlier in this chapter: build a closure over the *same fixed function address* both times (`0x10cb178` with a constant `x1`), pass `(container, closure)` to a second fixed call, and discard the result — the shape of "mutate a container in place according to a predicate," whatever that predicate turns out to check. Object #3 is the interesting one of the three: it gets built from a *populated* 4-slot array (const `I` at slot 0, the value anchored back in example 3's own `fp-0xc0` at slot 1) — the exact "allocate an array, `stur` a couple of values into it, hand it to one consumer" shape from worked example 1, here producing a two-entry key/value container from a value this same function already resolved earlier. Object #4 reuses the *other* argument this function was handed (`fp-0xd0`, anchored in example 3), passes it alone to one call, then merges that call's result into object #4 via a `(container, value)` call whose result is likewise discarded — "convert this argument to another shape, then absorb it into a container," honestly indistinguishable at the byte level from "serialize an object into a map," which is exactly what it turns out to be (see below). Object #1, by contrast, is written once and never read again until it's dropped, completely unmodified, straight into a fourth object's field at `+0x2b` — a passthrough default. That fourth object itself is the clearest instance of worked example 1's shape in this whole excerpt: a `bl` with no visible input, immediately followed by three `stur`s into its result at `+7`/`+0x2b`/`+0xb` — allocate, then populate, full stop.
+
+The genuinely new shape here appears twice, at `0x724b14`-`0x724b34` and again at `0x724b54`-`0x724b70`: reload a pointer, read one of its fields, decompress it, compare against *the same* recurring pool constant both times, and branch on equality to a call-only block that never returns. That's not an ordinary null check — the real one sits a few instructions later at `0x724bd0`, comparing against the `NULL` register itself, and the contrast is instructive precisely because both patterns are two-instruction guards around a field read that look superficially alike. A guard against one specific *non-`NULL`* pool value, immediately followed by a dead-end call, is the shape of a **lazily-initialized field being read before it's ready** — the two tail blocks even reinforce this: each loads one more pool value tied to its own specific field before calling the same never-returning target (`0x724bf8`/`0x724c04` both call `0x10cc85c`), while the third tail (`0x724c10`, guarded by the real null check) calls a *different* target — three distinct failure modes, distinguishable from each other purely by which guard reached them and which pool value each loads right before its own call, without yet knowing any of their names. Past both guards, three calls chain together against one repeated pointer (the one anchored at `0x724b20`): the first combines it with the two filtered/merged containers, a literal string, and a small pool-constant list; the second takes that result plus the same pointer's own field; the third takes that result plus the pointer again — "build up one configuration object, piece by piece, always against the same receiver," each step's small `const [...]` pool list a fixed-shape argument descriptor distinct from the runtime-built arrays of worked example 1, present at nearly every one of these calls but at none of the four container-building ones. What follows the chain is the suspend/resume shape by position alone (a value anchored, then a call, then the *same* stack slot immediately overwritten with what comes back) — before one field of the resumed value gets the real null check, and either a final call combines `(NULL, that field)` into the function's actual result, returned through the async-return branch rather than a plain `ret`, or execution falls into one of the three dead-end tails already described.
+
+**Shape-only conclusion:** continuing directly from example 3's two resolved arguments, this half of the function builds two filtered key/value containers and one merged, serialized-argument container; assembles a single configuration object from a passthrough default, a filtered container, and a merged one; chains three calls against one repeated pointer, gated twice by a lazy-field guard distinct from an ordinary null check; suspends on a fourth call's result; and on resuming either extracts and returns one field or falls into one of three distinguishable, never-returning failure paths. **Needs a lookup:** what the two guarded fields and the three tail targets actually are, and what package the four "container" and three "chain" calls belong to — in the investigation this excerpt comes from ([[ClasseViva-Case-Study]], see [[Hooking-Dart-AOT-Login-With-Frida]]), this is `dio`'s `Options.compose()` and `RequestOptions.copyWith()` building the outgoing request, gated by two `late` fields on the app's `Dio` client (`options`, then `BaseOptions._baseUrl`) that throw `LateInitializationError` if read before Dio's own setup has run, followed by `dio.fetch<Map<String, dynamic>>()`, an `await`, a `response.data` null check (`NullCastError` on the tail that guards it), and `LoginJTO.fromJson()` on success — the network call this entire function exists to make. The shape-only read above reaches every one of those conclusions' *structure* without needing a single one of those names.
+
 ## More patterns, worked cold
 
 Shorter excerpts, each isolating one additional recognizable shape not yet covered above.
@@ -271,3 +406,4 @@ When a comment-free disassembly shows a register used in a computation without e
 What shape identifies inline heap allocation even with no `AllocateXStub` name attached to the call?::A bump-pointer sequence against a fixed thread-register offset (load top/end, compare, advance, store back) — or, for an out-of-line allocation, a `bl` whose result immediately gets populated field-by-field via `stur`s.
 What shape identifies a virtual/dispatch call even with no `GDT[...]` comment?::Extracting a class id from an object header (`ldur` at `-1`, then `ubfx`) immediately followed by using that id to index a fixed table-base register in a computed `blr`.
 What distinguishes a freshly-built closure from a freshly-built ordinary object in the disassembly that follows its allocation?::An ordinary object gets its own fields populated afterward (`stur`s into it); a closure instead gets staged as an argument to a following call, without further fields being written into it directly.
+What shape identifies a guarded/lazy field read (e.g. a Dart `late` field) even with no field name attached?::A field read immediately compared against one specific, recurring *non-`NULL`* pool constant, branching on equality to a call-only block that never returns — distinct from an ordinary null check, which compares against the `NULL` register itself.

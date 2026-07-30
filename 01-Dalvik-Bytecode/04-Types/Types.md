@@ -132,6 +132,8 @@ LExample;->method(IILjava/lang/String;Z)Ljava/lang/Object;
 
 - [[Multidimensional-Arrays]] — `int[][]` end to end, with `aget`/`aput`
 
+Real-world fragments illustrating this chapter live in `snippets/` — see [[Encrypted-String-Table-Array-Data]] for the `[B` descriptor and the `fill-array-data`/`.array-data` pair baking a literal byte table into a real app's class file.
+
 ## See also
 
 - [[Classes]] — `.field` uses the same type descriptors
