@@ -37,6 +37,25 @@ The compiled bytecode for this contains no reference at all to `hiddenCheck` —
 
 This is exactly the signal used to hunt reflection-hiding in the TUA case study (see [[Anti-Tampering-Pattern-Workflow]]): grepping declared methods and grepping direct `invoke-*` targets separately, then taking the set difference — a method that exists but is never the explicit target of any `invoke-*` in the whole tree is almost certainly reached only through reflection.
 
+### How to identify a reflective call in disassembly
+
+Reflection is easy to *spot* precisely because it can't hide its own machinery: the `java.lang.reflect` API is a fixed, small set of classes, so it always leaves the same fingerprints regardless of how the surrounding code is obfuscated. Two complementary approaches, from call-site and from callee:
+
+**From the call site (find where reflection happens).** These signatures are invariant — grep the whole smali tree for them and you have located every reflective call:
+
+| Grep for | What it anchors |
+| --- | --- |
+| `Ljava/lang/reflect/Method;->invoke(` | every reflective *method* call (the single best search) |
+| `Ljava/lang/reflect/Constructor;->newInstance(` | every reflective *object construction* |
+| `Ljava/lang/Class;->forName(` / `->getDeclaredMethod(` / `->getMethod(` | the lookup that produces the `Method`/`Class` object feeding the invoke |
+| `Ljava/lang/reflect/AccessibleObject;->setAccessible(` | code deliberately reaching a `private`/`protected` member — a loud "hiding something" signal |
+
+Around each hit you'll see the same chain: a `Class` obtained (`forName`/`const-class`), a `Method` looked up from it (`getDeclaredMethod`/`getMethod`), optionally `setAccessible(true)`, then `Method.invoke`. That `forName → getMethod → invoke` shape *is* the recognition pattern.
+
+**Reading the obfuscation dial.** Once you're on a reflective call, the interesting question is where its name-`String`s come from — this tells you how much work the bypass will take: a plain `const-string "android.os.Debug"` is barely hidden (grep still finds it); a `move-result-object` out of an app decoder means the name is **encrypted** and you must run/reimplement the decoder; a `StringBuilder` concatenation is a middle ground meant to beat literal grep. And the `check-cast` on the invoke's result (`check-cast v0, Ljava/lang/Boolean;`/`Ljava/lang/Long;`) leaks the target's *return type* even when its name is fully encrypted — often enough to guess intent (a no-arg `boolean` probe reads like "rooted?/debuggable?").
+
+**From the callee (find what is reached reflectively, without decrypting anything).** The set-difference technique above comes at it from the other end: any method that is *declared* but is *never* an explicit `invoke-*` target anywhere in the tree can only be reached reflectively (or is dead). This finds hidden *targets* even when every name string is encrypted, because it never needs to read the strings at all. See [[Reflective-Hidden-Method-Call]] for the plaintext walk-through and [[Reflection-Hidden-Check-With-Decoded-Names]] for the encrypted-name real-app instance.
+
 ### Other mechanisms that hide the call graph the same way
 
 Reflection is the most common instance of a broader family — worth knowing the others, since real hardening tools often combine them:

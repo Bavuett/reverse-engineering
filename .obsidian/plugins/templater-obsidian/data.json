@@ -84,6 +84,18 @@
       "template": "Templates/New-Concept.md"
     },
     {
+      "folder": "01-Dalvik-Bytecode/07-Reflection-and-Runtime-Internals/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "01-Dalvik-Bytecode/07-Reflection-and-Runtime-Internals/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "01-Dalvik-Bytecode/05-Dalvik-Instructions/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
       "folder": "01-Dalvik-Bytecode/08-Reference",
       "template": "Templates/New-Reference-Entry.md"
     },
@@ -297,6 +309,94 @@
     },
     {
       "folder": "03-Frida-Dynamic-Instrumentation/10-Reference",
+      "template": "Templates/New-Reference-Entry.md"
+    },
+    {
+      "folder": "04-Java-Fundamentals/01-Operational-Semantics",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "04-Java-Fundamentals/01-Operational-Semantics/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "04-Java-Fundamentals/01-Operational-Semantics/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "04-Java-Fundamentals/02-State-And-Expressions",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "04-Java-Fundamentals/02-State-And-Expressions/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "04-Java-Fundamentals/02-State-And-Expressions/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "04-Java-Fundamentals/03-Commands-And-Control-Flow",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "04-Java-Fundamentals/03-Commands-And-Control-Flow/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "04-Java-Fundamentals/03-Commands-And-Control-Flow/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "04-Java-Fundamentals/04-Declarations-And-Scope",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "04-Java-Fundamentals/04-Declarations-And-Scope/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "04-Java-Fundamentals/04-Declarations-And-Scope/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "04-Java-Fundamentals/05-Classes-And-Objects",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "04-Java-Fundamentals/05-Classes-And-Objects/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "04-Java-Fundamentals/05-Classes-And-Objects/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "04-Java-Fundamentals/06-Methods-And-Recursion",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "04-Java-Fundamentals/06-Methods-And-Recursion/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "04-Java-Fundamentals/06-Methods-And-Recursion/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "04-Java-Fundamentals/07-Memory-Model",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "04-Java-Fundamentals/07-Memory-Model/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "04-Java-Fundamentals/07-Memory-Model/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "04-Java-Fundamentals/08-Reference",
       "template": "Templates/New-Reference-Entry.md"
     },
     {

@@ -75,4 +75,5 @@ graph TD
 ## See also
 
 - [[Home]]
+- [[Java-Fundamentals]] — the operational-semantics model of the *source* language Dalvik encodes: what a class, object, field access, method call, `this`, and the library/stack/heap memory regions actually mean, so a `new-instance`/`iget`/`invoke-*`/`p0` isn't just an opcode but a known construct. Read it alongside [[Reflection-and-Runtime-Internals]] for the runtime-internals half.
 - [[ARM64-Android]] — the native/register-machine side of Android reverse engineering: what you're reversing whenever there's no more Dalvik bytecode left to read (a JNI `.so`, or a Flutter app's Dart AOT snapshot)
