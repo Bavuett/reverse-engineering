@@ -412,6 +412,10 @@
       "template": "Templates/New-Case-Study-Note.md"
     },
     {
+      "folder": "Case-Studies/poste-italiane/notes",
+      "template": "Templates/New-Case-Study-Note.md"
+    },
+    {
       "folder": "Cheatsheets",
       "template": "Templates/New-Cheatsheet.md"
     },
