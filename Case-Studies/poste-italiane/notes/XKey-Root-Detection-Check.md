@@ -162,4 +162,6 @@ paths.forEach(p => console.log(p, SUSPICIOUS_PATH_RE.test(p)));
 
 - [[JWE-OTP-Payload-And-Key-Investigation]]
 - [[Login-AT01-And-Device-Trust-Signals]]
+- [[RSA-Adaptive-Auth-Onboarding-Verdict]] — the actual device-trust verdict gating onboarding
+  (a separate SDK from this one)
 - [[Case-Studies]]

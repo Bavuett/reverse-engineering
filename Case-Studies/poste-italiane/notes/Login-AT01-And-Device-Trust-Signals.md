@@ -176,4 +176,7 @@ expensive fix (Play Integrity Fix + a valid keybox):
 
 ## See also
 
+- [[RSA-Adaptive-Auth-Onboarding-Verdict]] — traces the `x-rsa` SDK's actual ALLOW/CHALLENGE/DENY
+  verdict logic gating onboarding, one layer deeper than the `Compromised`/`Emulator` fields noted
+  here
 - [[Case-Studies]]

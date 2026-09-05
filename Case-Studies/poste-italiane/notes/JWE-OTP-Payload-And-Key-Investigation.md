@@ -529,3 +529,5 @@ of "explore and see what's there."
 - [[Decrypting-JWE-Request-Response-Bodies]]
 - [[Login-AT01-And-Device-Trust-Signals]]
 - [[http-pinning-bypass-and-dump.js]]
+- [[XKey-Key-Exchange-And-Request-Flow]] — the end-to-end picture this note's key material feeds
+  into

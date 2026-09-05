@@ -159,4 +159,6 @@ When a captured request/response body turns out to be encrypted rather than plai
 
 ## See also
 
+- [[XKey-Key-Exchange-And-Request-Flow]] — the end-to-end key-exchange picture this note's
+  "which side's private key" reasoning feeds into
 - [[Case-Studies]]
