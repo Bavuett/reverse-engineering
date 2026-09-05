@@ -38,6 +38,22 @@
 // elsewhere in the app, independent of whether pinning itself needs bypassing.
 const ENABLE_HTTP_LOGGING = true;
 
+// Set to false to suppress file output even when using run.py as the launcher.
+// Has no effect when running with plain `frida -l` (console only in that case).
+const LOG_TO_FILE = true;
+
+// Mirrors every log line both to the Frida console and, when LOG_TO_FILE is
+// true, to the Python run.py launcher via send() so it can persist the line to
+// a local timestamped file. Falls back gracefully to console-only when this
+// script is loaded directly with `frida -l` (unhandled send() messages are
+// silently dropped by the Frida runtime in that mode).
+function flog(msg) {
+    console.log(msg);
+    if (LOG_TO_FILE) {
+        send({ type: 'log', line: String(msg) });
+    }
+}
+
 // ---------------------------------------------------------------------
 // JWE plaintext <-> ciphertext correlation.
 // A JWE compact token is 5 base64url segments (4 dots) — distinguishes it from a
@@ -66,7 +82,10 @@ function makeJweMatcher(label) {
         while (pendingCiphertext.length > 0 && pendingPlaintext.length > 0) {
             const { url } = pendingCiphertext.shift();
             const plaintext = pendingPlaintext.shift();
-            console.log(`      [jwe-decrypted ${label} — ${url}]\n${plaintext}`);
+            // Same single-call pattern as logRequest/logResponse: build the entire
+            // block as one string so it can never be split by a concurrent thread.
+            const out = `[jwe-decrypted ${label} — ${url}]\n      ${plaintext.replace(/\n/g, '\n      ')}`;
+            console.log(out);
         }
     }
 
@@ -102,8 +121,23 @@ Java.perform(() => {
 
         JWEObject.encrypt.overload("com.nimbusds.jose.JWEEncrypter").implementation = function (encrypter) {
             let plaintext = null;
-            try { plaintext = this.getPayload().toString(); } catch (e) { /* leave null */ }
-            this.encrypt(encrypter);
+          try { plaintext = this.getPayload().toString(); } catch (e) { /* leave null */ }
+
+          // Log the encrypt call details, including the stack trace for debugging purposes.
+          let header = null;
+          try { header = this.getHeader().toString(); } catch (e) { }
+
+          // Log the encrypt call details, including the stack trace for debugging purposes.
+          const encrypterClass = encrypter.$className;
+
+          // Get the stack trace to identify the caller context (useful for debugging).
+          // Note: the stack trace is obtained before the encrypt call to avoid interference from concurrent threads.
+          const stack = Java.use("android.util.Log")
+            .getStackTraceString(Java.use("java.lang.Exception").$new());
+
+          // Log the encrypt call details, including the stack trace for debugging purposes.
+          console.log(`[jwe-encrypt]\n  header:   ${header}\n   encrypter: ${encrypterClass}\n  payload:  ${plaintext}\n${stack}`);
+          this.encrypt(encrypter);
             if (plaintext !== null) requestJwe.notePlaintext(plaintext);
         };
 
@@ -292,14 +326,20 @@ function shQuote(value) {
 function logRequest(request, Buffer) {
     const method = request.method();
     const url = request.url().toString();
-    console.log(`\n[>>>] ${method} ${url}`);
+
+    // Accumulate the entire block — headers, body, and curl — into one string
+    // before emitting it. logRequest runs on an OkHttp dispatcher thread; if two
+    // requests overlap, separate console.log calls would interleave their lines.
+    // A single console.log is one atomic Frida message over the control channel,
+    // so the full block (including the curl) always arrives intact and together.
+    let out = `\n[>>>] ${method} ${url}\n`;
 
     const headers = request.headers();
     const headerPairs = [];
     for (let i = 0; i < headers.size(); i++) {
         const name = headers.name(i);
         const value = headers.value(i);
-        console.log(`      ${name}: ${value}`);
+        out += `      ${name}: ${value}\n`;
         headerPairs.push([name, value]);
     }
 
@@ -310,44 +350,40 @@ function logRequest(request, Buffer) {
             const buffer = Buffer.$new();
             body.writeTo(buffer);
             bodyText = buffer.readUtf8();
-            console.log(`      [body]\n${bodyText}`);
+            out += `      [body]\n${bodyText}\n`;
             requestJwe.noteCiphertext(url, bodyText);
         } catch (e) {
-            console.log(`      [body] <unreadable: ${e.message}>`);
+            out += `      [body] <unreadable: ${e.message}>\n`;
         }
     }
 
-    // Built as one string and logged in a single console.log call — see the [curl]
-    // marker comment further down for why this atomicity matters when multiple
-    // requests are in flight concurrently (e.g. the app-registry checks at cold
-    // start): each RealInterceptorChain.proceed hook runs on its own OkHttp
-    // dispatcher thread, so two overlapping requests' individual log lines can
-    // interleave in the console. A curl command split across interleaved lines
-    // would be silently corrupted and unusable in Postman/a shell — one
-    // console.log call per command is the cheapest way to guarantee each one
-    // stays intact, since Frida ships each console.log as its own message over
-    // the control channel rather than a raw stdout byte stream.
-    let curl = `curl -X ${method} ${shQuote(url)}`;
+    // curl — part of the same atomic block so it always accompanies its request
+    // and is never displaced by a concurrent request on another dispatcher thread.
+    // Skip Content-Length and Host: OkHttp manages these itself and re-sending a
+    // stale Content-Length when replaying by hand would just be wrong.
+    let curl = `[curl] curl -X ${method} ${shQuote(url)}`;
     for (const [name, value] of headerPairs) {
-        // Skip framing headers OkHttp adds/manages itself — curl/Postman set these
-        // from the URL and --data-raw automatically, and re-sending a stale
-        // Content-Length here would just be wrong once re-issued by hand.
         if (/^(content-length|host)$/i.test(name)) continue;
         curl += ` \\\n  -H ${shQuote(`${name}: ${value}`)}`;
     }
     if (bodyText !== null) {
         curl += ` \\\n  --data-raw ${shQuote(bodyText)}`;
     }
-    console.log(`[curl] ${curl}`);
+    out += curl;
+
+    console.log(out.trimEnd());
 }
 
 function logResponse(response) {
     const url = response.request().url().toString();
-    console.log(`[<<<] ${response.code()} ${response.message()} — ${url}`);
+
+    // Same atomicity fix as logRequest: accumulate the full [<<<] block into one
+    // string so concurrent responses never interleave their header/body lines.
+    let out = `[<<<] ${response.code()} ${response.message()} — ${url}\n`;
 
     const headers = response.headers();
     for (let i = 0; i < headers.size(); i++) {
-        console.log(`      ${headers.name(i)}: ${headers.value(i)}`);
+        out += `      ${headers.name(i)}: ${headers.value(i)}\n`;
     }
 
     const body = response.body();
@@ -357,7 +393,7 @@ function logResponse(response) {
             // app still gets its response body afterwards.
             const peeked = response.peekBody(1024 * 1024);
             const bodyText = peeked.string();
-            console.log(`      [body]\n${bodyText}`);
+            out += `      [body]\n${bodyText}`;
             // Any matching plaintext prints here immediately only if this app's own
             // code already decrypted this exact body before we got around to peeking
             // it (rare); otherwise it appears later, tagged with this URL, from
@@ -365,9 +401,11 @@ function logResponse(response) {
             // header comment and the makeJweMatcher definition above.
             responseJwe.noteCiphertext(url, bodyText);
         } catch (e) {
-            console.log(`      [body] <unreadable: ${e.message}>`);
+            out += `      [body] <unreadable: ${e.message}>`;
         }
     }
+
+    console.log(out.trimEnd());
 }
 
 // ---------------------------------------------------------------------
