@@ -58,6 +58,29 @@ invoke-super {p0}, LParent;->onCreate()V
 >
 > Static resolution (`invoke-direct`/`invoke-static`) skips both tables entirely: the target address is baked in at compile time, since there's no overriding to account for.
 
+### `final` methods: still `invoke-virtual`, not a different resolution rule
+
+`final` on a method is a **verifier-enforced promise**, not a dispatch mechanism: it tells the compiler
+"no subclass may ever override this", but a `public final` instance method is still a virtual method —
+it still occupies a vtable slot, and call sites still compile to plain `invoke-virtual`, exactly as if
+`final` weren't there at all. This is easy to get backwards, since it's tempting to assume "can't be
+overridden" means "resolved like a `private`/`static` method" (`invoke-direct`/`invoke-static`, baked
+in at compile time) — but those two really never had a vtable slot to begin with, for an unrelated
+reason (there's no receiver-based dispatch for them at all), while a `final` method has one and simply
+guarantees, statically, that the slot's contents can never change underneath it. The distinction only
+matters at the *optimizer* level: knowing a call can only ever reach one implementation lets ART's
+AOT/JIT compiler *devirtualize* it (skip the vtable lookup, inline the target directly) as a runtime
+optimization — but that's invisible in the static bytecode itself; the `.dex`/smali representation of
+the call site looks identical whether or not the target happens to be `final`.
+
+A whole class marked `final` (`.class public final Lbp/m1;` — see
+[[Final-Instance-Methods-Still-Dispatch-Virtually]] for the real snippet this is drawn from) has the
+same effect on every one of its instance methods implicitly, since no subclass can exist to override
+anything — which is exactly why real compiled code sometimes marks each instance method `final`
+individually too, redundantly restating a guarantee the class declaration already gives: `bp.m1`'s own
+`e()`, `f()`, `k()`, `l()`, and `m()` are each declared `.method public final`, and `l()`'s call into
+`m()` still compiles to a plain `invoke-virtual`, not `invoke-direct`.
+
 ### Getting the return value: `move-result`
 
 `invoke-*` instructions never name a destination register — their register list (`{p0, v1}` above) is only the _arguments_. Whatever the callee returns is instead placed in an implicit, VM-internal "result" slot right after the call returns, and the _next_ instruction — only if the value is actually needed — reads it out into a real register:
@@ -183,7 +206,7 @@ A Java static block (`static { ... }`) compiles down to the special method `<cli
 - [[Method-with-Parameters]] — multiple parameter types and a reference return type
 - [[Exception-Handling]] — `.catch`/`.catchall` in practice
 
-Real-world fragments illustrating this chapter live in `snippets/` — see [[Hashed-Device-Id-Multi-Catch]] for a real app's two-`.catch` method on one `try` block, or [[Demo-Example-Class]] for the expected format of a new one.
+Real-world fragments illustrating this chapter live in `snippets/` — see [[Hashed-Device-Id-Multi-Catch]] for a real app's two-`.catch` method on one `try` block, [[Final-Instance-Methods-Still-Dispatch-Virtually]] for a `final` method still resolved via `invoke-virtual`, or [[Demo-Example-Class]] for the expected format of a new one.
 
 ## See also
 
@@ -205,3 +228,5 @@ What does `.catch Lexception; {:start .. :end} :handler` declare?::A protected c
 Why is `invoke-interface` slower to resolve than `invoke-virtual`, even though both are "dynamic"?::`invoke-virtual` looks up a fixed slot in the object's class's vtable (shared across the single-inheritance hierarchy), while `invoke-interface` must go through the itable, since unrelated classes implementing the same interface can place its methods at different slots.
 Why doesn't `invoke-virtual {p0, v1}, LPerson;->greet()Ljava/lang/String;` name a register to receive the returned `String`?::Because `invoke-*` instructions never carry a destination register; the return value lands in an implicit VM-internal slot that the following `move-result-object` (or `move-result`/`move-result-wide`) instruction must explicitly read out — and can simply be omitted if the value isn't needed.
 Does `invoke-virtual/range` call a different method, or resolve differently, compared to plain `invoke-virtual`?::No — it's the exact same instruction family and resolution (still a vtable lookup); `/range` only changes how the argument registers are encoded, using a start register + count instead of listing each one, because it can address more than 5 arguments and registers above `v15`. The arguments it names must be consecutive.
+Does marking a `public` instance method `final` change which `invoke-*` instruction calls it?::No — a `final` instance method is still called via `invoke-virtual` and still occupies a vtable slot; `final` only guarantees, to the verifier, that no subclass can ever override that slot's contents. The guarantee lets ART's AOT/JIT devirtualize (inline) the call as a runtime optimization, but that's invisible in the static bytecode — the call site itself compiles identically whether or not the target is `final`.
+Why is marking a `static` method `final` meaningless, while marking a `public` instance method `final` is meaningful?::A `static` method is never placed in a vtable and is always resolved at compile time via `invoke-static` — there's no override to prevent in the first place. A `public` instance method genuinely has a vtable slot a subclass could otherwise override, so `final` there removes a real possibility, not a non-existent one.
