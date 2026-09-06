@@ -18,6 +18,8 @@ Once [[Classes]], [[Methods]], [[Registers]] and [[Types]] are familiar, reading
 | `move`, `move-wide`, `move-object` | copy a value between registers (see [[Registers]]) |
 | `move-result`, `move-result-wide`, `move-result-object` | capture the return value of the last `invoke-*` |
 
+See [[Const-String]] and [[Move-Result]] for detailed reference entries.
+
 ## Field access
 
 | Family | Purpose |
@@ -30,6 +32,8 @@ iget v0, p0, LPerson;->age:I      # v0 = this.age
 sput v0, LCounter;->total:I       # Counter.total = v0
 ```
 
+See [[Iget-And-Iput]] and [[Sget-And-Sput]] for detailed reference entries.
+
 ## Array access
 
 | Family | Purpose |
@@ -39,6 +43,8 @@ sput v0, LCounter;->total:I       # Counter.total = v0
 | `filled-new-array` / `filled-new-array/range` | allocate and initialize a small array in one step, from individual register values |
 | `fill-array-data` | populate an **already-allocated** primitive array from a literal data block, rather than register values |
 | `aget`, `aput` (+ `-wide`, `-object`, `-boolean`, `-byte`, `-char`, `-short`) | read/write an array element |
+
+See [[Aget-And-Aput]] and [[Fill-Array-Data]] for detailed reference entries.
 
 See [[Multidimensional-Arrays]] for how these compose to model `int[][]`-style types.
 
@@ -72,6 +78,8 @@ The `<element-width>` argument (`1` for `byte[]`, `2` for `short[]`/`char[]`, `4
 | `invoke-super` | explicit call to the superclass's implementation |
 | `*/range` variants of the above | used when the call needs more than 5 registers to pass its arguments |
 
+See [[Invoke-Direct-Static-Virtual-Interface]] for a detailed reference entry.
+
 ## Object and array creation
 
 | Family | Purpose |
@@ -80,6 +88,8 @@ The `<element-width>` argument (`1` for `byte[]`, `2` for `short[]`/`char[]`, `4
 | `new-array` | allocate an array (see above) |
 | `check-cast` | verify (and narrow) a reference's type, throwing `ClassCastException` on mismatch |
 | `instance-of` | test whether a reference is an instance of a type, without throwing |
+
+See [[New-Instance-And-Check-Cast]] for a detailed reference entry.
 
 ## Arithmetic and conversion
 
@@ -95,6 +105,9 @@ The `<element-width>` argument (`1` for `byte[]`, `2` for `short[]`/`char[]`, `4
 > [!warning] `rsub-int`'s operand order is reversed
 >
 > There is no plain `sub-int/lit8` — literal subtraction only exists in the *reversed* form, `rsub-int/lit8 vA, vB, #lit` meaning `vA = #lit - vB`, not `vB - #lit`. It's easy to misread on a first pass as ordinary subtraction with the operands swapped in the mnemonic; they're swapped in the *computation* instead. This shows up constantly in hand-obfuscated code, where a call-site integer gets disguised as `rsub-int/lit8 v0, p1, 0x1` (i.e. `v0 = 1 - p1`) rather than a more obviously-reversible `p1 - 1` — see [[Reading-Raw-Dalvik]]'s decoder examples for real instances.
+
+See [[Bitwise-Operations]] for a detailed reference entry on the `and-`/`or-`/`xor-`/`shl-`/`shr-`/
+`ushr-`/`not-` family.
 
 ## Comparisons and control flow
 
@@ -113,6 +126,8 @@ if-lt v0, v1, :cond_0
 # ... "else"/continuation ...
 ```
 
+See [[Conditional-Branches]] and [[Packed-Switch-And-Sparse-Switch]] for detailed reference entries.
+
 ## Returning and exceptions
 
 | Family | Purpose |
@@ -124,6 +139,8 @@ if-lt v0, v1, :cond_0
 | `throw` | raise an exception |
 | `monitor-enter`, `monitor-exit` | acquire/release the intrinsic lock used by `synchronized` (see [[Methods]]) |
 | `move-exception` | at the top of a catch block, capture the thrown exception (see `.catch` in [[Methods]]) |
+
+See [[Return-And-Throw]] for a detailed reference entry.
 
 ## Where these show up
 
