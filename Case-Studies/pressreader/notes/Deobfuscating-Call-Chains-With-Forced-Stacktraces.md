@@ -138,8 +138,9 @@ obfuscation can't touch, and let a synthetic stack trace expose everyone standin
 
 ## Open questions / next steps
 
-- [ ] Hook `w50.q.i` directly and inspect `this` at call time to confirm/deny the `okhttp3.HttpUrl`
-      hypothesis.
+- [x] Confirm/deny the `w50.q` = `okhttp3.HttpUrl` hypothesis — settled by decompiling the APK
+      instead of hooking `w50.q.i` directly, see
+      [[Confirming-HttpUrl-Identity-By-Decompiling-The-APK]].
 - [ ] Capture a few more traces through different app screens to see whether `kh.g.b` is a single
       shared network-service entry point or one of several per-feature callers.
 - [ ] Cross-reference `a60.e$a` against [[Beginning-Enumerate-Loaded-Classes]]'s confirmed

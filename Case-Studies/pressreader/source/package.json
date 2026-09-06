@@ -1,0 +1,14 @@
+{
+  "name": "source",
+  "version": "1.0.0",
+  "description": "Frida TypeScript Workspace",
+  "main": "inspector.ts",
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {
+    "@types/frida-gum": "^19.10.0",
+    "@types/node": "^20.0.0",
+    "frida-java-bridge": "^7.0.13",
+    "typescript": "^5.0.0"
+  }
+}

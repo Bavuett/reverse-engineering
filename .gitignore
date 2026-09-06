@@ -7,5 +7,12 @@
 .trash/
 
 # Local-only scratch space for material that must never be committed (real
-# secrets/tokens captured during a case study, etc.) — never published.
+# secrets/tokens captured during a case study, etc.) — never published. Kept
+# as a safety net, but this content now belongs in the private rev-eng-art
+# repo's <project>/captures/ instead of sitting here even gitignored.
 **/local/
+
+# Regenerable JS/TS tooling dependencies for scripts under a case study's
+# source/ (e.g. a Frida+TypeScript setup) — reinstall with `npm install`
+# from the matching package.json instead of committing them.
+**/node_modules/
