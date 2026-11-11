@@ -52,5 +52,6 @@ JNI_OnLoad:
 - [[ARM64-Android-Reference|Reference]]
 - [[Android-Native-Internals]]
 - [[PLT-Stub-And-Indirect-Call]] and [[JNI-Native-Method-Signature]] — the sibling examples on indirect calls and JNI signatures.
+- [[ADR-And-ADRP]] and [[B-BL-BLR-And-RET]] — the `adrp`/`add` table-addressing and `blr` vtable-call instructions used here.
 - [[Flutter-Dart-AOT]] — why a Flutter app's real logic is in `libapp.so`, not these engine bindings.
 - [[ClasseViva-Case-Study]] in [[Case-Studies]]

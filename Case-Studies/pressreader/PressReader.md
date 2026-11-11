@@ -5,7 +5,7 @@ source: "PressReader Android app"
 version: "unknown"
 obtained_via: "Google Play"
 tools_used: "Frida, adb, JADX"
-topics: ["Frida-Dynamic-Instrumentation"]
+topics: ["Frida-Dynamic-Instrumentation", "Dalvik-Bytecode"]
 date_started: 2026-09-05
 status: "in-progress"
 license_note: "Personal study/research purposes only, against a device and account the investigator owns. Only import the fragments actually needed; check the app's ToS before sharing publicly."
@@ -57,6 +57,7 @@ here.
 - [[Frida-Fundamentals]]
 - [[Java-Layer-Hooking]]
 - [[Static-Dynamic-Integration]]
+- [[Smali-Exercises]] — twelve rewrite-the-source exercises built from this app's XML API classes (`bp.m1`, `nr.*`, `mr.*`), taken from a fresh apktool dump of version `7.5.260731`
 
 ## Findings
 
@@ -104,6 +105,12 @@ here.
   correctly reuses the `this.<methodName>(...)` call-through idiom, and hooks `m` purely for its call
   arguments and stack context since Frida can hook bytecode even where JADX couldn't decompile it.
   Design-only so far — not yet run against the app for real output.
+- [[Confirming-The-Outgoing-XML-Write-Path]] — read `bp.m1.m()`'s raw smali cold to confirm how it
+  actually sends the XML envelope: `setDoOutput(true)` → `getOutputStream()` → wrapped in a UTF-8
+  `OutputStreamWriter` → `Writer.write(String)`, not a manual `byte[]` conversion. Also recovered the
+  exact payload-assembly call, `String.format(f(), {v7, e(service)})` — confirming the two-slot `%s`
+  fill is a plain `String.format`, not `StringBuilder` concatenation, and leaving `v7`'s origin as an
+  open question.
 
 ## Open questions / next steps
 
@@ -121,10 +128,12 @@ here.
       and the Braze SDK traffic are used for.
 - [ ] Run [[inspect-api.ts]] against the app and capture real console output (hooks are written, per
       [[Hooking-The-Core-XML-API-Methods-Directly]], but not yet exercised).
-- [ ] `bp.m1.m()`'s raw `.smali` is now imported (`smali/bp/m1.smali`) but its ~3,000-instruction body
-      hasn't been read cold yet — a candidate for a future [[Reading-Raw-Dalvik]]-style worked example
-      once there's a concrete reason to fully trace it, rather than relying on [[inspect-api.ts]]'s
-      argument/stack-trace hook alone.
+- [x] `bp.m1.m()`'s raw `.smali` is now imported (`smali/bp/m1.smali`); the request-body write path
+      (`setDoOutput` → `getOutputStream` → `OutputStreamWriter` → `Writer.write(String)`) has been
+      read cold and confirmed — see [[Confirming-The-Outgoing-XML-Write-Path]]. The rest of the
+      ~3,000-instruction body (response reading via SAX, error handling) is still unread.
+- [ ] Trace `v7`'s origin in `m()` (the first `%s` slot in `f()`'s XML template, filled via
+      `String.format`) — see [[Confirming-The-Outgoing-XML-Write-Path]]'s open questions.
 - [ ] Confirm whether the XML/`HttpURLConnection` protocol and the `okhttp3`/JSON one share a base
       host, or run on separate infrastructure entirely.
 

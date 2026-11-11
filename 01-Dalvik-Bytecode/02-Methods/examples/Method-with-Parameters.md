@@ -70,6 +70,9 @@ flowchart TD
 - [[Types]] — descriptors and full signature syntax
 - [[Registers]]
 - [[Methods]]
+- [[Conditional-Branches]] — `if-eqz` and the conditional branch family
+- [[Return-And-Throw]] — `return`, `return-wide`, `return-object`, `return-void`
+- [[Exercise-01-Outlined-StringBuilder-Helpers]] — reading multi-parameter static methods cold
 
 ## References
 

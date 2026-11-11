@@ -26,7 +26,7 @@ adb push frida-server /data/local/tmp/ && adb shell "chmod +x /data/local/tmp/fr
 | Command | Effect |
 | --- | --- |
 | `frida-ps -U` | List processes on a USB-connected device |
-| `frida -U -f com.example.app -l script.js --no-pause` | Spawn the app with an instrumentation script attached from the start |
+| `frida -U -f com.example.app -l script.js` | Spawn the app with an instrumentation script attached from the start (`frida -f` auto-resumes in Frida 16+) |
 | `Interceptor.attach(ptr(...), {...})` (in a script) | Hook a native function at a known address/offset — the direct use case for an address recovered from static analysis |
 | `Java.perform(() => { ... })` | Hook ART-managed (Java/Kotlin) methods by class/method name |
 
@@ -38,9 +38,13 @@ adb push frida-server /data/local/tmp/ && adb shell "chmod +x /data/local/tmp/fr
 
 ## See also
 
+- [[Frida-Dynamic-Instrumentation]]
+- [[Frida-Server-Setup]]
+- [[Frida-JS-API-Cheatsheet]]
 - [[ARM64-Android]]
 - [[Flutter-Dart-AOT]]
 
 ## References
 
+- [[Frida-Dynamic-Instrumentation-Bibliography|Bibliography]]
 - [[ARM64-Android-Bibliography|Bibliography]]

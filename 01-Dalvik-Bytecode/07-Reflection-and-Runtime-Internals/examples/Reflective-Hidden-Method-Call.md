@@ -69,7 +69,8 @@ Applied to this example: a grep for `reflect/Method;->invoke` lands on line-with
 ## See also
 
 - [[Reflection-and-Runtime-Internals]]
-- [[Reflection-Hidden-Debuggable-Check]] — a real, encrypted-string instance of this shape from the TUA app.
+- [[Hunting-Reflection-With-Grep-And-Set-Difference]] — automating these six tells across a whole smali tree.
+- [[Reflection-Hidden-Check-With-Decoded-Names]] — a real, encrypted-string instance of this shape from the TUA app.
 - [[Methods]] and [[Dalvik-Instructions]] — the `invoke-*`/`move-result` mechanics.
 
 ## References

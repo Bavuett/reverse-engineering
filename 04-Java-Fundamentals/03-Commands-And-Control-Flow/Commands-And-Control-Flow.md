@@ -76,7 +76,9 @@ The `while-tt` premise refers to the *same* command `while(E) C` — not circula
 
 - [[State-And-Expressions]] — expressions the commands evaluate.
 - [[Declarations-And-Scope]] — what happens to σ when blocks also *declare* names.
-- [[Control-Flow-Patterns]] in [[ARM64-Android]] and [[Dalvik-Instructions]] in [[Dalvik-Bytecode]] — the compiled shapes of these constructs.
+- [[Command-Semantics-Rules]] — consolidated formal transition rules $\langle c, \sigma \rangle \to_c \sigma'$ for `skip`, assignment, sequential composition, blocks, `if`/`else`, and `while`.
+- [[State-And-Environment-Substitution]] — formal definition of state lookup and functional substitution $\sigma[v/x]$ ($\sigma[x \mapsto v]$).
+- [[Control-Flow-Patterns]] in [[ARM64-Android]] and [[Dalvik-Instructions]] / [[Conditional-Branches]] in [[Dalvik-Bytecode]] — the compiled shapes of these constructs.
 
 ## References
 

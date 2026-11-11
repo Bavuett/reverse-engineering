@@ -96,7 +96,19 @@
       "template": "Templates/New-Snippet.md"
     },
     {
-      "folder": "01-Dalvik-Bytecode/08-Reference",
+      "folder": "01-Dalvik-Bytecode/08-Smali-Exercises",
+      "template": "Templates/New-Concept.md"
+    },
+    {
+      "folder": "01-Dalvik-Bytecode/08-Smali-Exercises/examples",
+      "template": "Templates/New-Example.md"
+    },
+    {
+      "folder": "01-Dalvik-Bytecode/08-Smali-Exercises/snippets",
+      "template": "Templates/New-Snippet.md"
+    },
+    {
+      "folder": "01-Dalvik-Bytecode/09-Reference",
       "template": "Templates/New-Reference-Entry.md"
     },
     {
@@ -413,6 +425,10 @@
     },
     {
       "folder": "Case-Studies/poste-italiane/notes",
+      "template": "Templates/New-Case-Study-Note.md"
+    },
+    {
+      "folder": "Case-Studies/pressreader/notes",
       "template": "Templates/New-Case-Study-Note.md"
     },
     {

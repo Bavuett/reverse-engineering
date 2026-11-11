@@ -57,8 +57,10 @@ This is the model you carry into static and dynamic analysis:
 
 - [[Classes-And-Objects]] and [[Declarations-And-Scope]] — the heap and stack in detail.
 - [[Methods-And-Recursion]] — the call stack.
+- [[Object-And-Method-Semantics-Rules]] and [[State-And-Environment-Substitution]] — consolidated formal rules and notation over the $(\Delta, \sigma, \theta)$ / `⟨ρc, σ, ζ⟩` three-region state.
 - [[Reflection-and-Runtime-Internals]] in [[Dalvik-Bytecode]] — runtime data areas, class loading, and stack frames as ART implements them; the concrete counterpart to this chapter.
 - [[Memory-And-Data-Structures]] in [[ARM64-Android]] — the heap region at the level of raw loads/stores.
+- [[Frida-Dynamic-Instrumentation]] — live inspection and modification of the class environment (`Java.use`), activation frames (method hooks reading `this` and arguments), and heap instances (`Java.choose`).
 
 ## References
 

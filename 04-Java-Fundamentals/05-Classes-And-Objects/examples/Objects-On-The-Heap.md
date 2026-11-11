@@ -69,7 +69,9 @@ graph LR
 
 - [[Classes-And-Objects]]
 - [[Memory-Model]]
-- [[Classes]] and [[Memory-And-Data-Structures]] in [[Dalvik-Bytecode]]/[[ARM64-Android]] — `new-instance`/`iget`/`iput` in full, and the native `ldr`/`str`-at-an-offset a field access becomes.
+- [[Object-And-Method-Semantics-Rules]]
+- [[State-And-Environment-Substitution]]
+- [[Classes]], [[Smali-Exercises]], and [[Memory-And-Data-Structures]] in [[Dalvik-Bytecode]]/[[ARM64-Android]] — `new-instance`/`<init>`/`iget`/`iput` in full, and the native `ldr`/`str`-at-an-offset a field access becomes.
 
 ## References
 

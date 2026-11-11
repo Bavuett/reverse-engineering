@@ -89,9 +89,7 @@ sub   x0, x0, #0xf           ; x0 now points at the new object (tagged, one word
 ; write the header word at [x0, #-1], then field values
 ```
 
-This is the heap-allocation analog of [[Functions-And-Calling-Convention#Explanation|the
-stack-overflow check]]: a cheap inline fast path guarded by a compare against a limit held in
-`THR`, falling back to a proper runtime call only when the fast path can't be taken.
+This is the heap-allocation analog of [[Functions-And-Calling-Convention#Explanation|the stack-overflow check]]: a cheap inline fast path guarded by a compare against a limit held in `THR`, falling back to a proper runtime call only when the fast path can't be taken.
 
 ### Write barriers
 
@@ -118,12 +116,17 @@ See [[Object-Field-Store-With-Write-Barrier]] for a full real excerpt (from `_Ab
 
 - [[Struct-Field-Access]] — plain NDK struct/array offsets, no header, no tagging
 - [[String-Length-And-Pointer]] — how a length-prefixed string differs from a NUL-terminated one at the instruction level
+- [[Object-Field-Store-With-Write-Barrier]] — real-world snippet showing a compressed-pointer store and its `tbz`-guarded generational write barrier
+- [[Smi-Boxing-And-Unboxing]] — real-world snippet showing `sbfiz` + `cmp` + `AllocateMintStub` boxing a 64-bit integer
 
 ## See also
 
 - [[Instructions]]
 - [[Control-Flow-Patterns]]
 - [[Flutter-Dart-AOT]]
+- [[LDR-And-STR]]
+- [[UBFM-SBFM-And-Bitfield-Aliases]]
+- [[CBZ-CBNZ-And-TBZ-TBNZ]]
 
 ## References
 

@@ -44,9 +44,9 @@ See [[Iget-And-Iput]] and [[Sget-And-Sput]] for detailed reference entries.
 | `fill-array-data` | populate an **already-allocated** primitive array from a literal data block, rather than register values |
 | `aget`, `aput` (+ `-wide`, `-object`, `-boolean`, `-byte`, `-char`, `-short`) | read/write an array element |
 
-See [[Aget-And-Aput]] and [[Fill-Array-Data]] for detailed reference entries.
+See [[Array-Length-And-New-Array]], [[Aget-And-Aput]], and [[Fill-Array-Data]] for detailed reference entries.
 
-See [[Multidimensional-Arrays]] for how these compose to model `int[][]`-style types.
+See [[Multidimensional-Arrays]] for how these compose to model `int[][]`-style types, and [[Exercise-08-Server-Mode-Map-Constructor]] for `filled-new-array` + `move-result-object` in practice.
 
 ### `fill-array-data` and `.array-data`
 
@@ -106,8 +106,7 @@ See [[New-Instance-And-Check-Cast]] for a detailed reference entry.
 >
 > There is no plain `sub-int/lit8` — literal subtraction only exists in the *reversed* form, `rsub-int/lit8 vA, vB, #lit` meaning `vA = #lit - vB`, not `vB - #lit`. It's easy to misread on a first pass as ordinary subtraction with the operands swapped in the mnemonic; they're swapped in the *computation* instead. This shows up constantly in hand-obfuscated code, where a call-site integer gets disguised as `rsub-int/lit8 v0, p1, 0x1` (i.e. `v0 = 1 - p1`) rather than a more obviously-reversible `p1 - 1` — see [[Reading-Raw-Dalvik]]'s decoder examples for real instances.
 
-See [[Bitwise-Operations]] for a detailed reference entry on the `and-`/`or-`/`xor-`/`shl-`/`shr-`/
-`ushr-`/`not-` family.
+See [[Arithmetic-And-Conversion-Opcodes]] for the binary/unary arithmetic, `/2addr`, `/lit8`/`/lit16`, and conversion families, and [[Bitwise-Operations]] for the `and-`/`or-`/`xor-`/`shl-`/`shr-`/`ushr-`/`not-` family.
 
 ## Comparisons and control flow
 
@@ -140,16 +139,18 @@ See [[Conditional-Branches]] and [[Packed-Switch-And-Sparse-Switch]] for detaile
 | `monitor-enter`, `monitor-exit` | acquire/release the intrinsic lock used by `synchronized` (see [[Methods]]) |
 | `move-exception` | at the top of a catch block, capture the thrown exception (see `.catch` in [[Methods]]) |
 
-See [[Return-And-Throw]] for a detailed reference entry.
+See [[Return-And-Throw]] and [[Monitor-Enter-And-Monitor-Exit]] for detailed reference entries.
 
 ## Where these show up
 
-Every practical example across the vault exercises several of these families at once — see e.g. [[Constructor-and-Fields]] for `iput`/`iget`, [[Multidimensional-Arrays]] for `aget`/`aput`, or [[Exception-Handling]] for `throw`/`move-exception`.
+Every practical example across the vault exercises several of these families at once — see [[Invoke-Kinds-And-Move-Result]] for `invoke-*`/`move-result*`, [[Packed-Switch-Multi-Way-Branch]] for `packed-switch`, [[Constructor-and-Fields]] for `iput`/`iget`, [[Multidimensional-Arrays]] for `aget`/`aput`, [[Exception-Handling]] for `throw`/`move-exception`, or work through the twelve real-app reconstructions in [[Smali-Exercises]] (such as [[Exercise-01-Outlined-StringBuilder-Helpers]] for `/2addr` arithmetic, [[Exercise-06-Static-Monitors-And-Iterators]] and [[Exercise-07-Wait-Loop-Under-A-Monitor]] for `monitor-enter`/`monitor-exit`, and [[Exercise-09-Sparse-Switch-On-String-Hash]] for `sparse-switch` on string hashes).
 
 ## See also
 
 - [[Dalvik-Bytecode-Reference|Reference]] — where individual opcodes get their own detailed entry over time
 - [[Registers]], [[Types]], [[Methods]], [[Classes]]
+- [[Reading-Raw-Dalvik]] — reading these instruction families cold in obfuscated code
+- [[Smali-Exercises]] — graded exercises on real PressReader smali
 
 ## References
 

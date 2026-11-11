@@ -617,9 +617,15 @@ Worked example 7's `if-eqz v1, :cond_1` is a cleaner target than either of `okht
 
 This is the same patch 1 technique — conditional-to-unconditional-jump, nothing deleted, no register renumbering — applied at a completely different kind of target: not a crash trap, but a security *feature* being turned off at its one call site, entirely inside code this case study actually has. It's also the static counterpart of a bypass already in this vault: `Case-Studies/tua/source/combined.js` neutralizes pinning at runtime by overriding `okhttp3.CertificatePinner.check(String, List)` to a no-op (needed there specifically to let mitmproxy intercept traffic during the dynamic investigation — see the script's own comment on why the mitmproxy CA still has to be installed separately for WebView traffic, which doesn't go through this `OkHttpClient` at all). The two patches neutralize pinning at different points in the same call chain — `combined.js` inside the library method that *enforces* the pin, this patch at the app's own call site that *configures* one — and only this one survives a rebuild without Frida attached; `combined.js`'s approach is strictly more general in one respect, since it would also catch pinning configured anywhere else in the app that this constructor doesn't cover, if such a place existed.
 
+## More examples
+
+- [[Recognizing-An-Opaque-Predicate-Guard]] — focused walkthrough of spotting an opaque-predicate-gated `div-int/lit8 ..., 0x0` crash trap inside a lifecycle override
+- [[Smali-Exercises]] — twelve graded source-reconstruction exercises on real PressReader smali (capped by [[Exercise-12-The-DQ-Request-Callable]], a 300-instruction method combining inlined Kotlin/OkHttp helpers, `synchronized` wait loops, and XML envelope formatting)
+
 ## See also
 
 - [[Classes]], [[Methods]], [[Registers]], [[Types]], [[Dalvik-Instructions|Instructions]] — the fundamentals this chapter assumes
+- [[Smali-Exercises]] — hands-on practice reconstructing Java and Kotlin source from raw `baksmali` output
 - [[Reading-Raw-Disassembly]] — the same skill applied to stripped ARM64 disassembly, including the "same N instructions repeated once per field" idiom reused above
 - [[Tua-Case-Study]] and [[Anti-Tampering-Pattern-Workflow]] — the dynamic-triage investigation this chapter's static reading complements; the full smali this chapter excerpts from lives under `Case-Studies/tua/source/smali/`
 - [[Frida-Dynamic-Instrumentation]] — the dynamic alternative to hand-simulating a decoder (checklist item #6) or hand-tracing a reflective resolve chain (worked example 5)

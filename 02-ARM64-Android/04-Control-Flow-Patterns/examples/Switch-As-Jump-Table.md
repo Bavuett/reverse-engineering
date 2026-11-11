@@ -57,6 +57,7 @@ graph TD
 - [[Control-Flow-Patterns]]
 - [[Enum-Switch-Via-Pointer-Comparison]] — a different real-app switch shape (chained pointer compares, no table).
 - [[Instructions]] and [[Android-Native-Internals]] in [[ARM64-Android]] — `adrp`/`add` PIE addressing.
+- [[ADR-And-ADRP]], [[LDR-And-STR]], and [[B-BL-BLR-And-RET]] — the three instruction families that build the jump-table dispatch.
 - [[Resolving-An-Indirect-Call-With-Stalker]] in [[Frida-Dynamic-Instrumentation]] — resolving the computed `br` at runtime.
 
 ## References

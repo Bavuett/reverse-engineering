@@ -43,6 +43,9 @@ graph TD
 
 - [[Operational-Semantics]]
 - [[State-And-Expressions]]
+- [[Evaluating-Expressions-In-A-State]]
+- [[Inference-Rule-Notation]]
+- [[Expression-Semantics-Rules]]
 - [[Reading-Raw-Dalvik]] in [[Dalvik-Bytecode]] — the informal version: carrying a value across `const`/`div-int`/`sub-int` opcodes is walking this tree left-to-right.
 
 ## References

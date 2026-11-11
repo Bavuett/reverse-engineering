@@ -38,6 +38,8 @@ Quick lookup — not a full explanation. See [[Frida-Fundamentals]], [[Java-Laye
 | `Java.perform(fn)` | Run `fn` once the ART runtime is attached to the current thread — required before any other `Java.*` call |
 | `Java.use("pkg.Class")` | Get a wrapper around an ART class |
 | `SomeClass.method.overload("java.lang.String").implementation = function(a) {...}` | Replace/observe a specific overload |
+| `SomeClass.$init.overload(...).implementation = function(...) {...}` | Hook a constructor (`$init`) |
+| `SomeClass.$new(...)` | Allocate and initialize a new instance on the Java heap |
 | `this.originalMethod(...)` (inside an `.implementation` fn) | Call through to the original implementation |
 | `Java.enumerateLoadedClasses({ onMatch, onComplete })` | List class definitions the class loader knows about |
 | `Java.choose("pkg.Class", { onMatch, onComplete })` | Walk the live heap for existing *instances* |
@@ -56,14 +58,16 @@ Quick lookup — not a full explanation. See [[Frida-Fundamentals]], [[Java-Laye
 | `Interceptor.attach(addr, { onEnter(args) {}, onLeave(retval) {} })` | Hook a native function |
 | `Interceptor.replace(addr, new NativeCallback(...))` | Fully replace a native function's implementation |
 
-## `Memory.*`
+## `NativePointer` / `Memory.*`
 
 | Command / syntax | Does |
 |---|---|
-| `Memory.readUtf8String(ptr, [len])` | Read a UTF-8 string |
-| `Memory.readCString(ptr, [len])` | Read a null-terminated C string |
-| `Memory.readByteArray(ptr, len)` | Read raw bytes as an `ArrayBuffer` |
-| `Memory.readPointer(ptr)` | Follow one level of pointer indirection |
+| `ptr("0x1234")` / `p.add(0x10)` | Construct a `NativePointer` / offset it by bytes |
+| `p.readUtf8String([len])` (or `Memory.readUtf8String(p, [len])`) | Read a UTF-8 string |
+| `p.readCString([len])` (or `Memory.readCString(p, [len])`) | Read a null-terminated C string |
+| `p.readByteArray(len)` / `p.writeByteArray(bytes)` | Read/write raw bytes |
+| `p.readPointer()` / `p.readU32()` / `p.readS64()` | Dereference a pointer or read a typed integer |
+| `Memory.patchCode(addr, size, code => { ... })` | Safely patch executable instructions in memory (handles `r-x` -> `rwx` -> icache flush) |
 | `Memory.scan(addr, size, "AA BB ?? DD", { onMatch, onComplete })` | Search memory for a byte pattern (`??` = wildcard byte) |
 | `hexdump(ptr, { length, header: true, ansi: false })` | Formatted hex+ASCII dump |
 
@@ -87,6 +91,10 @@ Quick lookup — not a full explanation. See [[Frida-Fundamentals]], [[Java-Laye
 ## See also
 
 - [[Frida-Dynamic-Instrumentation]]
+- [[Java-Perform-And-Java-Use]]
+- [[Interceptor-Attach-And-Replace]]
+- [[NativePointer-And-Memory-API]]
+- [[Module-And-Process-API]]
 
 ## References
 

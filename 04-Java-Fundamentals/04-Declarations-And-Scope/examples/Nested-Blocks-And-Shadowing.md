@@ -53,6 +53,8 @@ graph TD
 ## See also
 
 - [[Declarations-And-Scope]]
+- [[State-And-Environment-Substitution]]
+- [[Command-Semantics-Rules]]
 - [[Registers]] in [[Dalvik-Bytecode]] — Dalvik allocates registers once per method and resolves this scoping statically, so smali shows no push/pop; the *same* register number can stand for the outer and inner `x` in different regions, and separating them back out is part of reading decompiled code.
 
 ## References

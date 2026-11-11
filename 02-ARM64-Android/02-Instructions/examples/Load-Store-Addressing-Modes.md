@@ -41,6 +41,8 @@ graph LR
 
 - [[Instructions]]
 - [[Functions-And-Calling-Convention]]
+- [[LDR-And-STR]]
+- [[STP-And-LDP]]
 
 ## References
 

@@ -12,10 +12,7 @@ license_note: "Personal study/research purposes only, against a device and accou
 
 ## Context
 
-[[Network-Interception]] frames the Java-layer bypass as a single hook on `TrustManagerImpl` or
-`CertificatePinner`. In practice this app used **five** independent, non-overlapping validation paths
-at once — a single bypass covered most traffic but left two specific hosts failing, discovered only
-after the app got far enough into an authenticated session to reach them.
+[[Network-Interception]] frames the Java-layer bypass as a single hook on `TrustManagerImpl` or `CertificatePinner`. In practice this app used **five** independent, non-overlapping validation paths at once — a single bypass covered most traffic but left two specific hosts failing, discovered only after the app got far enough into an authenticated session to reach them.
 
 ## Original path
 
@@ -55,8 +52,7 @@ Java.use("android.security.net.config.NetworkSecurityTrustManager").checkServerT
 
 ### What each layer actually fires against, in the app's own console output
 
-Not hypothetical coverage — each of the five produced its own distinct, real log line the moment it
-intercepted a genuine check:
+Not hypothetical coverage — each of the five produced its own distinct, real log line the moment it intercepted a genuine check:
 
 ```
 [pin-bypass] TrustManagerImpl.verifyChain() — accepting chain for host: appregistry.mobile.poste.it
@@ -66,9 +62,7 @@ intercepted a genuine check:
 [pin-bypass] NetworkSecurityTrustManager.checkServerTrusted() — bypassing Network Security Config pinning
 ```
 
-The `CertificatePinner` line specifically reads `check$okhttp` rather than `check` — OkHttp 5.x's
-Kotlin compiler renames the method, one more reason `["check", "check$okhttp"].forEach(...)` hooks both
-names rather than assuming which one a given OkHttp version actually uses.
+The `CertificatePinner` line specifically reads `check$okhttp` rather than `check` — OkHttp 5.x's Kotlin compiler renames the method, one more reason `["check", "check$okhttp"].forEach(...)` hooks both names rather than assuming which one a given OkHttp version actually uses.
 
 ### The exact failure #5 was found from, before the fix existed
 
@@ -77,27 +71,17 @@ names rather than assuming which one a given OkHttp version actually uses.
 [xxx] POST https://appup.mobile.poste.it/jod-mobile-server/json/services/sca/v1/common/verifyUserStatus — proceed() threw: Error: javax.net.ssl.SSLHandshakeException: Trusted chain does not end in a TrustAnchor
 ```
 
-Only visible at all because of
-[[Hooking-The-OkHttp-Interceptor-Chain-Exactly-Once]]'s exception-catching addition — without it, both
-of these calls would have just vanished from the log with #1-#4 already active, indistinguishable from
-a generic network failure.
+Only visible at all because of [[Hooking-The-OkHttp-Interceptor-Chain-Exactly-Once]]'s exception-catching addition — without it, both of these calls would have just vanished from the log with #1-#4 already active, indistinguishable from a generic network failure.
 
 ## Notes
 
-- Bypasses #1-#4 were all needed from the very first working capture — every one of them fired against
-  a real check this app actually performs, confirmed by their own console output during live traffic
-  (see [[Poste-Italiane]]'s Findings). #5 only surfaced once login succeeded and traffic reached
-  `oneapp.poste.it`/`appup.mobile.poste.it` specifically — a reminder that "the bypass works" after
-  early testing doesn't mean every host is covered, only every host reached *so far*.
-- #5's discovery method matters as much as the fix: dumping `TrustManagerImpl`'s own
-  `getDeclaredMethods()` first ruled out "a missed overload of the hook already in place" before
-  looking for a *different* class entirely — see [[Dumping-Real-Method-Signatures-Before-Hooking]].
-- Each bypass is independently `try`/`catch`-wrapped in the real script (not shown here for brevity) —
-  a class that doesn't exist in a given app version (e.g. no custom `SSLInterceptor` at all) shouldn't
-  abort every other, unrelated bypass from installing.
+- Bypasses #1-#4 were all needed from the very first working capture — every one of them fired against a real check this app actually performs, confirmed by their own console output during live traffic (see [[Poste-Italiane]]'s Findings). #5 only surfaced once login succeeded and traffic reached `oneapp.poste.it`/`appup.mobile.poste.it` specifically — a reminder that "the bypass works" after early testing doesn't mean every host is covered, only every host reached *so far*.
+- #5's discovery method matters as much as the fix: dumping `TrustManagerImpl`'s own `getDeclaredMethods()` first ruled out "a missed overload of the hook already in place" before looking for a *different* class entirely — see [[Dumping-Real-Method-Signatures-Before-Hooking]].
+- Each bypass is independently `try`/`catch`-wrapped in the real script (not shown here for brevity) — a class that doesn't exist in a given app version (e.g. no custom `SSLInterceptor` at all) shouldn't abort every other, unrelated bypass from installing.
 
 ## See also
 
 - [[Frida-Dynamic-Instrumentation-Reference|Reference]]
+- [[Java-Perform-And-Java-Use]]
 - [[Network-Interception]]
 - [[Home-Screen-Skeleton-NetworkSecurityConfig-Pinning]] and [[Poste-Italiane]] in [[Case-Studies]]

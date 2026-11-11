@@ -100,6 +100,7 @@ Reading this cold: `EnterFrame` and `CheckStackOverflow` are pure boilerplate �
 - [[Leaf-Function-Prologue-Epilogue]] — the AAPCS64 side: when a prologue is skipped entirely
 - [[Stack-Frame-With-Locals]] — a non-leaf AAPCS64 function spilling callee-saved registers
 - [[Tracking-A-Stack-Slots-Meaning]] — anchoring at `SetupParameters` and following a stack slot's meaning (and reuse) through a function body
+- [[Dart-Function-Prologue-In-The-Wild]] — real-world snippet showing `EnterFrame`, `AllocStack`, `SetupParameters`, `CheckStackOverflow`, and `LeaveFrame` in `GradeUtils.getAvg`
 
 ## See also
 
@@ -107,6 +108,9 @@ Reading this cold: `EnterFrame` and `CheckStackOverflow` are pure boilerplate �
 - [[Instructions]]
 - [[Flutter-Dart-AOT]]
 - [[Android-Native-Internals]]
+- [[STP-And-LDP]]
+- [[B-BL-BLR-And-RET]]
+- [[LDR-And-STR]]
 
 ## References
 

@@ -60,6 +60,8 @@ graph TD
 ## See also
 
 - [[Dalvik-Instructions]]
+- [[Packed-Switch-And-Sparse-Switch]] — opcode reference entry for both `.packed-switch` and `.sparse-switch` payloads.
+- [[Exercise-09-Sparse-Switch-On-String-Hash]] — a real-app `sparse-switch` compiling a Kotlin `when (String)` via `String.hashCode()` and `String.equals()`.
 - [[Reading-Raw-Dalvik]] — reading switch-driven state machines in obfuscated code.
 - [[Control-Flow-Patterns]] in [[ARM64-Android]] — how the same `switch` looks as a native jump table.
 

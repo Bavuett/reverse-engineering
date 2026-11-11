@@ -60,13 +60,16 @@ The result `6` is `E[[(x+8)/y]]ϕ`.
 
 ## More examples
 
-- [[Deriving-An-Arithmetic-Expression]] — a full evaluation derivation with a state.
+- [[Evaluating-Expressions-In-A-State]] — evaluating arithmetic, relational, and short-circuit boolean expressions in a concrete state $\sigma$, contrasting when a division-by-zero sub-expression is skipped vs. blocked and how Dalvik compiles boolean guards into conditional branches.
+- [[Deriving-An-Arithmetic-Expression]] — a full evaluation derivation tree for an arithmetic expression.
 
 ## See also
 
 - [[Operational-Semantics]] — the rule notation used here.
 - [[Commands-And-Control-Flow]] — where expressions get *used* to change the state.
-- [[Registers]] in [[Dalvik-Bytecode]] — the concrete register array a frame corresponds to.
+- [[Expression-Semantics-Rules]] — consolidated formal evaluation rules $\langle e, \sigma \rangle \to_e v$ for literals, variable lookup, arithmetic/relational operators, and short-circuit `&&`/`||`.
+- [[State-And-Environment-Substitution]] — formal lookup and functional update notation across flat frames, frame stacks, and the heap.
+- [[Registers]], [[Dalvik-Instructions]], and [[Conditional-Branches]] in [[Dalvik-Bytecode]] — the concrete register array a frame corresponds to, and how arithmetic and short-circuit boolean expressions compile to bytecode.
 
 ## References
 

@@ -47,6 +47,8 @@ graph TD
 
 - [[Memory-And-Data-Structures]]
 - [[Flutter-Dart-AOT]]
+- [[LDR-And-STR]]
+- [[CBZ-CBNZ-And-TBZ-TBNZ]]
 
 ## References
 

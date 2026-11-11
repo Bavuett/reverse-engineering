@@ -90,10 +90,15 @@ def on_message(message, data):
 
 ## More examples
 
+- [[Resolving-An-Indirect-Call-With-Stalker]] — worked example capturing the concrete runtime destination of an indirect `blr x8` call and mapping it back to a module offset for Ghidra.
+- [[Dumping-An-InMemoryDex-Payload]] — real-world snippet from [[Tua-Case-Study]] dumping a decrypted `InMemoryDexClassLoader` buffer to disk for static decompilation.
+- [[Attaching-At-A-Dart-AOT-Entry-Offset]] — real-world snippet from [[ClasseViva-Case-Study]] turning a static Blutter offset into a live register-reading hook.
+- [[Confirming-HttpUrl-Identity-By-Decompiling-The-APK]] in [[PressReader]] — combining static APK decompilation with live Frida hooks to confirm an obfuscated class's identity.
 - [[Frida-JS-API-Cheatsheet]] in [[Cheatsheets]].
 
 ## See also
 
+- [[Module-And-Process-API]], [[NativePointer-And-Memory-API]], and [[Stalker-Follow-And-Transform]] — reference entries for the module-base calculation, memory-dumping, and call-tracing APIs that power the static-dynamic loop.
 - [[Native-Memory-And-ARM64]]
 - [[Stalker-And-Code-Tracing]]
 - [[Reading-Raw-Disassembly]] in [[ARM64-Android]] — the static-reading discipline this chapter's dumps and confirmations feed back into.

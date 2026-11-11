@@ -58,7 +58,7 @@ Static analysis from [[Dalvik-Bytecode]] tells you what classes *exist* in the A
 
 ### Constructors and instance methods
 
-`Java.use(...)` also exposes constructors as callable overloads (`TargetClass.$init.overload(...)`), and `Java.cast(anObjectPointer, TargetClass)` wraps an arbitrary object reference (e.g. one captured as a method argument) so you can call its methods or read its fields directly from the script.
+`Java.use(...)` also exposes constructors as callable overloads (`TargetClass.$init.overload(...)`), and `Java.cast(anObjectPointer, TargetClass)` wraps an arbitrary object reference (e.g. one captured as a method argument) so you can call its methods or read its fields directly from the script. When static decompilation leaves parameter or return types obscured by ProGuard/R8, logging `arg.getClass().getName()` or `String(arg)` at runtime (see [[Confirming-Obfuscated-Types-By-Dumping-Runtime-Arguments]]) and printing a forced Java stack trace via `Log.getStackTraceString(Exception.$new())` (see [[Capturing-A-Stack-Trace-From-Inside-A-Hook]] and [[Deobfuscating-Call-Chains-With-Forced-Stacktraces]]) quickly recovers the real types and caller chain; once you have a set of target methods across several classes, driving the hooks from a declarative target table (`[{ className, methods }]`) keeps the script modular (see [[Modularizing-Hook-Targets-With-An-Array-Structure]]).
 
 ## Worked example
 
@@ -79,13 +79,19 @@ Java.perform(() => {
 
 ## More examples
 
+- [[Hooking-A-Constructor-And-Casting-Arguments]] — hooking `$init` and using `Java.cast` on opaque argument/return references.
+- [[Enumerating-Loaded-Classes-By-Keyword]], [[Dumping-Real-Method-Signatures-Before-Hooking]], [[Capturing-A-Stack-Trace-From-Inside-A-Hook]], [[Calling-Through-An-Overload-Without-Recursing]], and [[Hooking-A-Lazily-Loaded-Class-With-A-Retry-Loop]] — real-world snippets from [[Poste-Italiane]].
+- [[Hooking-Log-And-Runtime-Exit-To-Find-The-Culprit]] — real-world triage snippet from [[Tua-Case-Study]].
+- [[Beginning-Enumerate-Loaded-Classes]], [[Deobfuscating-Call-Chains-With-Forced-Stacktraces]], [[Confirming-Obfuscated-Types-By-Dumping-Runtime-Arguments]], and [[Modularizing-Hook-Targets-With-An-Array-Structure]] in [[PressReader]] — applying class enumeration, forced stack traces, runtime argument dumping, and table-driven hooks against an obfuscated production app.
 - [[Frida-JS-API-Cheatsheet]] in [[Cheatsheets]] has the full `Java.*` API at a glance.
 
 ## See also
 
+- [[Java-Perform-And-Java-Use]] — complete API reference entry for `Java.perform`, `Java.use`, `.overload`, `$init`/`$new`, `Java.choose`, and `Java.cast`.
 - [[Frida-Fundamentals]]
 - [[Network-Interception]]
 - [[Classes]] and [[Methods]] in [[Dalvik-Bytecode]] — where the class/method names and signatures you pass to `Java.use`/`.overload` actually come from.
+- [[Java-Fundamentals]] — the Java class/object, `this` dispatch, and reflection mental model underlying `Java.use` and `Java.choose`.
 
 ## References
 

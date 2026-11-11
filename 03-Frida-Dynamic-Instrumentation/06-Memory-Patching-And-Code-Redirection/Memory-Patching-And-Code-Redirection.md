@@ -75,10 +75,14 @@ Interceptor.replace(target, new NativeCallback(() => {
 
 ## More examples
 
+- [[Forcing-A-Conditional-Branch-With-PatchCode]] — worked example replacing an inline AArch64 `b.eq` integrity guard with a `nop` via `Memory.patchCode` and `Arm64Writer`.
 - [[Frida-JS-API-Cheatsheet]] in [[Cheatsheets]].
 
 ## See also
 
+- [[NativeFunction-And-NativeCallback]] — reference entry for `NativeFunction` and `NativeCallback`, including ABI type strings and garbage-collection lifetime rules.
+- [[Interceptor-Attach-And-Replace]] — reference entry for `Interceptor.replace`, `Interceptor.revert`, and `Interceptor.flush()`.
+- [[NativePointer-And-Memory-API]] — reference entry for `Memory.patchCode`, `Memory.protect`, and direct pointer writes.
 - [[Native-Memory-And-ARM64]]
 - [[Anti-Detection-And-Gadget-Mode]] — the most common real use of `Interceptor.replace`/code patching: neutralizing root/Frida-detection checks.
 - [[Functions-And-Calling-Convention]] in [[ARM64-Android]] — required to get a `NativeFunction`/`NativeCallback` signature right.

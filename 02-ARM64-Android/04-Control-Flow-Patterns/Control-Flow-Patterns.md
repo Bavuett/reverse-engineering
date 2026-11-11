@@ -84,12 +84,18 @@ The pattern repeats: load the field once at the top, then a sequence of `cmp` ag
 
 - [[If-Else-As-Branches]] — the forward-branch shape end to end, including the "compiler skipped the branch" `csel` variant
 - [[Loop-As-Backward-Branch]] — `while`, `do/while`, and a rotated loop
+- [[Switch-As-Jump-Table]] — dense `switch` compiled to `adrp`/`add`, `ldrsw`, and `br`
+- [[Enum-Switch-Via-Pointer-Comparison]] — real-world snippet showing a Dart `enum` `switch` compiled as a chain of pool-constant pointer comparisons
 
 ## See also
 
 - [[Instructions]]
 - [[Memory-And-Data-Structures]]
 - [[Flutter-Dart-AOT]]
+- [[B-BL-BLR-And-RET]]
+- [[CBZ-CBNZ-And-TBZ-TBNZ]]
+- [[CSEL-CSINC-And-Conditional-Select]]
+- [[ADR-And-ADRP]]
 
 ## References
 

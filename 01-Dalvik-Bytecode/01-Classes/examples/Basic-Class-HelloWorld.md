@@ -44,9 +44,9 @@ public class HelloWorld {
 ## Step by step
 
 1. `.class public LHelloWorld;` / `.super Ljava/lang/Object;` declare the class and its superclass ([[Classes]]).
-2. The implicit default constructor becomes `<init>()V`, a _direct method_ that chains to `Object`'s constructor ([[Methods]]).
-3. `print()` is a public _virtual method_; `.locals 2` reserves two local registers (`v0`, `v1`) — no parameters besides `this` ([[Registers]]).
-4. `sget-object` reads a **static** field (`System.out`); `const-string` loads a string literal; `invoke-virtual` calls `println`, resolved at runtime.
+2. The implicit default constructor becomes `<init>()V`, a _direct method_ that chains to `Object`'s constructor via [[Invoke-Direct-Static-Virtual-Interface|`invoke-direct`]] ([[Methods]]).
+3. `print()` is a public _virtual method_; `.locals 2` reserves two local registers (`v0`, `v1`) — no parameters besides `this` in `p0` ([[Registers]]).
+4. [[Sget-And-Sput|`sget-object`]] reads a **static** field (`System.out`); [[Const-String|`const-string`]] loads an interned string literal; [[Invoke-Direct-Static-Virtual-Interface|`invoke-virtual`]] calls `println`, resolved at runtime via the receiver's vtable; [[Return-And-Throw|`return-void`]] exits the `V`-returning method.
 
 ## Diagram
 
@@ -57,8 +57,10 @@ sequenceDiagram
     participant PrintStream as System.out
 
     Caller->>HelloWorld: invoke-virtual print()
+    HelloWorld->>PrintStream: sget-object System.out
     HelloWorld->>PrintStream: invoke-virtual println("Hello, Dalvik!")
-    PrintStream-->>Caller: return-void
+    PrintStream-->>HelloWorld: return-void
+    HelloWorld-->>Caller: return-void
 ```
 
 ## See also
@@ -66,6 +68,9 @@ sequenceDiagram
 - [[Classes]]
 - [[Methods]]
 - [[Constructor-and-Fields]]
+- [[Sget-And-Sput]]
+- [[Const-String]]
+- [[Invoke-Direct-Static-Virtual-Interface]]
 
 ## References
 

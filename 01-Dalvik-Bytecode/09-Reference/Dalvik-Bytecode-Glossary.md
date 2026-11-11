@@ -78,64 +78,64 @@ Most instruction *families* below appear under several suffixed names — the su
 
 | Instruction | Meaning |
 | --- | --- |
-| `array-length` | Store an array's length into a register |
-| `new-array` | Allocate a new single-dimension array of a given length |
-| `filled-new-array`, `filled-new-array/range` | Allocate and populate a small array in one instruction, result read out via `move-result-object` |
-| `fill-array-data` | Populate an already-allocated primitive array from a literal `.array-data <width> ... .end array-data` block, rather than individual `aput`s — rare enough to be easy to forget the syntax of; see [[Dalvik-Instructions|Instructions]], [[Dalvik-Bytecode-Bibliography\|Bibliography]], and [[Encrypted-String-Table-Array-Data]] for a real-app instance |
-| `aget`, `aput` (+ `-wide`/`-object`/`-boolean`/`-byte`/`-char`/`-short`) | Read/write one array element |
+| `array-length` | Store an array's length into a register — see [[Array-Length-And-New-Array]] |
+| `new-array` | Allocate a new single-dimension array of a given length — see [[Array-Length-And-New-Array]] |
+| `filled-new-array`, `filled-new-array/range` | Allocate and populate a small array in one instruction, result read out via `move-result-object` — see [[Array-Length-And-New-Array]] |
+| `fill-array-data` | Populate an already-allocated primitive array from a literal `.array-data <width> ... .end array-data` block, rather than individual `aput`s — see [[Fill-Array-Data]], [[Dalvik-Instructions\|Instructions]], and [[Encrypted-String-Table-Array-Data]] |
+| `aget`, `aput` (+ `-wide`/`-object`/`-boolean`/`-byte`/`-char`/`-short`) | Read/write one array element — see [[Aget-And-Aput]] |
 
 ### Method invocation
 
 | Instruction | Meaning |
 | --- | --- |
-| `invoke-direct` (+ `/range`) | Call a constructor or `private` instance method — resolved at compile time |
-| `invoke-static` (+ `/range`) | Call a `static` method |
-| `invoke-virtual` (+ `/range`) | Call a public/protected instance method via the vtable — dynamic dispatch |
-| `invoke-interface` (+ `/range`) | Call a method declared on an interface, via the itable |
-| `invoke-super` (+ `/range`) | Call the exact superclass implementation, bypassing dynamic dispatch on the receiver's runtime type |
+| `invoke-direct` (+ `/range`) | Call a constructor or `private` instance method — resolved at compile time; see [[Invoke-Direct-Static-Virtual-Interface]] |
+| `invoke-static` (+ `/range`) | Call a `static` method — see [[Invoke-Direct-Static-Virtual-Interface]] |
+| `invoke-virtual` (+ `/range`) | Call a public/protected instance method via the vtable — dynamic dispatch; see [[Invoke-Direct-Static-Virtual-Interface]] |
+| `invoke-interface` (+ `/range`) | Call a method declared on an interface, via the itable — see [[Invoke-Direct-Static-Virtual-Interface]] |
+| `invoke-super` (+ `/range`) | Call the exact superclass implementation, bypassing dynamic dispatch on the receiver's runtime type — see [[Invoke-Direct-Static-Virtual-Interface]] |
 
 ### Object and type operations
 
 | Instruction | Meaning |
 | --- | --- |
-| `new-instance` | Allocate an object of a given class, **uninitialized** until a matching `invoke-direct ...-><init>(...)V` runs on it |
-| `check-cast` | Verify (and narrow) a reference's type, throwing `ClassCastException` on mismatch |
+| `new-instance` | Allocate an object of a given class, **uninitialized** until a matching `invoke-direct ...-><init>(...)V` runs on it — see [[New-Instance-And-Check-Cast]] |
+| `check-cast` | Verify (and narrow) a reference's type, throwing `ClassCastException` on mismatch — see [[New-Instance-And-Check-Cast]] |
 | `instance-of` | Test whether a reference is an instance of a type, storing a `boolean` result — never throws |
 
 ### Arithmetic and conversion
 
 | Instruction | Meaning |
 | --- | --- |
-| `add-int`, `sub-int`, `mul-int`, `div-int`, `rem-int` (+ `int`→`long`/`float`/`double` variants, `/2addr`, `/lit8`, `/lit16`) | Binary arithmetic; `div-int .../lit8 ..., 0x0` always throws `ArithmeticException` — see [[Reading-Raw-Dalvik]] |
-| `rsub-int`, `rsub-int/lit8` | **Reverse** subtract, `literal - register` — the only way to subtract a register from a literal, easy to misread as ordinary subtraction; see [[Dalvik-Instructions|Instructions]] and [[Dalvik-Bytecode-Bibliography\|Bibliography]] |
-| `and-int`, `or-int`, `xor-int`, `shl-int`, `shr-int`, `ushr-int` (+ `-long` variants, `/2addr`, `/lit8`, `/lit16`) | Bitwise AND/OR/XOR and left/arithmetic-right/logical-right shift; a `shl`/`xor`/`ushr`/`xor`/`shl`/`xor` sequence on one accumulator is the classic xorshift PRNG mixer — see [[Reading-Raw-Dalvik]] |
-| `neg-int`, `neg-long`, `neg-float`, `neg-double` | Unary negation |
-| `not-int`, `not-long` | Bitwise complement |
-| `int-to-long`, `int-to-float`, `int-to-double`, `long-to-int`, `float-to-int`, `double-to-long`, ... | Explicit numeric conversions between primitive types |
-| `int-to-byte`, `int-to-char`, `int-to-short` | Narrowing conversions, truncating to the sub-32-bit type |
+| `add-int`, `sub-int`, `mul-int`, `div-int`, `rem-int` (+ `int`→`long`/`float`/`double` variants, `/2addr`, `/lit8`, `/lit16`) | Binary arithmetic; `div-int .../lit8 ..., 0x0` always throws `ArithmeticException` — see [[Arithmetic-And-Conversion-Opcodes]] and [[Reading-Raw-Dalvik]] |
+| `rsub-int`, `rsub-int/lit8` | **Reverse** subtract, `literal - register` — the only way to subtract a register from a literal, easy to misread as ordinary subtraction; see [[Arithmetic-And-Conversion-Opcodes]] and [[Dalvik-Instructions\|Instructions]] |
+| `and-int`, `or-int`, `xor-int`, `shl-int`, `shr-int`, `ushr-int` (+ `-long` variants, `/2addr`, `/lit8`, `/lit16`) | Bitwise AND/OR/XOR and left/arithmetic-right/logical-right shift; a `shl`/`xor`/`ushr`/`xor`/`shl`/`xor` sequence on one accumulator is the classic xorshift PRNG mixer — see [[Bitwise-Operations]] and [[Reading-Raw-Dalvik]] |
+| `neg-int`, `neg-long`, `neg-float`, `neg-double` | Unary negation — see [[Arithmetic-And-Conversion-Opcodes]] |
+| `not-int`, `not-long` | Bitwise complement — see [[Bitwise-Operations]] |
+| `int-to-long`, `int-to-float`, `int-to-double`, `long-to-int`, `float-to-int`, `double-to-long`, ... | Explicit numeric conversions between primitive types — see [[Arithmetic-And-Conversion-Opcodes]] |
+| `int-to-byte`, `int-to-char`, `int-to-short` | Narrowing conversions, truncating to the sub-32-bit type — see [[Arithmetic-And-Conversion-Opcodes]] |
 
 ### Comparisons and control flow
 
 | Instruction | Meaning |
 | --- | --- |
-| `if-eq`, `if-ne`, `if-lt`, `if-ge`, `if-gt`, `if-le` | Two-register conditional branch |
-| `if-eqz`, `if-nez`, `if-ltz`, `if-gez`, `if-gtz`, `if-lez` | Compare a single register against zero (also used for reference null-checks, `if-eqz`/`if-nez`) |
-| `cmp-long` | Three-way compare of two `long`s (`-1`/`0`/`1`), result fed into a following `if-*z` |
-| `cmpl-float`, `cmpg-float`, `cmpl-double`, `cmpg-double` | Three-way float/double compare; the `l`/`g` suffix picks which result (`-1` or `1`) `NaN` produces — a genuinely obscure distinction, see [[Dalvik-Bytecode-Bibliography\|Bibliography]] |
+| `if-eq`, `if-ne`, `if-lt`, `if-ge`, `if-gt`, `if-le` | Two-register conditional branch — see [[Conditional-Branches]] |
+| `if-eqz`, `if-nez`, `if-ltz`, `if-gez`, `if-gtz`, `if-lez` | Compare a single register against zero (also used for reference null-checks, `if-eqz`/`if-nez`) — see [[Conditional-Branches]] |
+| `cmp-long` | Three-way compare of two `long`s (`-1`/`0`/`1`), result fed into a following `if-*z` — see [[Conditional-Branches]] |
+| `cmpl-float`, `cmpg-float`, `cmpl-double`, `cmpg-double` | Three-way float/double compare; the `l`/`g` suffix picks which result (`-1` or `1`) `NaN` produces — see [[Conditional-Branches]] |
 | `goto`, `goto/16`, `goto/32` | Unconditional jump, in increasingly wide encodings |
-| `packed-switch` | Multi-way branch over a dense, contiguous range of `int` values (compiled `switch`), reading its case targets from a `.packed-switch <first-value> ... .end packed-switch` literal block, the control-flow analog of `fill-array-data`'s `.array-data` — see [[Dalvik-Bytecode-Bibliography\|Bibliography]] |
-| `sparse-switch` | Same, but the case values are an arbitrary, non-contiguous set, listed in a `.sparse-switch ... .end sparse-switch` block instead |
+| `packed-switch` | Multi-way branch over a dense, contiguous range of `int` values (compiled `switch`), reading its case targets from a `.packed-switch <first-value> ... .end packed-switch` literal block — see [[Packed-Switch-And-Sparse-Switch]] |
+| `sparse-switch` | Same, but the case values are an arbitrary, non-contiguous set, listed in a `.sparse-switch ... .end sparse-switch` block instead — see [[Packed-Switch-And-Sparse-Switch]] |
 
 ### Returning, exceptions, and synchronization
 
 | Instruction | Meaning |
 | --- | --- |
-| `return-void` | Return with no value |
-| `return` | Return a 32-bit primitive |
-| `return-wide` | Return a 64-bit primitive |
-| `return-object` | Return a reference |
-| `throw` | Raise an exception — throws `NullPointerException` immediately if the register is null, per [[Reading-Raw-Dalvik]] |
-| `monitor-enter`, `monitor-exit` | Acquire/release the intrinsic lock backing a `synchronized` block — see `declared-synchronized` in [[Methods]] |
+| `return-void` | Return with no value — see [[Return-And-Throw]] |
+| `return` | Return a 32-bit primitive — see [[Return-And-Throw]] |
+| `return-wide` | Return a 64-bit primitive — see [[Return-And-Throw]] |
+| `return-object` | Return a reference — see [[Return-And-Throw]] |
+| `throw` | Raise an exception — throws `NullPointerException` immediately if the register is null, per [[Return-And-Throw]] and [[Reading-Raw-Dalvik]] |
+| `monitor-enter`, `monitor-exit` | Acquire/release the intrinsic lock backing a `synchronized` block — see [[Monitor-Enter-And-Monitor-Exit]] and `declared-synchronized` in [[Methods]] |
 
 ## See also
 

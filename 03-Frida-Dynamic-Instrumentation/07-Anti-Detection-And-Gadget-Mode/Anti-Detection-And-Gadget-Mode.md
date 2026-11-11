@@ -80,13 +80,18 @@ Java.perform(() => {
 
 ## More examples
 
+- [[Faking-Proc-Reads-For-Frida-Detection]] — worked example scrubbing Frida artifacts from `/proc/self/maps` via a `libc.so!fgets` hook.
+- [[Hiding-Root-Artifacts-With-One-Compiled-Regex]], [[Blocking-The-Frida-Control-Port-Scan]], [[Confirming-A-Bypass-Against-The-Apps-Own-Fraud-SDK]], and [[Ruling-Out-Play-Integrity-Before-Reaching-For-It]] — real-world snippets from [[Poste-Italiane]].
+- [[Dumping-An-InMemoryDex-Payload]] and [[Hooking-Log-And-Runtime-Exit-To-Find-The-Culprit]] — real-world anti-tampering triage and dynamic DEX dumping snippets from [[Tua-Case-Study]].
 - [[Frida-JS-API-Cheatsheet]] in [[Cheatsheets]].
 
 ## See also
 
+- [[Java-Perform-And-Java-Use]] and [[Interceptor-Attach-And-Replace]] — reference entries for the Java and native hooking primitives used in root/Frida detection bypasses.
 - [[Java-Layer-Hooking]]
 - [[Memory-Patching-And-Code-Redirection]]
 - [[Static-Dynamic-Integration]] — the workflow for actually *locating* a specific app's detection logic before hooking it.
+- [[Android-ABIs-And-Emulation]] — why repackaging an APK with Frida Gadget requires keeping `lib/*.so` entries uncompressed when `extractNativeLibs=false`.
 
 ## References
 

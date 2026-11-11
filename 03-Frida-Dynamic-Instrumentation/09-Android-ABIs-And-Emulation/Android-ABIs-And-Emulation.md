@@ -160,10 +160,12 @@ adb install -r final_signed.apk
 
 ## More examples
 
--
+- [[Matching-Frida-Server-To-The-Target-ABI]] — worked example distinguishing the device ABI (which selects the `frida-server` binary) from the target app's native ABI (`Process.arch`, which governs hook calling conventions).
+- [[Forcing-A-64-Bit-Split-Install-To-Dodge-The-32-Bit-Agent-Bug]] and [[Reading-A-Native-Crash-Backtrace-To-Diagnose-An-Agent-Failure]] — real-world snippets from [[Poste-Italiane]] diagnosing a 32-bit vs. 64-bit process ABI mismatch on a physical device.
 
 ## See also
 
+- [[Module-And-Process-API]] — reference entry for `Process.arch`, `Process.pointerSize`, and module inspection inside the target process.
 - [[Frida-Fundamentals]] — what all of this is in service of: getting a script attached at all.
 - [[Frida-Server-Setup]] — the companion AVD-setup note, focused on the `google_apis`-vs-`google_apis_playstore` rootability tradeoff rather than the ABI-translation question this chapter covers.
 - [[Anti-Detection-And-Gadget-Mode]] — the most common reason to be repackaging an APK's native libraries in the first place.

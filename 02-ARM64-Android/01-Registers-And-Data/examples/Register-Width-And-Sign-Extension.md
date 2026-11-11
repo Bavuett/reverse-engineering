@@ -39,6 +39,8 @@ graph TD
 - [[Registers-And-Data]]
 - [[Memory-And-Data-Structures]]
 - [[Flutter-Dart-AOT]]
+- [[LDR-And-STR]]
+- [[UBFM-SBFM-And-Bitfield-Aliases]]
 
 ## References
 

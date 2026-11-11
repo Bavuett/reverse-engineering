@@ -166,9 +166,11 @@ coexist rather than one superseding the other:
 
 ## Open questions / next steps
 
-- [ ] Pull `bp.m1.m`'s raw `.smali` (JADX's Java reconstruction failed on it) and read it cold, per
+- [x] Pull `bp.m1.m`'s raw `.smali` (JADX's Java reconstruction failed on it) and read it cold, per
       [[Reading-Raw-Dalvik]]'s checklist, to confirm it really does assemble `f()`'s envelope and
-      dispatch it via `a(String)`.
+      dispatch it via `a(String)` — confirmed in [[Confirming-The-Outgoing-XML-Write-Path]]: `m()`
+      wraps the connection's `OutputStream` in a UTF-8 `OutputStreamWriter` and writes the
+      `String.format(f(), {v7, e(service)})` result directly.
 - [ ] Hook `bp.m1.e(Service)` and `bp.m1.f()` directly (both fully decompiled, both plain
       String-returning methods) to dump the real, populated XML request bodies — the fastest way to
       see what this protocol actually sends without needing `m()` at all.

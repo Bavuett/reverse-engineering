@@ -86,6 +86,8 @@ Note there's no `stp fp, lr` prologue at all — a genuine **leaf function** (ca
 - [[Instructions]]
 - [[Functions-And-Calling-Convention]]
 - [[Flutter-Dart-AOT]]
+- [[LDR-And-STR]]
+- [[UBFM-SBFM-And-Bitfield-Aliases]]
 
 ## References
 

@@ -41,7 +41,7 @@ None of the examples below pretend to divine a string's contents or a function's
 0x10dedd8: mov   x0, x1                 ; copy x1 in x0.
 0x10deddc: stur  x1, [fp, #-8]          ; anchor: fp-8 = arg1
 0x10dede0: ldr   x16, [THR, #0x38]      ; stack-limit check
-0x10dede4: cmp   SP, x16                ; if true, we owerflowed the SP
+0x10dede4: cmp   SP, x16                ; if true, we overflowed the SP
 0x10dede8: b.ls  #0x10dee40             ; -> overflow slow path
 0x10dedec: mov   x1, NULL               ; x1 = 0
 0x10dedf0: movz  x2, #0xa               ; x2 = 10
@@ -68,7 +68,7 @@ None of the examples below pretend to divine a string's contents or a function's
 0x10dee44: b     #0x10dedec             ; retry
 ```
 
-Reading it cold: one argument, anchored at `fp-8` the moment it arrives — we don't yet know what it _represents_, only that `X1` (which could just as easily be `this` as a plain first parameter; the assembly alone never distinguishes the two, see [[Functions-And-Calling-Convention]]) is now live at that offset. `call #1` (bl means branch link: saves address of the instruction next to bl inside of LR, so it can resume) takes a null and the constant `10`, and its result immediately gets five sequential field writes at offsets `0xf`/`0x13`/`0x17`/`0x1b`/`0x1f` — a `bl`-then-populate-fields shape is _always_ "allocate, then fill in," per the checklist, whatever `0x10cbe44` turns out to be named. Four of those five slots come from a pool load (`add x16,PP,#page,lsl#12` / `ldr x16,[x16,#off]`, the fixed object-pool idiom from [[Flutter-Dart-AOT]]); the other comes straight from `fp-8` — the caller's own argument, sandwiched between constants. That alone says "constant, argument, constant, constant" without knowing any of the constants' actual values. Then the populated object is handed to a _second_ call (`call #2`), which produces this function's own return value — allocate-a-small-array-then-hand-it-to-one-consumer is the shape of a string built from pieces, per [[Api-Endpoint-Strings]], before ever learning that the consumer is `_interpolate`.
+Reading it cold: one argument, anchored at `fp-8` the moment it arrives — we don't yet know what it _represents_, only that `X1` (which could just as easily be `this` as a plain first parameter; the assembly alone never distinguishes the two, see [[Functions-And-Calling-Convention]]) is now live at that offset. `call #1` (bl means branch link: saves address of the instruction next to bl inside of LR, so it can resume) takes a null and the constant `10`, and its result immediately gets five sequential field writes at offsets `0xf`/`0x13`/`0x17`/`0x1b`/`0x1f` — a `bl`-then-populate-fields shape is _always_ "allocate, then fill in," per the checklist, whatever `0x10cbe44` turns out to be named. Four of those five slots come from a pool load (`add x16,PP,#page,lsl#12` / `ldr x16,[x16,#off]`, the fixed object-pool idiom from [[Flutter-Dart-AOT]]); the other comes straight from `fp-8` — the caller's own argument, sandwiched between constants. That alone says "constant, argument, constant, constant" without knowing any of the constants' actual values. Then the populated object is handed to a _second_ call (`call #2`), which produces this function's own return value — allocate-a-small-array-then-hand-it-to-one-consumer is the shape of a string built from pieces, per [[Memory-And-Data-Structures]] and [[Flutter-Dart-AOT]], before ever learning that the consumer is `_interpolate`.
 
 **Shape-only conclusion:** one argument in, a small fixed-layout object built from three constants plus that argument, piped into a single consumer — almost certainly assembled text. **Needs a lookup:** the constants' actual text, and confirmation of what the two calls really are (answered by [[Flutter-Dart-AOT]]).
 
@@ -386,6 +386,8 @@ Same virtual-dispatch shape as examples 2 and the closure above (class-id extrac
 
 ## More examples
 
+- [[Walking-An-Unknown-Function-Cold]] — recovering a bounded string copy (`sub_1a40`) in C from unlabeled AAPCS64 assembly
+- [[Reading-A-Dart-AOT-Getter-Cold]] — real-world snippet walking a Dart AOT getter (`MasterGrade.subjectId`) and its compressed-pointer decompression cold
 - [[Tracking-A-Stack-Slots-Meaning]] — the anchor-then-follow technique in isolation, on a short hand-written function
 
 ## See also
@@ -394,6 +396,11 @@ Same virtual-dispatch shape as examples 2 and the closure above (class-id extrac
 - [[Memory-And-Data-Structures]]
 - [[Control-Flow-Patterns]]
 - [[Flutter-Dart-AOT]]
+- [[STP-And-LDP]]
+- [[LDR-And-STR]]
+- [[CBZ-CBNZ-And-TBZ-TBNZ]]
+- [[B-BL-BLR-And-RET]]
+- [[UBFM-SBFM-And-Bitfield-Aliases]]
 
 ## References
 

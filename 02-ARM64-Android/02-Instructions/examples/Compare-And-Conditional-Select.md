@@ -47,6 +47,7 @@ graph TD
 
 - [[Instructions]]
 - [[Control-Flow-Patterns]]
+- [[CSEL-CSINC-And-Conditional-Select]]
 
 ## References
 

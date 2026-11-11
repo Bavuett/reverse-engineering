@@ -5,7 +5,7 @@ aliases: [".class", "Class declaration", "Direct methods", "Virtual methods"]
 
 # Classes
 
-Every `.smali` file declares exactly one class, using a small set of directives that read like assembly: statements starting with `.` (`.class`, `.super`, `.implements`, `.field`, `.method`, ...) followed by their arguments.
+Every `.smali` file declares exactly one class, using a small set of directives that read like assembly: statements starting with `.` (`.class`, `.super`, `.implements`, `.field`, `.method`, `.annotation`, ...) followed by their arguments.
 
 ## Declaring a class
 
@@ -57,8 +57,8 @@ Unlike `.super` (single parent, matching Java's single inheritance), `.implement
 Declares an instance or static variable of the class. Common flags: `public`, `private`, `protected`, `static`, `final`, `volatile`, `transient`. A field can optionally carry a default value directly in the declaration (only meaningful for `static final` primitives/`String`, mirroring Java compile-time constants):
 
 ```smali
-.field private nome:Ljava/lang/String;
-.field public eta:I
+.field private name:Ljava/lang/String;
+.field public age:I
 .field public static final MAX_SIZE:I = 0x64
 ```
 
@@ -170,15 +170,19 @@ classDiagram
 
 - [[Basic-Class-HelloWorld]] — the simplest possible class, end to end
 - [[Interface-Implementation]] — `.implements`, abstract methods, `invoke-interface`
+- [[Exercise-05-Kotlin-Data-Class-Reconstruction]] — reconstructing a Kotlin `data class`'s fields and property order from `.field` declarations and generated `equals`/`hashCode`/`toString` methods
+- [[Exercise-10-Synthetic-Lambda-And-Rx-Single]] — `.class public final synthetic` and `.implements Ljava/util/concurrent/Callable;` on a D8-desugared lambda class
 
 Real-world fragments illustrating this chapter live in `snippets/` — see [[Demo-Example-Class]] for the expected format.
 
 ## See also
 
+- [[Annotations]] — `.annotation`/`.end annotation`, dex's mechanism for both real `@Annotation` usages and compiler-internal metadata like Kotlin's `@Metadata`
 - [[Methods]] — `.method`, constructors, and internal directives
 - [[Registers]] — how `this` and parameters are passed to methods
 - [[Types]] — type syntax used in `.field` and method signatures
-- [[Dalvik-Instructions|Instructions]] — instruction categories referenced above (`invoke-*`, `iput`/`iget`, ...)
+- [[Dalvik-Instructions|Instructions]] — instruction categories referenced above ([[Invoke-Direct-Static-Virtual-Interface|`invoke-*`]], [[Iget-And-Iput|`iput`/`iget`]], [[Sget-And-Sput|`sput`/`sget`]], ...)
+- [[Smali-Exercises]] — graded source-reconstruction exercises built on real class definitions
 
 ## References
 

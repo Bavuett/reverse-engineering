@@ -60,26 +60,9 @@ invoke-super {p0}, LParent;->onCreate()V
 
 ### `final` methods: still `invoke-virtual`, not a different resolution rule
 
-`final` on a method is a **verifier-enforced promise**, not a dispatch mechanism: it tells the compiler
-"no subclass may ever override this", but a `public final` instance method is still a virtual method —
-it still occupies a vtable slot, and call sites still compile to plain `invoke-virtual`, exactly as if
-`final` weren't there at all. This is easy to get backwards, since it's tempting to assume "can't be
-overridden" means "resolved like a `private`/`static` method" (`invoke-direct`/`invoke-static`, baked
-in at compile time) — but those two really never had a vtable slot to begin with, for an unrelated
-reason (there's no receiver-based dispatch for them at all), while a `final` method has one and simply
-guarantees, statically, that the slot's contents can never change underneath it. The distinction only
-matters at the *optimizer* level: knowing a call can only ever reach one implementation lets ART's
-AOT/JIT compiler *devirtualize* it (skip the vtable lookup, inline the target directly) as a runtime
-optimization — but that's invisible in the static bytecode itself; the `.dex`/smali representation of
-the call site looks identical whether or not the target happens to be `final`.
+`final` on a method is a **verifier-enforced promise**, not a dispatch mechanism: it tells the compiler "no subclass may ever override this", but a `public final` instance method is still a virtual method — it still occupies a vtable slot, and call sites still compile to plain `invoke-virtual`, exactly as if `final` weren't there at all. This is easy to get backwards, since it's tempting to assume "can't be overridden" means "resolved like a `private`/`static` method" (`invoke-direct`/`invoke-static`, baked in at compile time) — but those two really never had a vtable slot to begin with, for an unrelated reason (there's no receiver-based dispatch for them at all), while a `final` method has one and simply guarantees, statically, that the slot's contents can never change underneath it. The distinction only matters at the *optimizer* level: knowing a call can only ever reach one implementation lets ART's AOT/JIT compiler *devirtualize* it (skip the vtable lookup, inline the target directly) as a runtime optimization — but that's invisible in the static bytecode itself; the `.dex`/smali representation of the call site looks identical whether or not the target happens to be `final`.
 
-A whole class marked `final` (`.class public final Lbp/m1;` — see
-[[Final-Instance-Methods-Still-Dispatch-Virtually]] for the real snippet this is drawn from) has the
-same effect on every one of its instance methods implicitly, since no subclass can exist to override
-anything — which is exactly why real compiled code sometimes marks each instance method `final`
-individually too, redundantly restating a guarantee the class declaration already gives: `bp.m1`'s own
-`e()`, `f()`, `k()`, `l()`, and `m()` are each declared `.method public final`, and `l()`'s call into
-`m()` still compiles to a plain `invoke-virtual`, not `invoke-direct`.
+A whole class marked `final` (`.class public final Lbp/m1;` — see [[Final-Instance-Methods-Still-Dispatch-Virtually]] for the real snippet this is drawn from) has the same effect on every one of its instance methods implicitly, since no subclass can exist to override anything — which is exactly why real compiled code sometimes marks each instance method `final` individually too, redundantly restating a guarantee the class declaration already gives: `bp.m1`'s own `e()`, `f()`, `k()`, `l()`, and `m()` are each declared `.method public final`, and `l()`'s call into `m()` still compiles to a plain `invoke-virtual`, not `invoke-direct`.
 
 ### Getting the return value: `move-result`
 
@@ -131,7 +114,7 @@ Native methods likewise have no smali body, since their implementation lives in 
 .end method
 ```
 
-`declared-synchronized` marks the method as if it were wrapped in `synchronized(this) { ... }` (or the class object, for `static` methods). The actual locking is expressed explicitly with the `monitor-enter`/`monitor-exit` instructions — see [[Dalvik-Instructions|Instructions]].
+`declared-synchronized` marks the method as if it were wrapped in `synchronized(this) { ... }` (or the class object, for `static` methods). In dex bytecode, `declared-synchronized` is purely informational — the actual locking is expressed explicitly inside the method body with `monitor-enter`/`monitor-exit` instructions and a synthetic `.catchall` handler; see [[Monitor-Enter-And-Monitor-Exit]] and [[Exercise-06-Static-Monitors-And-Iterators]].
 
 ### Exception handling: `.catch`
 
@@ -205,6 +188,11 @@ A Java static block (`static { ... }`) compiles down to the special method `<cli
 
 - [[Method-with-Parameters]] — multiple parameter types and a reference return type
 - [[Exception-Handling]] — `.catch`/`.catchall` in practice
+- [[Invoke-Kinds-And-Move-Result]] — `invoke-direct`, `invoke-virtual`, `invoke-static`, and `move-result-object` side by side
+- [[Exercise-04-Kotlin-Default-Argument-Constructor]] — how Kotlin compiles default arguments into a synthetic `<init>(..., I)V` bitmask constructor and runs null checks before `Object.<init>`
+- [[Exercise-06-Static-Monitors-And-Iterators]] — `declared-synchronized`, `monitor-enter`/`monitor-exit`, and synthetic `.catchall` handlers in real code
+- [[Exercise-10-Synthetic-Lambda-And-Rx-Single]] — how R8 "staticizes" an instance method into `invoke-static` with an explicit receiver plus `getClass()` null check
+- [[Exercise-11-Download-With-Try-Catch-Finally]] — reconstructing a `try`/`catch`/`finally` method where the `finally` cleanup block is duplicated across every normal and exceptional exit path
 
 Real-world fragments illustrating this chapter live in `snippets/` — see [[Hashed-Device-Id-Multi-Catch]] for a real app's two-`.catch` method on one `try` block, [[Final-Instance-Methods-Still-Dispatch-Virtually]] for a `final` method still resolved via `invoke-virtual`, or [[Demo-Example-Class]] for the expected format of a new one.
 
@@ -214,6 +202,8 @@ Real-world fragments illustrating this chapter live in `snippets/` — see [[Has
 - [[Registers]] — `p0`/`this`, parameters, and local registers
 - [[Types]] — type descriptors used in signatures
 - [[Dalvik-Instructions|Instructions]] — the instruction families mentioned above in detail
+- [[Invoke-Direct-Static-Virtual-Interface]], [[Move-Result]], [[Return-And-Throw]], [[Monitor-Enter-And-Monitor-Exit]] — opcode reference entries for method call, return, and synchronization mechanics
+- [[Smali-Exercises]] — graded source-reconstruction exercises
 
 ## References
 

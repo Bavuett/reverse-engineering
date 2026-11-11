@@ -79,7 +79,7 @@ outside of git (`Case-Studies/poste-italiane/local/`, covered by the repo's `**/
 The finding itself, independent of the specific secret value, is: **a statically embedded
 `client_credentials` OAuth2 secret, extractable from the app binary/process with no authentication
 step of its own**, used to obtain a bearer token for at least the app's remote-logging/telemetry
-API. This is the same class of issue [[TUA]] documented for a different app's root-detection
+API. This is the same class of issue [[Tua-Case-Study|TUA]] documented for a different app's root-detection
 bypass (`Case-Studies/tua/`) — an app-level trust assumption ("only my own APK will ever run this
 code path") that Frida makes trivial to violate.
 

@@ -47,6 +47,8 @@ sequenceDiagram
 
 - [[Android-Native-Internals]]
 - [[Functions-And-Calling-Convention]]
+- [[ADR-And-ADRP]]
+- [[B-BL-BLR-And-RET]]
 
 ## References
 

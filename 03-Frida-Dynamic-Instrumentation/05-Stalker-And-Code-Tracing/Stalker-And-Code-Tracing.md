@@ -82,10 +82,13 @@ Interceptor.attach(target, {
 
 ## More examples
 
+- [[Coverage-Diff-To-Locate-A-Feature]] — worked example using `events.block` differential coverage between two UI flows to isolate feature-specific basic blocks in a native library.
+- [[Resolving-An-Indirect-Call-With-Stalker]] — worked example in [[Static-Dynamic-Integration]] using a tightly bracketed Stalker `call` trace to resolve a runtime `blr x8` target for Ghidra.
 - [[Frida-JS-API-Cheatsheet]] in [[Cheatsheets]].
 
 ## See also
 
+- [[Stalker-Follow-And-Transform]] — reference entry for `Stalker.follow`, `Stalker.exclude`, `events`, `transform(iterator)`, `putCallout`, and `Stalker.garbageCollect()`.
 - [[Native-Memory-And-ARM64]]
 - [[Static-Dynamic-Integration]] — using a Stalker trace's addresses together with a disassembler.
 - [[Reading-Raw-Disassembly]] in [[ARM64-Android]] — the static-analysis skill Stalker's output confirms or corrects.

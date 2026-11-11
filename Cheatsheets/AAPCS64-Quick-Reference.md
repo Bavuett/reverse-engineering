@@ -39,6 +39,8 @@ Quick lookup — not a full explanation. See [[Functions-And-Calling-Convention]
 
 - [[ARM64-Android]]
 - [[Functions-And-Calling-Convention]]
+- [[STP-And-LDP]]
+- [[B-BL-BLR-And-RET]]
 
 ## References
 

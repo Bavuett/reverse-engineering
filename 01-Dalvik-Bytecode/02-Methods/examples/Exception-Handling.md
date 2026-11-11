@@ -74,6 +74,11 @@ flowchart TD
 
 - [[Methods]] — `.catch`/`.catchall`
 - [[Dalvik-Instructions|Instructions]] — `throw`, `move-exception`
+- [[Return-And-Throw]] — `return-*` and `throw` opcode reference
+- [[Monitor-Enter-And-Monitor-Exit]] — why `synchronized` blocks emit synthetic `.catchall` handlers
+- [[Hashed-Device-Id-Multi-Catch]] — a real-app method with multiple `.catch` directives on one `:try_start .. :try_end` range
+- [[Exercise-07-Wait-Loop-Under-A-Monitor]] — nested `.catch Ljava/lang/InterruptedException;` inside a `.catchall`-guarded `synchronized` block
+- [[Exercise-11-Download-With-Try-Catch-Finally]] — full `try`/`catch`/`finally` reconstruction with duplicated `finally` cleanup paths
 
 ## References
 

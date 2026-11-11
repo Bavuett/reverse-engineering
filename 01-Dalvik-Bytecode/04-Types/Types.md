@@ -130,9 +130,11 @@ LExample;->method(IILjava/lang/String;Z)Ljava/lang/Object;
 
 ## More examples
 
-- [[Multidimensional-Arrays]] — `int[][]` end to end, with `aget`/`aput`
+- [[Multidimensional-Arrays]] — `int[][]` end to end, with `filled-new-array`, `aget-object`, and `aput`
+- [[Exercise-06-Static-Monitors-And-Iterators]] — allocating and populating `[Ljava/lang/String;` with `new-array` and `aput-object`
+- [[Exercise-08-Server-Mode-Map-Constructor]] — building a `[Ln10/i;` (`kotlin.Pair[]`) array via `filled-new-array` + `move-result-object`
 
-Real-world fragments illustrating this chapter live in `snippets/` — see [[Encrypted-String-Table-Array-Data]] for the `[B` descriptor and the `fill-array-data`/`.array-data` pair baking a literal byte table into a real app's class file.
+Real-world fragments illustrating this chapter live in `snippets/` — see [[Encrypted-String-Table-Array-Data]] for the `[B` descriptor and the `fill-array-data`/`.array-data` pair baking a literal byte table into a real app's class file, or [[Device-Id-Wide-Register-Uuid]] for 64-bit `J` register pairs in a `(JJ)V` constructor call.
 
 ## See also
 
@@ -140,6 +142,8 @@ Real-world fragments illustrating this chapter live in `snippets/` — see [[Enc
 - [[Methods]] — method signatures and return values
 - [[Registers]] — how 64-bit types affect register allocation
 - [[Dalvik-Type-Table]] (quick reference)
+- [[Array-Length-And-New-Array]], [[Aget-And-Aput]], [[Fill-Array-Data]] — array allocation, population, and element-access opcodes
+- [[Smali-Exercises]] — graded exercises on real Java/Kotlin type and method descriptors
 
 ## References
 

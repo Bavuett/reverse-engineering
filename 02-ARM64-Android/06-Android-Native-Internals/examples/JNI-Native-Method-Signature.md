@@ -66,6 +66,8 @@ sequenceDiagram
 
 - [[Android-Native-Internals]]
 - [[Functions-And-Calling-Convention]]
+- [[B-BL-BLR-And-RET]]
+- [[LDR-And-STR]]
 
 ## References
 

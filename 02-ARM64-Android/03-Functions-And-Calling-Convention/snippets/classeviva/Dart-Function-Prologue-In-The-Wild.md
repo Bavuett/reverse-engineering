@@ -57,3 +57,5 @@ static _ getAvg(/* No info */) {
 
 - [[ARM64-Android-Reference|Reference]]
 - [[Functions-And-Calling-Convention]]
+- [[STP-And-LDP]]
+- [[B-BL-BLR-And-RET]]

@@ -61,10 +61,14 @@ frida -U -n "ClasseViva Studenti" -l smoke-test.js
 
 ## More examples
 
+- [[RPC-Exports-And-Host-Messaging]] — worked example comparing one-way `send(payload, data)` streaming against synchronous `rpc.exports` calls from a Python host script.
+- [[Diagnosing-A-Wedged-Frida-Server]] and [[Reattaching-Without-Losing-Session-State]] — real-world snippets from [[Poste-Italiane]] covering `frida-server` daemon recovery and mid-session `-p <pid>` reattachment.
 - [[Frida-Server-Setup]] in [[Tools]] walks through getting `frida-server` running on an x86_64 emulator with root — required before any script here can attach to anything.
 
 ## See also
 
+- [[Java-Perform-And-Java-Use]] — reference entry for `Java.perform`, `Java.performNow`, and `Java.use`.
+- [[Module-And-Process-API]] — reference entry for `Process`, `Module`, and `Thread` globals exposed by GumJS.
 - [[Java-Layer-Hooking]]
 - [[Native-Memory-And-ARM64]]
 - [[Frida]] — the ARM64-Android topic's own tool note on Frida, focused on confirming static-analysis hypotheses dynamically rather than on the mechanics covered here.

@@ -25,10 +25,9 @@ graph TD
 
 ## Relevant standalone notes
 
-Case studies, cheatsheets, tools, reading notes, and projects aren't scoped to this topic alone —
-they live once, shared vault-wide. These are the ones that draw on Frida-Dynamic-Instrumentation:
+Case studies, cheatsheets, tools, reading notes, and projects aren't scoped to this topic alone — they live once, shared vault-wide. These are the ones that draw on Frida-Dynamic-Instrumentation:
 
-- [[Tua-Case-Study]] in [[Case-Studies]]
+- [[Tua-Case-Study]], [[ClasseViva-Case-Study]], [[Poste-Italiane]], [[PressReader]] in [[Case-Studies]]
 - [[Frida-JS-API-Cheatsheet]] in [[Cheatsheets]]
 - [[Frida]], [[Frida-Server-Setup]] in [[Tools]]
 
@@ -75,3 +74,4 @@ graph TD
 - [[Home]]
 - [[ARM64-Android]] — the static-analysis skills (registers, calling convention, memory layout) this topic constantly leans on to make sense of what a hook actually receives.
 - [[Dalvik-Bytecode]] — reading the smali surface that tells you which classes/methods/native declarations exist to hook in the first place.
+- [[Java-Fundamentals]] — the operational model of classes, method dispatch, `this`, and heap objects that underpins `Java.use`, `Java.choose`, and runtime argument inspection.

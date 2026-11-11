@@ -15,23 +15,6 @@ The **fundamentals of Java** built up rigorously, from the ground the language a
 
 ```mermaid
 graph TD
-    R[Reference]
-```
-
-| Section | Covers |
-| --- | --- |
-| [[Java-Fundamentals-Reference\|Reference]] | glossary, bibliography, vault-wide reference-entry/example/snippet listings for this topic |
-
-## Relevant standalone notes
-
-Case studies, cheatsheets, tools, reading notes, and projects aren't scoped to this topic alone — they live once, shared vault-wide. These draw on Java-Fundamentals:
-
-- [[Dalvik-Bytecode]]'s [[Reflection-and-Runtime-Internals]] chapter is the runtime-internals counterpart to this topic's memory model (class loading, method area, stack frames) at the ART/bytecode level.
-
-## Chapters
-
-```mermaid
-graph TD
     C1[01 - Operational Semantics] --> C2[02 - State And Expressions]
     C2 --> C3[03 - Commands And Control Flow]
     C3 --> C4[04 - Declarations And Scope]
@@ -40,6 +23,27 @@ graph TD
     C4 & C5 & C6 --> C7[07 - Memory Model]
     C1 & C2 & C3 & C4 & C5 & C6 & C7 --> R[08 - Reference]
 ```
+
+| Section | Covers |
+| --- | --- |
+| [[Operational-Semantics]] (`01-Operational-Semantics/`) | transition systems, configurations and terminal configurations, conditional rules, and big-step (natural) semantics with derivation trees |
+| [[State-And-Expressions]] (`02-State-And-Expressions/`) | the **state** as a function from names to values (a *frame*), and how an expression's value is computed relative to a state (`E[[E]]σ`); integer and boolean expressions |
+| [[Commands-And-Control-Flow]] (`03-Commands-And-Control-Flow/`) | commands as **state transitions**: assignment, blocks, `if`/`else`, `while`; blocked configurations as errors and non-termination |
+| [[Declarations-And-Scope]] (`04-Declarations-And-Scope/`) | declarations that introduce names, and why nested blocks force the state to become a **stack of frames**: local vs. global variables, and block entry/exit as push/pop |
+| [[Classes-And-Objects]] (`05-Classes-And-Objects/`) | classes as templates, objects as `(class, frame)` pairs living in the **heap**, `new`, and **references**: the split between a variable on the stack and the object it points at |
+| [[Methods-And-Recursion]] (`06-Methods-And-Recursion/`) | method declaration vs. invocation, formal vs. actual parameters, the `this` binding, and how recursion is just more frames on the stack, each with its own `this` |
+| [[Memory-Model]] (`07-Memory-Model/`) | the synthesis: **library (class environment / method area) + stack + heap** as the three memory regions of a running program, how they map onto the real JVM and ART, garbage collection, and the bridge to [[Dalvik-Bytecode]]/[[ARM64-Android]] |
+| [[Java-Fundamentals-Reference\|Reference]] (`08-Reference/`) | glossary, bibliography, formal rule quick-references ([[Inference-Rule-Notation]], [[State-And-Environment-Substitution]], [[Expression-Semantics-Rules]], [[Command-Semantics-Rules]], [[Object-And-Method-Semantics-Rules]]), and aggregated example listings for this topic |
+
+## Relevant standalone notes
+
+Case studies, cheatsheets, tools, reading notes, and projects aren't scoped to this topic alone — they live once, shared vault-wide. These draw on Java-Fundamentals:
+
+- [[PressReader]] and [[Tua-Case-Study]] in [[Case-Studies]] — real-world Android investigations where reconstructing constructors, `this` bindings, field reads/writes, and method call frames from smali or runtime hooks relies directly on the $(\Delta, \sigma, \theta)$ / `⟨ρc, σ, ζ⟩` operational state here.
+- [[Dalvik-Bytecode]]'s [[Reflection-and-Runtime-Internals]] and [[Smali-Exercises]] chapters — the runtime-internals and bytecode-level counterparts to this topic's memory model (class loading, method area, stack frames, `this` in `p0`, and field reads/writes via `iget`/`iput`).
+- [[Frida-Dynamic-Instrumentation]]'s [[Java-Layer-Hooking]] chapter and [[Frida-JS-API-Cheatsheet]] — live runtime inspection of the class environment $\Delta$ (`Java.use`), activation frames $\sigma$ (method hooks reading arguments and `this`), and the heap $\theta$ (`Java.choose`).
+
+## Chapters
 
 1. [[Operational-Semantics]] (`01-Operational-Semantics/`) — transition systems, configurations and terminal configurations, conditional rules, and big-step (natural) semantics with derivation trees; the machinery every later chapter's rules are written in.
 2. [[State-And-Expressions]] (`02-State-And-Expressions/`) — the **state** as a function from names to values (a *frame*), and how an expression's value is computed relative to a state (`E[[E]]σ`); integer and boolean expressions.
@@ -56,10 +60,11 @@ graph TD
 2. [[State-And-Expressions]] and [[Commands-And-Control-Flow]] build the imperative core (variables, assignment, control flow) on top of a single flat state.
 3. [[Declarations-And-Scope]] is the pivot: it's where the state stops being one table and becomes a **stack** of frames — the first of the three memory regions.
 4. [[Classes-And-Objects]] and [[Methods-And-Recursion]] add the **heap** and the **class environment**, completing the three-region model.
-5. [[Memory-Model]] ties them together and connects the abstract model to how the JVM and Android's ART actually lay memory out — the natural hand-off into [[Dalvik-Bytecode]] and [[ARM64-Android]].
+5. [[Memory-Model]] ties them together and connects the abstract model to how the JVM and Android's ART actually lay memory out — the natural hand-off into [[Dalvik-Bytecode]], [[ARM64-Android]], and [[Frida-Dynamic-Instrumentation]].
 
 ## See also
 
 - [[Home]]
 - [[Dalvik-Bytecode]] — the same runtime concepts (class loading, method area, stack frames, heap objects) at the level of the bytecode ART actually executes.
 - [[ARM64-Android]] — what a field access / method call / object pointer looks like once compiled all the way down to registers and memory.
+- [[Frida-Dynamic-Instrumentation]] — dynamic instrumentation at runtime: hooking a Java method (`Java.use`), inspecting `this` and argument bindings in the active call frame, or scanning live objects on the heap (`Java.choose`) directly observes and mutates the $(\Delta, \sigma, \theta)$ / `⟨ρc, σ, ζ⟩` state while the app runs.

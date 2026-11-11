@@ -43,9 +43,19 @@ FROM "01-Dalvik-Bytecode" AND #snippet
 SORT project ASC, file.name ASC
 ```
 
+## All exercises
+
+Every self-assessment exercise (tagged `#exercise`, also listed above as snippets since each is built from real app code) — see [[Smali-Exercises]] for how to work and grade them:
+
+```dataview
+TABLE difficulty AS "Difficulty", skills AS "Skills", source_path AS "Source path"
+FROM "01-Dalvik-Bytecode" AND #exercise
+SORT file.name ASC
+```
+
 > [!info] Requires Dataview
 >
-> These three tables need the **Dataview** community plugin — see the setup notes in [[Home]]. Until a matching note exists, a table simply stays empty.
+> These tables need the **Dataview** community plugin — see the setup notes in [[Home]]. Until a matching note exists, a table simply stays empty.
 
 ## Full case studies
 

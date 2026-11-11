@@ -85,10 +85,15 @@ See the `SSL_write`/`SSL_read` hook above — it's already a complete, runnable 
 
 ## More examples
 
+- [[Correlating-SSL-Write-With-A-Java-Stack]] — worked example pairing each native `SSL_write` call with the Java call stack that triggered it.
+- [[SSL-Write-Dump-In-Libflutter]] — real-world snippet from [[ClasseViva-Case-Study]] dumping plaintext login requests from `libflutter.so`'s bundled BoringSSL.
+- [[Stacking-Five-Independent-Pinning-Bypasses]], [[Hooking-The-OkHttp-Interceptor-Chain-Exactly-Once]], and [[Recovering-JWE-Plaintext-By-Hooking-The-JOSE-Library]] — real-world snippets from [[Poste-Italiane]] covering multi-layer TLS pinning bypasses, OkHttp interceptor logging, and application-layer JWE payload recovery.
+- [[Discovering-The-Core-XML-Protocol]], [[Hooking-The-Core-XML-API-Methods-Directly]], and [[Confirming-The-Outgoing-XML-Write-Path]] in [[PressReader]] — intercepting an app's custom XML-over-HTTP protocol directly at its serializer/parser methods and `OutputStreamWriter.write` boundary without needing a MITM proxy.
 - [[Frida-JS-API-Cheatsheet]] in [[Cheatsheets]].
 
 ## See also
 
+- [[Java-Perform-And-Java-Use]] and [[Interceptor-Attach-And-Replace]] — reference entries for the Java and native hooking primitives combined in this chapter.
 - [[Java-Layer-Hooking]]
 - [[Native-Memory-And-ARM64]]
 - [[Flutter-Dart-AOT]] in [[ARM64-Android]] — why Flutter apps have no Java networking layer to hook at all.

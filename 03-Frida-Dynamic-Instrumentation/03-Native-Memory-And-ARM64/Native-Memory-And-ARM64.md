@@ -95,10 +95,16 @@ if (base === null) {
 
 ## More examples
 
+- [[Reading-Struct-Args-With-A-Reconstructed-Layout]] — worked example decoding fields of a C struct pointer passed in `args[0]` (`x0`).
+- [[Attaching-At-A-Dart-AOT-Entry-Offset]] — real-world snippet from [[ClasseViva-Case-Study]] hooking an unexported `libapp.so` offset and decompressing Dart heap pointers from `this.context`.
+- [[Filtering-Proc-Self-Maps-Through-A-Libc-Fgets-Hook]] and [[Reading-A-Native-Crash-Backtrace-To-Diagnose-An-Agent-Failure]] — real-world native hooking and crash-triage snippets from [[Poste-Italiane]].
 - [[Frida-JS-API-Cheatsheet]] in [[Cheatsheets]] lists the full `Memory.*`/`Module.*`/`Interceptor.*` surface.
 
 ## See also
 
+- [[Interceptor-Attach-And-Replace]] — reference entry for `Interceptor.attach`, `onEnter`/`onLeave`, per-call `this`, and instruction-level probes.
+- [[NativePointer-And-Memory-API]] — reference entry for `ptr()`, pointer arithmetic, typed `.read*`/`.write*` methods, `hexdump`, and `Memory.*`.
+- [[Module-And-Process-API]] — reference entry for `Process.findModuleByName`, `mod.base`, `mod.findExportByName`, and `Thread.backtrace`.
 - [[Java-Layer-Hooking]]
 - [[Network-Interception]]
 - [[Functions-And-Calling-Convention]] and [[Reading-Raw-Disassembly]] in [[ARM64-Android]] — without these, `args[i]` are just numbers with no meaning.

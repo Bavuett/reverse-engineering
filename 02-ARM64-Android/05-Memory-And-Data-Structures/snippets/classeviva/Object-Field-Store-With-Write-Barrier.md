@@ -45,3 +45,5 @@ license_note: "Personal study/research purposes only. This is a tiny excerpt of 
 
 - [[ARM64-Android-Reference|Reference]]
 - [[Memory-And-Data-Structures]]
+- [[CBZ-CBNZ-And-TBZ-TBNZ]]
+- [[LDR-And-STR]]

@@ -73,6 +73,8 @@ sequenceDiagram
 - [[Functions-And-Calling-Convention]]
 - [[Leaf-Function-Prologue-Epilogue]]
 - [[Control-Flow-Patterns]]
+- [[STP-And-LDP]]
+- [[B-BL-BLR-And-RET]]
 
 ## References
 

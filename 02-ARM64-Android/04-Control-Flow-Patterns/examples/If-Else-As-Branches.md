@@ -54,6 +54,9 @@ graph TD
 
 - [[Control-Flow-Patterns]]
 - [[Compare-And-Conditional-Select]]
+- [[CBZ-CBNZ-And-TBZ-TBNZ]]
+- [[CSEL-CSINC-And-Conditional-Select]]
+- [[B-BL-BLR-And-RET]]
 
 ## References
 

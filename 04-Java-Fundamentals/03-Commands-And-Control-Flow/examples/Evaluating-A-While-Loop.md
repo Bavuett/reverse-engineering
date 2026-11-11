@@ -42,6 +42,8 @@ graph TD
 ## See also
 
 - [[Commands-And-Control-Flow]]
+- [[Command-Semantics-Rules]]
+- [[State-And-Environment-Substitution]]
 - [[Loop-As-Backward-Branch]] in [[ARM64-Android]] and [[Dalvik-Instructions]] in [[Dalvik-Bytecode]] — the compiled loop: a guard test plus a backward `goto`/branch, one iteration per back-edge, exactly matching each `(while-tt)` step here.
 
 ## References

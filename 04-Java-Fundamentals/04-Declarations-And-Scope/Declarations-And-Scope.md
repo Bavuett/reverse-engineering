@@ -65,6 +65,8 @@ The inner `x = 100` lives only in the inner frame; after the block pops, `x` in 
 - [[Commands-And-Control-Flow]] — the commands whose state these frames hold.
 - [[Methods-And-Recursion]] — the call stack, the same frame-stack idea for method activations.
 - [[Memory-Model]] — the stack as one of the three memory regions.
+- [[State-And-Environment-Substitution]] — formal definition of environment-stack lookup $\sigma(x)$ and innermost-frame update $\sigma[x \mapsto v]$.
+- [[Command-Semantics-Rules]] — formal rules for declarations and block entry/exit.
 - [[Registers]] in [[Dalvik-Bytecode]] — why Dalvik uses one flat register file instead of per-block frames.
 
 ## References

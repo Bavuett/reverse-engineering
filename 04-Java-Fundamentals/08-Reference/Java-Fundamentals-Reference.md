@@ -43,8 +43,7 @@ SORT project ASC, file.name ASC
 ```
 
 > [!info] Requires Dataview
-> These three tables need the **Dataview** community plugin — see the setup notes in [[Home]].
-> Until a matching note exists, a table simply stays empty.
+> These three tables need the **Dataview** community plugin — see the setup notes in [[Home]]. Until a matching note exists, a table simply stays empty.
 
 ## Full case studies
 

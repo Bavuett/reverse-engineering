@@ -60,7 +60,9 @@ graph TD
 
 - [[Methods-And-Recursion]]
 - [[Memory-Model]]
-- [[Methods]] in [[Dalvik-Bytecode]] — `invoke-*`, argument-register ordering, and `p0` as the receiver for non-static methods.
+- [[Object-And-Method-Semantics-Rules]]
+- [[State-And-Environment-Substitution]]
+- [[Methods]] and [[Smali-Exercises]] in [[Dalvik-Bytecode]] — `invoke-*`, argument-register ordering, and `p0` as the receiver (`this`) for non-static methods and constructors.
 
 ## References
 

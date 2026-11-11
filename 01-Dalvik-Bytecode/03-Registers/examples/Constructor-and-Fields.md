@@ -76,7 +76,10 @@ graph LR
 
 - [[Registers]] — `.locals` vs `.registers`
 - [[Classes]] — `.field`
+- [[Iget-And-Iput]] — `iget` and `iput` opcode reference
+- [[Arithmetic-And-Conversion-Opcodes]] — `mul-int` and `add-int/2addr`
 - [[Basic-Class-HelloWorld]]
+- [[Exercise-01-Outlined-StringBuilder-Helpers]] — `/2addr` arithmetic in real R8-outlined methods
 
 ## References
 

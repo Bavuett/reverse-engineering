@@ -48,8 +48,8 @@ class RecIncr { public int x;
 
 > [!tip] Connection to Dalvik
 > The call rule is the shape of `invoke-*` + a new activation frame:
-> - **Invocation opcode.** `o.m(E)` compiles to `invoke-virtual {vObj, vArg}, LC;->m(T)V` (or `-direct`/`-static`/`-interface`/`-super` per dispatch kind — see [[Methods]] in [[Dalvik-Bytecode]]). A return value is grabbed with `move-result*`.
-> - **`this` = `p0`.** In an instance method's frame, the receiver is the first parameter register `p0`; declared parameters follow in `p1, p2, …`. So "the `this` binding in the call frame" is literally register `p0`, and `this.x` is `iget/iput … p0, …`. That single fact — `p0` is `this` for non-static methods — is one of the most useful things to know when reading smali.
+> - **Invocation opcode.** `o.m(E)` compiles to `invoke-virtual {vObj, vArg}, LC;->m(T)V` (or `-direct`/`-static`/`-interface`/`-super` per dispatch kind — see [[Methods]] and [[Smali-Exercises]] in [[Dalvik-Bytecode]]). A return value is grabbed with `move-result*`.
+> - **`this` = `p0`.** In an instance method's frame, the receiver is the first parameter register `p0`; declared parameters follow in `p1, p2, …`. So "the `this` binding in the call frame" is literally register `p0`, and `this.x` is `iget/iput … p0, …`. That single fact — `p0` is `this` for non-static methods — is one of the most useful things to know when reading smali (see [[Smali-Exercises]]).
 > - **Recursion = a stack of activation frames**, each `invoke` pushing a new register set; `p0` carries the same object reference down every level, exactly as `this` does here.
 > - **The method environment ρm** is the class's method table in the dex; resolving `m` at a call site is method resolution, which reflection (see [[Reflection-and-Runtime-Internals]]) does dynamically via a name string instead.
 
@@ -62,7 +62,9 @@ class RecIncr { public int x;
 - [[Classes-And-Objects]] — the heap objects a method mutates through `this`.
 - [[Declarations-And-Scope]] — the frame-stack this call stack extends.
 - [[Memory-Model]] — the call stack as a memory region.
-- [[Methods]] and [[Reflection-and-Runtime-Internals]] in [[Dalvik-Bytecode]] — `invoke-*`, `p0` as `this`, and dynamic method resolution.
+- [[Object-And-Method-Semantics-Rules]] — consolidated formal rule `(method-call)` for evaluating the receiver $\ell$, building the activation frame with $\texttt{this} \mapsto \ell$ and formal parameters, executing the body in $\Delta(C)(m)$, and popping the frame on return.
+- [[State-And-Environment-Substitution]] — formal notation for frame-stack push/pop and heap updates.
+- [[Methods]], [[Smali-Exercises]], and [[Reflection-and-Runtime-Internals]] in [[Dalvik-Bytecode]] — `invoke-*`, `p0` as `this`, constructors (`<init>`), and dynamic method resolution.
 
 ## References
 

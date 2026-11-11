@@ -52,6 +52,8 @@ graph TD
 
 - [[Dalvik-Instructions]]
 - [[Methods]] — the dispatch rules behind each invoke kind.
+- [[Invoke-Direct-Static-Virtual-Interface]] and [[Move-Result]] — opcode reference entries.
+- [[Exercise-01-Outlined-StringBuilder-Helpers]] — R8-outlined `StringBuilder` helpers where intermediate `append` return values are intentionally left uncaptured.
 - [[Reflection-and-Runtime-Internals]] — how a reflective call erases the target these instructions name explicitly.
 
 ## References

@@ -49,6 +49,7 @@ graph TD
 
 - [[Reading-Raw-Dalvik]]
 - [[Dalvik-Instructions]] — the `if-*`, `div-int/lit8`, `sget` shapes read here.
+- [[Conditional-Branches]], [[Arithmetic-And-Conversion-Opcodes]], and [[Sget-And-Sput]] — opcode reference entries.
 - [[Anti-Tampering-Pattern-Workflow]] and [[Tua-Case-Study]] in [[Case-Studies]] — the real app this pattern was generalized from.
 
 ## References

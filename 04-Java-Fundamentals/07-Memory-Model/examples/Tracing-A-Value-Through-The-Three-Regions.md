@@ -62,7 +62,9 @@ graph TD
 
 - [[Memory-Model]]
 - [[Classes-And-Objects]] and [[Methods-And-Recursion]]
-- [[Reflection-and-Runtime-Internals]] in [[Dalvik-Bytecode]] — the runtime data areas this mirrors, and how reflection/dynamic loading manipulate the library region live.
+- [[Object-And-Method-Semantics-Rules]]
+- [[State-And-Environment-Substitution]]
+- [[Reflection-and-Runtime-Internals]] and [[Smali-Exercises]] in [[Dalvik-Bytecode]] — the runtime data areas this mirrors, and how reflection/dynamic loading manipulate the library region live.
 
 ## References
 

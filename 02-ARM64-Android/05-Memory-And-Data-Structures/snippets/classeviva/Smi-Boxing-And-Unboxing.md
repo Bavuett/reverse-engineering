@@ -53,3 +53,5 @@ A small helper closure inside `GradeUtils.getSubjectAveragesForPeriods` reads a 
 
 - [[ARM64-Android-Reference|Reference]]
 - [[Memory-And-Data-Structures]]
+- [[UBFM-SBFM-And-Bitfield-Aliases]]
+- [[STP-And-LDP]]

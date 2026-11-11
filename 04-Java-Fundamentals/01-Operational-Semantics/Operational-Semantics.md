@@ -62,10 +62,13 @@ Each node is a rule instance; a rule with no premises (`2 → 2`) is a leaf. The
 ## More examples
 
 - [[Deriving-An-Arithmetic-Expression]] — a full big-step derivation, step by step.
+- [[Evaluating-Expressions-In-A-State]] — big-step derivation trees over a concrete state, including short-circuit boolean rules vs. blocked configurations.
 
 ## See also
 
 - [[State-And-Expressions]] — the first real use of this machinery: expressions over a state.
+- [[Inference-Rule-Notation]] — quick-reference entry for axioms, conditional inference rules, side conditions, derivation trees, and big-step vs. small-step transitions.
+- [[Expression-Semantics-Rules]] — consolidated inference rules for expressions.
 - [[Reading-Raw-Dalvik]] in [[Dalvik-Bytecode]] — reading a method as a state-carrying walk, the informal version of a derivation.
 
 ## References

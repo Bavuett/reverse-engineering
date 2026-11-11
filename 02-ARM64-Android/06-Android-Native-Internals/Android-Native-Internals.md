@@ -79,14 +79,17 @@ See [[JNI-Native-Method-Signature]] for a full annotated JNI entry point, and [[
 
 ## More examples
 
-- [[JNI-Native-Method-Signature]]
-- [[PLT-Stub-And-Indirect-Call]]
+- [[JNI-Native-Method-Signature]] — annotated JNI entry point, implicit `env`/`thiz` parameters, and calling back through `JNINativeInterface`
+- [[PLT-Stub-And-Indirect-Call]] — how external shared-library calls go through `.plt` and `.got`
+- [[JNI-OnLoad-And-RegisterNatives-In-Libflutter]] — real-world snippet showing dynamic JNI registration via `RegisterNatives` in `libflutter.so`
 
 ## See also
 
 - [[Functions-And-Calling-Convention]]
 - [[Flutter-Dart-AOT]]
 - [[Memory-And-Data-Structures]]
+- [[ADR-And-ADRP]]
+- [[B-BL-BLR-And-RET]]
 
 ## References
 

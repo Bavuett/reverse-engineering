@@ -18,8 +18,7 @@ Everything in [[Registers-And-Data]] through [[Memory-And-Data-Structures]] alre
 
 ### Reserved registers, recap and roles
 
-Already introduced in [[Registers-And-Data#Explanation|Reserved registers you'll meet in Android
-native code]] — restated here with their concrete jobs:
+Already introduced in [[Registers-And-Data#Explanation|Reserved registers you'll meet in Android native code]] — restated here with their concrete jobs:
 
 | Symbolic name | Role |
 | --- | --- |
@@ -108,8 +107,9 @@ See [[Object-Pool-Constant-Loads]] for a full excerpt showing multiple pool-inde
 ## More examples
 
 - [[Dart-Frame-Prologue]] — the prologue shape restated standalone, cross-referencing [[Functions-And-Calling-Convention]]
-- [[Object-Pool-Constant-Loads]]
-- [[MethodChannel-Invoke-And-Await]]
+- [[Closure-Capture-And-Invocation]] — how `AllocateContextStub` and `AllocateClosureStub` package captured locals with a standalone closure function
+- [[Object-Pool-Constant-Loads]] — real-world snippet showing static field and enum singleton loads from `THR` and `PP`
+- [[MethodChannel-Invoke-And-Await]] — real-world snippet showing `MethodChannel::invokeMethod` followed by `AwaitStub` and runtime class-id checks
 
 ## See also
 
@@ -117,6 +117,10 @@ See [[Object-Pool-Constant-Loads]] for a full excerpt showing multiple pool-inde
 - [[Memory-And-Data-Structures]]
 - [[Control-Flow-Patterns]]
 - [[Android-Native-Internals]]
+- [[LDR-And-STR]]
+- [[UBFM-SBFM-And-Bitfield-Aliases]]
+- [[B-BL-BLR-And-RET]]
+- [[CBZ-CBNZ-And-TBZ-TBNZ]]
 
 ## References
 

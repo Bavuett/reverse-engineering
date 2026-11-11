@@ -69,6 +69,7 @@ graph TD
 - [[Functions-And-Calling-Convention]] — prologue/epilogue and `x0`/`x1` as arguments.
 - [[Control-Flow-Patterns]] — the backward-branch loop shape.
 - [[Memory-And-Data-Structures]] — `ldrb`/`strb` widths and what they imply about types.
+- [[STP-And-LDP]], [[LDR-And-STR]], [[CBZ-CBNZ-And-TBZ-TBNZ]], and [[B-BL-BLR-And-RET]] — instruction reference entries for the opcodes used in `sub_1a40`.
 
 ## References
 

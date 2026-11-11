@@ -103,6 +103,9 @@ classDiagram
 
 - [[Classes]] — `.implements`
 - [[Methods]] — abstract methods, `invoke-interface`
+- [[Invoke-Direct-Static-Virtual-Interface]] — vtable vs itable dispatch
+- [[Exercise-06-Static-Monitors-And-Iterators]] — `invoke-interface` on `Set.iterator()`, `Iterator.hasNext()`, and `Iterator.next()` in real app code
+- [[Exercise-10-Synthetic-Lambda-And-Rx-Single]] — a synthetic lambda class implementing `Ljava/util/concurrent/Callable;`
 
 ## References
 

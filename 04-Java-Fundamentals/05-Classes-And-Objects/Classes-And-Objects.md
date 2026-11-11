@@ -69,7 +69,7 @@ o1.x = 5;  o2.x = 10;  o1.y = o1.x + o2.x;   // o1 = (Foo,{x↦5, y↦15}), o2 =
 > This is the model behind smali object handling, almost one-to-one:
 > - **`new` = `new-instance` + a `<init>` call.** `new-instance v0, LFoo;` allocates the heap object (the `(Foo, template)` here); the following `invoke-direct {v0}, LFoo;-><init>()V` runs the constructor. `new-instance` alone is `⟨new c⟩ → l`.
 > - **A reference is an object register.** `v0` holding the result of `new-instance`, moved with `move-object`, compared with `if-eqz` (that's the `null` check), is exactly a variable bound to a location `l`.
-> - **`o.x` = `iget`/`iput`.** `iget v1, v0, LFoo;->x:I` is `⟨o.x⟩ → ϕ(x)`; `iput v1, v0, LFoo;->x:I` is the heap-update rule. Static fields (`sget`/`sput`) target a per-class frame instead. See [[Classes]], [[Types]], and [[Dalvik-Instructions]] in [[Dalvik-Bytecode]].
+> - **`o.x` = `iget`/`iput`.** `iget v1, v0, LFoo;->x:I` is `⟨o.x⟩ → ϕ(x)`; `iput v1, v0, LFoo;->x:I` is the heap-update rule. Static fields (`sget`/`sput`) target a per-class frame instead. See [[Classes]], [[Types]], [[Dalvik-Instructions]], and the constructor/field walkthroughs in [[Smali-Exercises]] in [[Dalvik-Bytecode]].
 > - **ρc, the class environment, is the loaded-classes table** — the dex's class definitions as resolved by a `ClassLoader`. Reflection and dynamic class loading (see [[Reflection-and-Runtime-Internals]]) are literally operations on ρc at runtime.
 
 ## More examples
@@ -81,7 +81,9 @@ o1.x = 5;  o2.x = 10;  o1.y = o1.x + o2.x;   // o1 = (Foo,{x↦5, y↦15}), o2 =
 - [[Declarations-And-Scope]] — the stack half of the state.
 - [[Methods-And-Recursion]] — the method environment part of a class, and how `this` names the receiver reference.
 - [[Memory-Model]] — heap vs. stack vs. class environment as memory regions.
-- [[Classes]] and [[Memory-And-Data-Structures]] in [[Dalvik-Bytecode]]/[[ARM64-Android]] — object layout in bytecode and in native memory.
+- [[Object-And-Method-Semantics-Rules]] — consolidated formal rules for `new C()`, field read `e.f`, field write `e1.f = e2`, and method invocation over $(\Delta, \sigma, \theta)$.
+- [[State-And-Environment-Substitution]] — formal notation for heap lookup $\theta(\ell)$ and update $\theta[\ell \mapsto (C, \phi')]$.
+- [[Classes]], [[Smali-Exercises]], and [[Memory-And-Data-Structures]] in [[Dalvik-Bytecode]]/[[ARM64-Android]] — object layout, constructors (`<init>`), and field reads/writes (`iget`/`iput`) in bytecode and in native memory.
 
 ## References
 

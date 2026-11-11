@@ -20,20 +20,20 @@ You don't need all ~1500 pages of the Arm Architecture Reference Manual to read 
 | `adds`/`subs` | Same, and update NZCV flags — the form `cmp` is an alias of (`subs` with the result discarded) |
 | `mul`, `sdiv`/`udiv` | Multiply, signed/unsigned divide (no integer division exception on ARM — divide by zero yields 0) |
 | `and`/`orr`/`eor`/`bic` | Bitwise AND / OR / XOR / AND-NOT |
-| `lsl`/`lsr`/`asr`/`ror` | Logical shift left/right, arithmetic shift right (sign-extending), rotate right |
-| `sbfx`/`ubfx` | Signed/Unsigned Bitfield eXtract — pull `width` bits starting at `lsb` out of a register, sign- or zero-extending the rest. See [[Register-Width-And-Sign-Extension]] |
-| `sbfiz`/`ubfiz` | Signed/Unsigned Bitfield Insert in Zero — the inverse: place a value into a bit range within an otherwise-zeroed register. This is exactly how a Dart Smi gets **tagged** (shift left by 1 into a zeroed register) — see [[Memory-And-Data-Structures]] |
+| `lsl`/`lsr`/`asr`/`ror` | Logical shift left/right, arithmetic shift right (sign-extending), rotate right — see [[UBFM-SBFM-And-Bitfield-Aliases]] |
+| `sbfx`/`ubfx` | Signed/Unsigned Bitfield eXtract — pull `width` bits starting at `lsb` out of a register, sign- or zero-extending the rest. See [[UBFM-SBFM-And-Bitfield-Aliases]] and [[Register-Width-And-Sign-Extension]] |
+| `sbfiz`/`ubfiz` | Signed/Unsigned Bitfield Insert in Zero — the inverse: place a value into a bit range within an otherwise-zeroed register. This is exactly how a Dart Smi gets **tagged** (shift left by 1 into a zeroed register) — see [[UBFM-SBFM-And-Bitfield-Aliases]] and [[Memory-And-Data-Structures]] |
 | `mov`, `movz`/`movk`/`movn` | Register-to-register move; constant loading — see [[Basic-Arithmetic-And-Moves]] |
-| `adrp`/`add` (pair) | PC-relative addressing: `adrp` gets the page (4 KiB-aligned) containing a target, a following `add`/`ldr` supplies the page-internal offset. This is how PIE binaries reference their own data/functions without a relocation at every call site |
+| `adr`/`adrp` + `add` (pair) | PC-relative addressing: `adrp` gets the page (4 KiB-aligned) containing a target, a following `add`/`ldr` supplies the page-internal offset. This is how PIE binaries reference their own data/functions without a relocation at every call site — see [[ADR-And-ADRP]] |
 
 ### Load/store
 
 | Instruction | Meaning |
 | --- | --- |
-| `ldr`/`str` `Xt, [Xn, #imm]` | Load/store a register from/to `[base + offset]` |
-| `ldur`/`stur` | The _unscaled_-offset forms — offset is a raw signed byte count (`-256`..`255`), not scaled by access size. Dart-AOT-compiled code prefers these almost exclusively for field access, because compressed-pointer field offsets aren't always multiples of the access size |
-| `ldp`/`stp` `Xt1, Xt2, [Xn, #imm]` | Load/store **pair** — two registers in one instruction. The canonical function prologue/epilogue idiom `stp fp, lr, [SP, #-0x10]!` / `ldp fp, lr, [SP], #0x10` is this |
-| `ldrb`/`ldrh`/`ldrsb`/`ldrsh`/`ldrsw` | Sub-word loads, zero- or sign-extending — see [[Register-Width-And-Sign-Extension]] |
+| `ldr`/`str` `Xt, [Xn, #imm]` | Load/store a register from/to `[base + offset]` — see [[LDR-And-STR]] |
+| `ldur`/`stur` | The _unscaled_-offset forms — offset is a raw signed byte count (`-256`..`255`), not scaled by access size. Dart-AOT-compiled code prefers these almost exclusively for field access, because compressed-pointer field offsets aren't always multiples of the access size — see [[LDR-And-STR]] |
+| `ldp`/`stp` `Xt1, Xt2, [Xn, #imm]` | Load/store **pair** — two registers in one instruction. The canonical function prologue/epilogue idiom `stp fp, lr, [SP, #-0x10]!` / `ldp fp, lr, [SP], #0x10` is this — see [[STP-And-LDP]] |
+| `ldrb`/`ldrh`/`ldrsb`/`ldrsh`/`ldrsw` | Sub-word loads, zero- or sign-extending — see [[LDR-And-STR]] and [[Register-Width-And-Sign-Extension]] |
 | `!` suffix (pre-index) | Compute the address, use it, **then** write it back into the base register (`[SP, #-0x10]!` decrements SP first, then stores) |
 | trailing `, #imm` after `]` (post-index) | Use the address as-is, **then** add the offset into the base register (`[SP], #0x10` uses SP, then increments it — the other half of the prologue/epilogue pair) |
 | `ldar`/`stlr`/`ldaxr`/`stlxr` | Acquire/release (and exclusive) variants — atomics and memory ordering; rare in application-level static analysis, common in runtime/allocator internals |
@@ -43,14 +43,14 @@ You don't need all ~1500 pages of the Arm Architecture Reference Manual to read 
 | Instruction | Meaning |
 | --- | --- |
 | `cmp Xn, Xm`\|`#imm` | `subs xzr, Xn, Xm` — compare and set flags, discard the result |
-| `cbz`/`cbnz Xt, label` | Branch if register is/isn't zero — no flags needed, common for null checks |
-| `tbz`/`tbnz Xt, #bit, label` | Branch on a single bit — common for tag-bit checks (Smi vs. heap pointer: `tbz w0, #0, <is_smi>`) |
-| `b label` | Unconditional branch |
-| `b.cond label` | Conditional branch — `eq`,`ne`,`lt`,`le`,`gt`,`ge`,`lo`(`cc`),`ls`,`hi`,`hs`(`cs`),`vs`,`vc`,`mi`,`pl` |
-| `bl label` | Branch-with-link — call: `LR = PC + 4`, then branch |
-| `blr Xn` | Branch-with-link to an address held in a register — every **indirect/virtual call** (vtable-style dispatch, computed dispatch-table calls) looks like this |
-| `ret` (`{Xn}`) | Return — branches to `LR` (or an explicit register) |
-| `csel`/`csinc`/`csinv`/`csneg Xd, Xn, Xm, cond` | Conditional select: `Xd = cond ? Xn : Xm` (or `Xm+1`/`~Xm`/`-Xm` for the variants) — branch-free `?:`, extremely common for boolean results (`csel x0, true_val, false_val, eq`) |
+| `cbz`/`cbnz Xt, label` | Branch if register is/isn't zero — no flags needed, common for null checks — see [[CBZ-CBNZ-And-TBZ-TBNZ]] |
+| `tbz`/`tbnz Xt, #bit, label` | Branch on a single bit — common for tag-bit checks (Smi vs. heap pointer: `tbz w0, #0, <is_smi>`) — see [[CBZ-CBNZ-And-TBZ-TBNZ]] |
+| `b label` | Unconditional branch — see [[B-BL-BLR-And-RET]] |
+| `b.cond label` | Conditional branch — `eq`,`ne`,`lt`,`le`,`gt`,`ge`,`lo`(`cc`),`ls`,`hi`,`hs`(`cs`),`vs`,`vc`,`mi`,`pl` — see [[B-BL-BLR-And-RET]] |
+| `bl label` | Branch-with-link — call: `LR = PC + 4`, then branch — see [[B-BL-BLR-And-RET]] |
+| `blr Xn` | Branch-with-link to an address held in a register — every **indirect/virtual call** (vtable-style dispatch, computed dispatch-table calls) looks like this — see [[B-BL-BLR-And-RET]] |
+| `ret` (`{Xn}`) | Return — branches to `LR` (or an explicit register) — see [[B-BL-BLR-And-RET]] |
+| `csel`/`csinc`/`csinv`/`csneg Xd, Xn, Xm, cond` | Conditional select: `Xd = cond ? Xn : Xm` (or `Xm+1`/`~Xm`/`-Xm` for the variants) — branch-free `?:`, extremely common for boolean results (`csel x0, true_val, false_val, eq`) — see [[CSEL-CSINC-And-Conditional-Select]] |
 
 ### Condition codes at a glance
 
@@ -74,8 +74,8 @@ int clamp_or_double(int x) {
 ```asm
 clamp_or_double:
     cmp     w0, #0
-    b.lt    .Lret_zero     ; b = branch, lt = larger than
-    lsl     w0, w0, #1     ; w1 = x * 2, computed conditionally
+    b.lt    .Lret_zero     ; b = branch, lt = signed less-than
+    lsl     w0, w0, #1     ; w0 = x * 2, computed when x >= 0
     ret
 .Lret_zero:
     mov     w0, #0
@@ -92,18 +92,26 @@ clamp_or_double:
     ret
 ```
 
-Both are correct translations of the same C; which one a real compiler picks depends on optimization level and how cheap the "wrong" branch's work is. Recognizing the `csel` form as an `if`/`else` in disguise is one of the most valuable pattern-matches in this whole topic — see [[Control-Flow-Patterns]].
+Both are correct translations of the same C; which one a real compiler picks depends on optimization level and how cheap the "wrong" branch's work is. Recognizing the `csel` form as an `if`/`else` in disguise is one of the most valuable pattern-matches in this whole topic — see [[Control-Flow-Patterns]] and [[CSEL-CSINC-And-Conditional-Select]].
 
 ## More examples
 
 - [[Load-Store-Addressing-Modes]] — pre-/post-index, `ldp`/`stp`, and why unscaled `ldur` dominates Dart-compiled field access
 - [[Compare-And-Conditional-Select]] — building booleans and doing three-way comparisons without branching
+- [[Bitfield-Class-Id-Extraction]] — real-world snippet showing `ldur` + `ubfx` extracting a 20-bit class id from a Dart object header
 
 ## See also
 
 - [[Registers-And-Data]]
 - [[Control-Flow-Patterns]]
 - [[Functions-And-Calling-Convention]]
+- [[STP-And-LDP]]
+- [[LDR-And-STR]]
+- [[ADR-And-ADRP]]
+- [[CBZ-CBNZ-And-TBZ-TBNZ]]
+- [[B-BL-BLR-And-RET]]
+- [[UBFM-SBFM-And-Bitfield-Aliases]]
+- [[CSEL-CSINC-And-Conditional-Select]]
 
 ## References
 

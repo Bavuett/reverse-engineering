@@ -156,7 +156,10 @@ The first form names `rootCheck` right in the instruction — one grep finds eve
 
 ## More examples
 
-- None yet in `examples/` or `snippets/` for this chapter — see [[Anti-Tampering-Pattern-Workflow]] for the real, considerably more disguised instance this worked example is a simplified version of (reflection reaching a ZXing class repurposed as a hideout, with the method name itself never appearing in plaintext anywhere in the file).
+- [[Reflective-Hidden-Method-Call]] — bytecode-level walkthrough of `Class.forName` → `getDeclaredMethod` → `Method.invoke`, and the six static tells for recognizing reflection cold
+- [[Hunting-Reflection-With-Grep-And-Set-Difference]] — repeatable two-pass `rg`/`comm` procedure to locate every reflective call site and every reflection-only target across an APK's smali tree
+
+Real-world fragments illustrating this chapter live in `snippets/` — see [[Reflection-Hidden-Check-With-Decoded-Names]] for a real TUA call site where both the class and method names fed to reflection are decrypted at runtime from `.array-data` char tables, and [[Anti-Tampering-Pattern-Workflow]] for the full investigation.
 
 ## See also
 
@@ -164,6 +167,7 @@ The first form names `rootCheck` right in the instruction — one grep finds eve
 - [[Classes]] — direct vs. virtual methods, the distinction dispatch resolution relies on
 - [[Registers]] — the register/local-variable-slot model reflection's arguments still have to flow through
 - [[Reading-Raw-Dalvik]] — recognizing encrypted strings and reflection indirection cold, in real obfuscated smali
+- [[Smali-Exercises]] — graded exercises on real PressReader smali, including monitor internals ([[Exercise-06-Static-Monitors-And-Iterators]], [[Exercise-07-Wait-Loop-Under-A-Monitor]]) and R8 whole-program optimizations ([[Exercise-10-Synthetic-Lambda-And-Rx-Single]], [[Exercise-12-The-DQ-Request-Callable]])
 - [[Anti-Tampering-Pattern-Workflow]] — the full real-world investigation that motivated this chapter
 - [[Tua-Case-Study]] — the app this pattern was found in
 - [[ARM64-Android]] — the native/JNI side of this same call-hiding family, once there's no more Dalvik bytecode left to read
