@@ -95,10 +95,27 @@ if (base === null) {
 
 ## More examples
 
-- [[Reading-Struct-Args-With-A-Reconstructed-Layout]] — worked example decoding fields of a C struct pointer passed in `args[0]` (`x0`).
-- [[Attaching-At-A-Dart-AOT-Entry-Offset]] — real-world snippet from [[ClasseViva-Case-Study]] hooking an unexported `libapp.so` offset and decompressing Dart heap pointers from `this.context`.
-- [[Filtering-Proc-Self-Maps-Through-A-Libc-Fgets-Hook]] and [[Reading-A-Native-Crash-Backtrace-To-Diagnose-An-Agent-Failure]] — real-world native hooking and crash-triage snippets from [[Poste-Italiane]].
-- [[Frida-JS-API-Cheatsheet]] in [[Cheatsheets]] lists the full `Memory.*`/`Module.*`/`Interceptor.*` surface.
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
+- [[Hooking-An-Exported-Libc-Function]] — `Interceptor.attach` on `open`, with `args[i]` as raw registers and per-call `this` storage
+- [[Reading-And-Writing-Native-Memory]] — scanning a module, pointer arithmetic, typed reads, `hexdump`, and `Memory.protect`
+
+### Level 2 — intermediate
+
+- [[Reading-Struct-Args-With-A-Reconstructed-Layout]] — decoding the fields of a C struct pointer passed in `x0`
+- [[Calling-Native-Functions-With-NativeFunction]] — declaring prototypes, allocating arguments, and keeping buffers alive across a call
+
+### Level 3 — real code
+
+- [[Attaching-At-A-Dart-AOT-Entry-Offset]] — hooking an unexported `libapp.so` offset and decompressing Dart pointers in [[ClasseViva-Case-Study]]
+- [[Filtering-Proc-Self-Maps-Through-A-Libc-Fgets-Hook]] — a real libc hook that rewrites data instead of only logging it, from [[Poste-Italiane]]
+
+### Further practice
+
+- [[Reading-A-Native-Crash-Backtrace-To-Diagnose-An-Agent-Failure]] — real crash triage from [[Poste-Italiane]]
+- [[Frida-JS-API-Cheatsheet]] in [[Cheatsheets]] — the full `Memory.*`/`Module.*`/`Interceptor.*` surface
 
 ## See also
 

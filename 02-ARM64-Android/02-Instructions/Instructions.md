@@ -96,9 +96,22 @@ Both are correct translations of the same C; which one a real compiler picks dep
 
 ## More examples
 
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
+- [[Arithmetic-And-Logical-Instructions]] — three-operand form, shifted register operands, logical immediates
+- [[Multiply-Divide-And-Modulo]] — `madd`/`msub`, `%` as `sdiv` + `msub`, and magic-number division
+
+### Level 2 — intermediate
+
 - [[Load-Store-Addressing-Modes]] — pre-/post-index, `ldp`/`stp`, and why unscaled `ldur` dominates Dart-compiled field access
 - [[Compare-And-Conditional-Select]] — building booleans and doing three-way comparisons without branching
-- [[Bitfield-Class-Id-Extraction]] — real-world snippet showing `ldur` + `ubfx` extracting a 20-bit class id from a Dart object header
+
+### Level 3 — real code
+
+- [[Bitfield-Class-Id-Extraction]] — `ldur` + `ubfx` extracting a 20-bit class id from a Dart object header
+- [[Outline-Atomics-LSE-Vs-LLSC-In-Datastore]] — a real `fetch_add` through compiler-rt's outline-atomics helper: `ldaddal` vs an `ldaxr`/`stlxr` loop, chosen at load time
 
 ## See also
 

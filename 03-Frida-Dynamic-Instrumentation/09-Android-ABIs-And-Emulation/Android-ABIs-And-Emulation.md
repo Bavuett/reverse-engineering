@@ -160,8 +160,22 @@ adb install -r final_signed.apk
 
 ## More examples
 
-- [[Matching-Frida-Server-To-The-Target-ABI]] — worked example distinguishing the device ABI (which selects the `frida-server` binary) from the target app's native ABI (`Process.arch`, which governs hook calling conventions).
-- [[Forcing-A-64-Bit-Split-Install-To-Dodge-The-32-Bit-Agent-Bug]] and [[Reading-A-Native-Crash-Backtrace-To-Diagnose-An-Agent-Failure]] — real-world snippets from [[Poste-Italiane]] diagnosing a 32-bit vs. 64-bit process ABI mismatch on a physical device.
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
+- [[Matching-Frida-Server-To-The-Target-ABI]] — device ABI (which `frida-server` binary) versus process ABI (which calling convention)
+- [[Checking-Process-Arch-And-Pointer-Size]] — `abilist`, `primaryCpuAbi`, `Process.arch`, and width-independent code
+
+### Level 2 — intermediate
+
+- [[Inspecting-An-APKs-Native-Libraries-Per-ABI]] — install-time ABI selection, `extractNativeLibs`, and PressReader's uneven library set
+- [[Running-ARM-Apps-On-An-x86-Emulator-With-Translation]] — what the native bridge changes for Java and native hooks
+
+### Level 3 — real code
+
+- [[Forcing-A-64-Bit-Split-Install-To-Dodge-The-32-Bit-Agent-Bug]] — controlling a real app's process ABI on a physical device in [[Poste-Italiane]]
+- [[Reading-A-Native-Crash-Backtrace-To-Diagnose-An-Agent-Failure]] — the crash that revealed the 32-bit agent problem
 
 ## See also
 

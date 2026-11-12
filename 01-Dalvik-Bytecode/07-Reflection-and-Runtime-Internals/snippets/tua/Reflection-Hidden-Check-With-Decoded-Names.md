@@ -1,5 +1,6 @@
 ---
 tags: [snippet]
+level: 3
 project: "TUA (net.pluservice.tua)"
 source: "net.pluservice.tua — Cordova/Android hybrid app, decompiled to smali from the APK"
 version: "11.26.4"

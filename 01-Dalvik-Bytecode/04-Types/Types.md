@@ -130,11 +130,28 @@ LExample;->method(IILjava/lang/String;Z)Ljava/lang/Object;
 
 ## More examples
 
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
+- [[Primitive-And-Reference-Descriptors]] — every kind of type descriptor on one class, and reading a method descriptor left to right
+- [[Autoboxing-In-Smali]] — `Integer.valueOf` in, `check-cast` + `intValue` out
+
+### Level 2 — intermediate
+
 - [[Multidimensional-Arrays]] — `int[][]` end to end, with `filled-new-array`, `aget-object`, and `aput`
+- [[Generics-Erasure-And-Signature-Annotations]] — erasure to the bound, `Signature` strings, and call-site casts that reveal type arguments
+
+### Level 3 — real code
+
+- [[Encrypted-String-Table-Array-Data]] — the `[B` descriptor and the `fill-array-data`/`.array-data` pair baking a literal byte table into a real app's class file
+- [[Parcelable-Creator-Erased-Generics]] — a real Kotlin `Parcelable.Creator<T>`: generic type only in `Signature`, erased methods, array covariance
+
+### Further practice
+
 - [[Exercise-06-Static-Monitors-And-Iterators]] — allocating and populating `[Ljava/lang/String;` with `new-array` and `aput-object`
 - [[Exercise-08-Server-Mode-Map-Constructor]] — building a `[Ln10/i;` (`kotlin.Pair[]`) array via `filled-new-array` + `move-result-object`
-
-Real-world fragments illustrating this chapter live in `snippets/` — see [[Encrypted-String-Table-Array-Data]] for the `[B` descriptor and the `fill-array-data`/`.array-data` pair baking a literal byte table into a real app's class file, or [[Device-Id-Wide-Register-Uuid]] for 64-bit `J` register pairs in a `(JJ)V` constructor call.
+- [[Device-Id-Wide-Register-Uuid]] — 64-bit `J` register pairs in a `(JJ)V` constructor call
 
 ## See also
 

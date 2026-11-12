@@ -85,11 +85,29 @@ See the `SSL_write`/`SSL_read` hook above — it's already a complete, runnable 
 
 ## More examples
 
-- [[Correlating-SSL-Write-With-A-Java-Stack]] — worked example pairing each native `SSL_write` call with the Java call stack that triggered it.
-- [[SSL-Write-Dump-In-Libflutter]] — real-world snippet from [[ClasseViva-Case-Study]] dumping plaintext login requests from `libflutter.so`'s bundled BoringSSL.
-- [[Stacking-Five-Independent-Pinning-Bypasses]], [[Hooking-The-OkHttp-Interceptor-Chain-Exactly-Once]], and [[Recovering-JWE-Plaintext-By-Hooking-The-JOSE-Library]] — real-world snippets from [[Poste-Italiane]] covering multi-layer TLS pinning bypasses, OkHttp interceptor logging, and application-layer JWE payload recovery.
-- [[Discovering-The-Core-XML-Protocol]], [[Hooking-The-Core-XML-API-Methods-Directly]], and [[Confirming-The-Outgoing-XML-Write-Path]] in [[PressReader]] — intercepting an app's custom XML-over-HTTP protocol directly at its serializer/parser methods and `OutputStreamWriter.write` boundary without needing a MITM proxy.
-- [[Frida-JS-API-Cheatsheet]] in [[Cheatsheets]].
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
+- [[Logging-URL-Connections]] — finding endpoints through `URL.openConnection` and OkHttp's `Request$Builder.build`
+- [[Disabling-OkHttp-CertificatePinner]] — turning OkHttp's pin check into a no-op, version-dependent overloads included
+
+### Level 2 — intermediate
+
+- [[Correlating-SSL-Write-With-A-Java-Stack]] — pairing each native `SSL_write` with the Java stack that triggered it
+- [[Bypassing-Pinning-With-A-Custom-TrustManager]] — a `Java.registerClass` trust manager swapped into `SSLContext.init`, and how validation layers stack
+
+### Level 3 — real code
+
+- [[Injecting-An-OkHttp-Interceptor-With-Java-RegisterClass]] — a runtime-created `okhttp3.Interceptor` and forced proxy on every client in [[Tua-Case-Study]]
+- [[Stacking-Five-Independent-Pinning-Bypasses]] — five pinning layers bypassed independently in [[Poste-Italiane]]
+
+### Further practice
+
+- [[SSL-Write-Dump-In-Libflutter]] — plaintext login requests from `libflutter.so`'s bundled BoringSSL in [[ClasseViva-Case-Study]]
+- [[Hooking-The-OkHttp-Interceptor-Chain-Exactly-Once]] and [[Recovering-JWE-Plaintext-By-Hooking-The-JOSE-Library]] — OkHttp logging and application-layer JWE recovery in [[Poste-Italiane]]
+- [[Discovering-The-Core-XML-Protocol]], [[Hooking-The-Core-XML-API-Methods-Directly]], and [[Confirming-The-Outgoing-XML-Write-Path]] in [[PressReader]] — intercepting a custom XML-over-HTTP protocol at its serializer/parser methods without a MITM proxy
+- [[Frida-JS-API-Cheatsheet]] in [[Cheatsheets]]
 
 ## See also
 

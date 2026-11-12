@@ -1,5 +1,6 @@
 ---
 tags: [snippet, exercise]
+level: 3
 project: "PressReader"
 source: com.newspaperdirect.pressreader.android
 version: "7.5.260731"

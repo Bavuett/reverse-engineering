@@ -58,7 +58,22 @@ The inner `x = 100` lives only in the inner frame; after the block pops, `x` in 
 
 ## More examples
 
-- [[Nested-Blocks-And-Shadowing]] — a block evaluated frame-by-frame with the graphical stack.
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
+- [[Nested-Blocks-And-Shadowing]] — a block evaluated frame by frame with the graphical stack
+- [[Declaration-Without-Initializer]] — `(decl)` binding `$`, assignment on both branches, and definite assignment
+
+### Level 2 — intermediate
+
+- [[Scope-Vs-Lifetime-In-Registers]] — frames model scope; register reuse follows lifetime
+- [[Loop-Body-Block-Per-Iteration]] — a fresh frame per iteration, and what hoisting a declaration changes
+
+### Level 3 — real code
+
+- [[Synchronized-Block-Locals-In-PressReader]] — a decompiler-invented declaration around a real monitor region
+- [[Branch-Assigned-Locals-In-PressReader-HttpUrl-Builder]] — a real branch-assigned local and registers that carry several variables
 
 ## See also
 

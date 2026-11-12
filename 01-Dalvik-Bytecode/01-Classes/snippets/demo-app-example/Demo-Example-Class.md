@@ -1,5 +1,6 @@
 ---
 tags: [snippet, placeholder]
+level: 3
 project: "Demo App (placeholder, not real)"
 source: com.example.demo
 version: "1.0.0"

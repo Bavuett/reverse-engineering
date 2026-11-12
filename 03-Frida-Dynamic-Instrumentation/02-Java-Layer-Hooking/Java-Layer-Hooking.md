@@ -79,11 +79,28 @@ Java.perform(() => {
 
 ## More examples
 
-- [[Hooking-A-Constructor-And-Casting-Arguments]] — hooking `$init` and using `Java.cast` on opaque argument/return references.
-- [[Enumerating-Loaded-Classes-By-Keyword]], [[Dumping-Real-Method-Signatures-Before-Hooking]], [[Capturing-A-Stack-Trace-From-Inside-A-Hook]], [[Calling-Through-An-Overload-Without-Recursing]], and [[Hooking-A-Lazily-Loaded-Class-With-A-Retry-Loop]] — real-world snippets from [[Poste-Italiane]].
-- [[Hooking-Log-And-Runtime-Exit-To-Find-The-Culprit]] — real-world triage snippet from [[Tua-Case-Study]].
-- [[Beginning-Enumerate-Loaded-Classes]], [[Deobfuscating-Call-Chains-With-Forced-Stacktraces]], [[Confirming-Obfuscated-Types-By-Dumping-Runtime-Arguments]], and [[Modularizing-Hook-Targets-With-An-Array-Structure]] in [[PressReader]] — applying class enumeration, forced stack traces, runtime argument dumping, and table-driven hooks against an obfuscated production app.
-- [[Frida-JS-API-Cheatsheet]] in [[Cheatsheets]] has the full `Java.*` API at a glance.
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
+- [[Logging-Arguments-And-Return-Values]] — `Java.perform`, `Java.use`, `.implementation`, and calling the original
+- [[Changing-A-Return-Value]] — replacing a result outright versus calling the original and overriding it
+
+### Level 2 — intermediate
+
+- [[Hooking-A-Constructor-And-Casting-Arguments]] — hooking `$init` and using `Java.cast` on opaque argument/return references
+- [[Finding-Live-Instances-With-Java-Choose]] — heap scans, field `.value` access, and the `_field` prefix for field/method name collisions
+
+### Level 3 — real code
+
+- [[Hooking-Log-And-Runtime-Exit-To-Find-The-Culprit]] — attributing a real anti-tamper crash to a Java stack in [[Tua-Case-Study]]
+- [[Calling-Through-An-Overload-Without-Recursing]] — selecting one real overload and calling the original from inside it, from [[Poste-Italiane]]
+
+### Further practice
+
+- [[Enumerating-Loaded-Classes-By-Keyword]], [[Dumping-Real-Method-Signatures-Before-Hooking]], [[Capturing-A-Stack-Trace-From-Inside-A-Hook]], and [[Hooking-A-Lazily-Loaded-Class-With-A-Retry-Loop]] — more real snippets from [[Poste-Italiane]]
+- [[Beginning-Enumerate-Loaded-Classes]], [[Deobfuscating-Call-Chains-With-Forced-Stacktraces]], [[Confirming-Obfuscated-Types-By-Dumping-Runtime-Arguments]], and [[Modularizing-Hook-Targets-With-An-Array-Structure]] in [[PressReader]] — class enumeration, forced stack traces, runtime argument dumping, and table-driven hooks against an obfuscated production app
+- [[Frida-JS-API-Cheatsheet]] in [[Cheatsheets]] — the full `Java.*` API at a glance
 
 ## See also
 

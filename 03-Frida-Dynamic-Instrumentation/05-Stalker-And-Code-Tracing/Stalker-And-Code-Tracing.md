@@ -82,9 +82,27 @@ Interceptor.attach(target, {
 
 ## More examples
 
-- [[Coverage-Diff-To-Locate-A-Feature]] — worked example using `events.block` differential coverage between two UI flows to isolate feature-specific basic blocks in a native library.
-- [[Resolving-An-Indirect-Call-With-Stalker]] — worked example in [[Static-Dynamic-Integration]] using a tightly bracketed Stalker `call` trace to resolve a runtime `blr x8` target for Ghidra.
-- [[Frida-JS-API-Cheatsheet]] in [[Cheatsheets]].
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
+- [[Counting-Calls-In-A-Thread]] — `onCallSummary` aggregation and symbolizing the most-called targets
+- [[Stalker-Follow-And-Unfollow-Around-A-Call]] — following exactly one invocation from inside an `Interceptor` hook
+
+### Level 2 — intermediate
+
+- [[Coverage-Diff-To-Locate-A-Feature]] — `events.block` differential coverage between two UI flows
+- [[Inspecting-Registers-With-A-Transform-Callout]] — a `transform` with `putCallout` reading live `cmp` operands
+
+### Level 3 — real code
+
+- [[Tracing-Libencrypt-Decrypt-Calls-With-Stalker]] — a call trace designed against PressReader's real `Encryption.decrypt` callee table
+- [[Stalking-A-Dart-AOT-Login-Path-In-ClasseViva]] — a Blutter-labeled call trace of a real Dart `async` login method
+
+### Further practice
+
+- [[Resolving-An-Indirect-Call-With-Stalker]] — in [[Static-Dynamic-Integration]], resolving a runtime `blr x8` target for Ghidra
+- [[Frida-JS-API-Cheatsheet]] in [[Cheatsheets]]
 
 ## See also
 

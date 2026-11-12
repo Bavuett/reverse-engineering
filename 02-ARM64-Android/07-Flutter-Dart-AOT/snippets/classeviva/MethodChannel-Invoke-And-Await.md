@@ -1,5 +1,6 @@
 ---
 tags: [snippet]
+level: 3
 project: "Classeviva (Spaggiari ClasseViva student app)"
 source: "com.spaggiari.classeviva.students, Flutter/Dart release build"
 version: "unknown (APK not versioned in the imported excerpt)"

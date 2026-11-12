@@ -168,12 +168,29 @@ classDiagram
 
 ## More examples
 
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
 - [[Basic-Class-HelloWorld]] — the simplest possible class, end to end
+- [[Static-Fields-And-Class-Initializer]] — constant, default, and computed static fields, and which ones need code in `<clinit>`
+
+### Level 2 — intermediate
+
 - [[Interface-Implementation]] — `.implements`, abstract methods, `invoke-interface`
+- [[Inheritance-And-Super-Calls]] — `.super`, chained constructors, overriding by descriptor, and `invoke-super`
+
+### Level 3 — real code
+
+- [[Inner-Class-This-Reference-In-PressReader]] — a real inner class: synthetic `this$0`, the field write before `super()`, and javac's marker-parameter constructor
+- [[Kotlin-Enum-Entries-In-PressReader]] — a real Kotlin `enum class` with `$VALUES`, `$ENTRIES`, and ordinals recovered from `<clinit>`
+
+### Further practice
+
 - [[Exercise-05-Kotlin-Data-Class-Reconstruction]] — reconstructing a Kotlin `data class`'s fields and property order from `.field` declarations and generated `equals`/`hashCode`/`toString` methods
 - [[Exercise-10-Synthetic-Lambda-And-Rx-Single]] — `.class public final synthetic` and `.implements Ljava/util/concurrent/Callable;` on a D8-desugared lambda class
 
-Real-world fragments illustrating this chapter live in `snippets/` — see [[Demo-Example-Class]] for the expected format.
+New real-world fragments go in `snippets/<project>/` — see [[Demo-Example-Class]] for the expected format.
 
 ## See also
 

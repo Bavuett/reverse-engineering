@@ -156,10 +156,22 @@ The first form names `rootCheck` right in the instruction — one grep finds eve
 
 ## More examples
 
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
+- [[Class-Literal-Vs-Class-ForName]] — `const-class`, `Class.forName`, and `getClass()`: what each reveals statically and does at runtime
+- [[Reading-A-Private-Field-Reflectively]] — a direct `iget` next to the four-call `getDeclaredField` recipe
+
+### Level 2 — intermediate
+
 - [[Reflective-Hidden-Method-Call]] — bytecode-level walkthrough of `Class.forName` → `getDeclaredMethod` → `Method.invoke`, and the six static tells for recognizing reflection cold
 - [[Hunting-Reflection-With-Grep-And-Set-Difference]] — repeatable two-pass `rg`/`comm` procedure to locate every reflective call site and every reflection-only target across an APK's smali tree
 
-Real-world fragments illustrating this chapter live in `snippets/` — see [[Reflection-Hidden-Check-With-Decoded-Names]] for a real TUA call site where both the class and method names fed to reflection are decrypted at runtime from `.array-data` char tables, and [[Anti-Tampering-Pattern-Workflow]] for the full investigation.
+### Level 3 — real code
+
+- [[Reflection-Hidden-Check-With-Decoded-Names]] — a real TUA call site where both the class and method names fed to reflection are decoded at runtime
+- [[Private-Field-Access-Via-Reflection-In-PressReader]] — benign real reflection into Android framework private fields (`mPopup`, `mAnchorPosition`), for contrast
 
 ## See also
 

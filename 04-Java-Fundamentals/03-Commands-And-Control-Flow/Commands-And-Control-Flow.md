@@ -70,7 +70,22 @@ The `while-tt` premise refers to the *same* command `while(E) C` — not circula
 
 ## More examples
 
-- [[Evaluating-A-While-Loop]] — a full command derivation for a loop, state by state.
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
+- [[Evaluating-A-While-Loop]] — a full command derivation for a loop, state by state
+- [[Deriving-An-If-Then-Else]] — `(if-tt)` and `(if-ff)` on one program, matched to the inverted test in bytecode
+
+### Level 2 — intermediate
+
+- [[For-Loop-As-Desugared-While]] — `for` as a block containing a `while`, derived and compiled
+- [[Early-Return-As-Nested-Else]] — guard clauses as nested conditionals, and why bytecode doesn't distinguish the two
+
+### Level 3 — real code
+
+- [[Command-Kind-If-Chain-In-PressReader]] — a real guard clause, `else if` chain and `||`, path by path
+- [[Path-Segment-Loops-In-PressReader-HttpUrl]] — a real index `for` and a real iterator loop read back to the desugaring
 
 ## See also
 

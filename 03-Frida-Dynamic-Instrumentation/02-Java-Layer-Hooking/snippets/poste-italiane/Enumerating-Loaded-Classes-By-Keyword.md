@@ -1,5 +1,6 @@
 ---
 tags: [snippet]
+level: 3
 project: "Poste Italiane (com.posteitaliane.spim)"
 source: "com.posteitaliane.spim — the official Poste Italiane Android app, from Google Play"
 version: "6.0.38"

@@ -114,10 +114,22 @@ See [[Object-Field-Store-With-Write-Barrier]] for a full real excerpt (from `_Ab
 
 ## More examples
 
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
 - [[Struct-Field-Access]] — plain NDK struct/array offsets, no header, no tagging
+- [[Array-Indexing-With-Scaled-Registers]] — element size, index type, and element signedness read off one load
+
+### Level 2 — intermediate
+
 - [[String-Length-And-Pointer]] — how a length-prefixed string differs from a NUL-terminated one at the instruction level
-- [[Object-Field-Store-With-Write-Barrier]] — real-world snippet showing a compressed-pointer store and its `tbz`-guarded generational write barrier
-- [[Smi-Boxing-And-Unboxing]] — real-world snippet showing `sbfiz` + `cmp` + `AllocateMintStub` boxing a 64-bit integer
+- [[Linked-List-Traversal]] — pointer chasing, padding, and search vs accumulation loops
+
+### Level 3 — real code
+
+- [[Object-Field-Store-With-Write-Barrier]] — a compressed-pointer store and its `tbz`-guarded generational write barrier
+- [[Smi-Boxing-And-Unboxing]] — `sbfiz` + `cmp` + `AllocateMintStub` boxing a 64-bit integer
 
 ## See also
 

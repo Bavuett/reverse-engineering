@@ -74,7 +74,22 @@ o1.x = 5;  o2.x = 10;  o1.y = o1.x + o2.x;   // o1 = (Foo,{x↦5, y↦15}), o2 =
 
 ## More examples
 
-- [[Objects-On-The-Heap]] — the two-object worked example above, drawn as stack + heap, mapped to smali.
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
+- [[Objects-On-The-Heap]] — the two-object worked example, drawn as stack + heap and mapped to smali
+- [[Aliasing-Two-References-One-Object]] — two variables, one location, and a write visible through both
+
+### Level 2 — intermediate
+
+- [[Dynamic-Dispatch-Through-Overriding]] — method lookup from the runtime class in the heap object, and `invoke-virtual` versus `invoke-super`
+- [[Constructor-Execution-Order]] — allocation defaults, `super()`, field initializers, then the body
+
+### Level 3 — real code
+
+- [[Builder-Field-Initializers-And-Aliasing-In-PressReader]] — a real constructor with merged initializers and a list mutated through an alias
+- [[HttpUrl-Final-Fields-From-Constructor-In-PressReader]] — a real immutable object: checks before `super()`, ten final fields, one derived
 
 ## See also
 

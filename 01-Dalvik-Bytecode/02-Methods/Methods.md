@@ -186,15 +186,30 @@ A Java static block (`static { ... }`) compiles down to the special method `<cli
 
 ## More examples
 
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
 - [[Method-with-Parameters]] — multiple parameter types and a reference return type
+- [[Static-Vs-Instance-Methods]] — what `static` changes: `p0`, `invoke-static` vs `invoke-virtual`, direct vs virtual sections
+
+### Level 2 — intermediate
+
 - [[Exception-Handling]] — `.catch`/`.catchall` in practice
+- [[Overloading-And-Bridge-Methods]] — overloads by descriptor, and the `bridge synthetic` methods generics and covariant returns force
+
+### Level 3 — real code
+
+- [[Hashed-Device-Id-Multi-Catch]] — a real app's two-`.catch` method on one `try` block
+- [[Final-Instance-Methods-Still-Dispatch-Virtually]] — a `final` method still resolved via `invoke-virtual`
+
+### Further practice
+
 - [[Invoke-Kinds-And-Move-Result]] — `invoke-direct`, `invoke-virtual`, `invoke-static`, and `move-result-object` side by side
 - [[Exercise-04-Kotlin-Default-Argument-Constructor]] — how Kotlin compiles default arguments into a synthetic `<init>(..., I)V` bitmask constructor and runs null checks before `Object.<init>`
 - [[Exercise-06-Static-Monitors-And-Iterators]] — `declared-synchronized`, `monitor-enter`/`monitor-exit`, and synthetic `.catchall` handlers in real code
 - [[Exercise-10-Synthetic-Lambda-And-Rx-Single]] — how R8 "staticizes" an instance method into `invoke-static` with an explicit receiver plus `getClass()` null check
 - [[Exercise-11-Download-With-Try-Catch-Finally]] — reconstructing a `try`/`catch`/`finally` method where the `finally` cleanup block is duplicated across every normal and exceptional exit path
-
-Real-world fragments illustrating this chapter live in `snippets/` — see [[Hashed-Device-Id-Multi-Catch]] for a real app's two-`.catch` method on one `try` block, [[Final-Instance-Methods-Still-Dispatch-Virtually]] for a `final` method still resolved via `invoke-virtual`, or [[Demo-Example-Class]] for the expected format of a new one.
 
 ## See also
 

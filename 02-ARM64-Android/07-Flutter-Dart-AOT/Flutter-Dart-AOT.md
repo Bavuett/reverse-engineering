@@ -106,10 +106,22 @@ See [[Object-Pool-Constant-Loads]] for a full excerpt showing multiple pool-inde
 
 ## More examples
 
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
 - [[Dart-Frame-Prologue]] — the prologue shape restated standalone, cross-referencing [[Functions-And-Calling-Convention]]
+- [[Dart-Object-Header-And-Field-Offsets]] — predicting `#7`, `#0xb`, `#0xf`, … field offsets from a class declaration, checked against a real model class
+
+### Level 2 — intermediate
+
 - [[Closure-Capture-And-Invocation]] — how `AllocateContextStub` and `AllocateClosureStub` package captured locals with a standalone closure function
-- [[Object-Pool-Constant-Loads]] — real-world snippet showing static field and enum singleton loads from `THR` and `PP`
-- [[MethodChannel-Invoke-And-Await]] — real-world snippet showing `MethodChannel::invokeMethod` followed by `AwaitStub` and runtime class-id checks
+- [[Compressed-Pointer-Decompression-Step-By-Step]] — a two-hop field access with a `NULL`-register check, decompression worked through with numbers
+
+### Level 3 — real code
+
+- [[Object-Pool-Constant-Loads]] — static field and enum singleton loads from `THR` and `PP`
+- [[MethodChannel-Invoke-And-Await]] — `MethodChannel::invokeMethod` followed by `AwaitStub` and runtime class-id checks
 
 ## See also
 

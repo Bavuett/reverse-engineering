@@ -78,8 +78,22 @@ Note there's no `stp fp, lr` prologue at all — a genuine **leaf function** (ca
 
 ## More examples
 
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
 - [[Basic-Arithmetic-And-Moves]] — the `mov`/`movz`/`movk`/`movn` family and why large constants take two instructions
+- [[Zero-Register-And-Special-Registers]] — `xzr`/`wzr`, the aliases built on them, and the fixed-role registers on Android
+
+### Level 2 — intermediate
+
 - [[Register-Width-And-Sign-Extension]] — `Wn` vs `Xn` views, and sign- vs zero-extending loads
+- [[Loading-Addresses-With-ADRP-And-ADD]] — page-relative addresses for strings and globals, resolved by hand
+
+### Level 3 — real code
+
+- [[Mmap-Call-Arguments-In-Datastore]] — six real `mmap` arguments built from constants, a saved parameter, and the zero register
+- [[Return-Value-Widening-In-Datastore-JNI]] — `xzr`, `movn`, and `sxtw` producing a real JNI function's 64-bit return value
 
 ## See also
 

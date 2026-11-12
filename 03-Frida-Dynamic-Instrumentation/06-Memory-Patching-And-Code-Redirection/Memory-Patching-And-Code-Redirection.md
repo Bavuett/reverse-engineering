@@ -75,8 +75,26 @@ Interceptor.replace(target, new NativeCallback(() => {
 
 ## More examples
 
-- [[Forcing-A-Conditional-Branch-With-PatchCode]] — worked example replacing an inline AArch64 `b.eq` integrity guard with a `nop` via `Memory.patchCode` and `Arm64Writer`.
-- [[Frida-JS-API-Cheatsheet]] in [[Cheatsheets]].
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
+- [[Replacing-A-Native-Function-With-Interceptor-Replace]] — swapping a whole native function for a `NativeCallback`
+- [[Overwriting-A-Global-Flag-In-Memory]] — locating a global from `adrp`/`ldr` and writing it, no code changed
+
+### Level 2 — intermediate
+
+- [[Forcing-A-Conditional-Branch-With-PatchCode]] — replacing an inline `b.eq` guard via `Memory.patchCode` and `Arm64Writer`
+- [[Calling-The-Original-From-A-Replacement]] — wrapping libc `read` and post-processing its output
+
+### Level 3 — real code
+
+- [[Neutralizing-A-Hidden-Check-With-A-No-Op-Implementation]] — a real reflectively-invoked root check disabled by an empty implementation in [[Tua-Case-Study]]
+- [[Reimplementing-Trapped-Methods-In-JavaScript]] — real div-by-zero and `throw null` traps skipped by calling the superclass or reimplementing the legitimate part
+
+### Further practice
+
+- [[Frida-JS-API-Cheatsheet]] in [[Cheatsheets]]
 
 ## See also
 

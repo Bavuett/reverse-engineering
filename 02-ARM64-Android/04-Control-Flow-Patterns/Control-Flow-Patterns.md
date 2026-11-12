@@ -82,10 +82,22 @@ The pattern repeats: load the field once at the top, then a sequence of `cmp` ag
 
 ## More examples
 
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
 - [[If-Else-As-Branches]] — the forward-branch shape end to end, including the "compiler skipped the branch" `csel` variant
 - [[Loop-As-Backward-Branch]] — `while`, `do/while`, and a rotated loop
+
+### Level 2 — intermediate
+
 - [[Switch-As-Jump-Table]] — dense `switch` compiled to `adrp`/`add`, `ldrsw`, and `br`
-- [[Enum-Switch-Via-Pointer-Comparison]] — real-world snippet showing a Dart `enum` `switch` compiled as a chain of pool-constant pointer comparisons
+- [[Short-Circuit-Conditions-And-CCMP]] — `&&`/`||` as branch chains and as branch-free `ccmp` + `csel`
+
+### Level 3 — real code
+
+- [[Enum-Switch-Via-Pointer-Comparison]] — a Dart `enum` `switch` compiled as a chain of pool-constant pointer comparisons
+- [[Conditional-Cleanup-Chain-In-Libencrypt]] — a real JNI function's try-then-retry, logged error paths, and shared cleanup chain
 
 ## See also
 

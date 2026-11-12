@@ -80,10 +80,28 @@ Java.perform(() => {
 
 ## More examples
 
-- [[Faking-Proc-Reads-For-Frida-Detection]] — worked example scrubbing Frida artifacts from `/proc/self/maps` via a `libc.so!fgets` hook.
-- [[Hiding-Root-Artifacts-With-One-Compiled-Regex]], [[Blocking-The-Frida-Control-Port-Scan]], [[Confirming-A-Bypass-Against-The-Apps-Own-Fraud-SDK]], and [[Ruling-Out-Play-Integrity-Before-Reaching-For-It]] — real-world snippets from [[Poste-Italiane]].
-- [[Dumping-An-InMemoryDex-Payload]] and [[Hooking-Log-And-Runtime-Exit-To-Find-The-Culprit]] — real-world anti-tampering triage and dynamic DEX dumping snippets from [[Tua-Case-Study]].
-- [[Frida-JS-API-Cheatsheet]] in [[Cheatsheets]].
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
+- [[Bypassing-A-Simple-Java-Root-Check]] — hooking `File.exists` instead of each check
+- [[Faking-Build-Properties]] — overwriting `android.os.Build` static fields with a coherent device profile
+
+### Level 2 — intermediate
+
+- [[Faking-Proc-Reads-For-Frida-Detection]] — scrubbing Frida artifacts from `/proc/self/maps` via a `libc.so!fgets` hook
+- [[Gadget-Mode-Repackaging-Walkthrough]] — embedding and configuring `frida-gadget`, and what re-signing costs
+
+### Level 3 — real code
+
+- [[Hiding-Root-Artifacts-With-One-Compiled-Regex]] — one regex applied across several file APIs in [[Poste-Italiane]]
+- [[Batch-Neutralizing-Hidden-Checks-By-Signature]] — exit suppression plus fifteen `(JJ)V` host methods disabled in [[Tua-Case-Study]]
+
+### Further practice
+
+- [[Blocking-The-Frida-Control-Port-Scan]], [[Confirming-A-Bypass-Against-The-Apps-Own-Fraud-SDK]], and [[Ruling-Out-Play-Integrity-Before-Reaching-For-It]] — more real snippets from [[Poste-Italiane]]
+- [[Dumping-An-InMemoryDex-Payload]] and [[Hooking-Log-And-Runtime-Exit-To-Find-The-Culprit]] — anti-tampering triage and dynamic DEX dumping in [[Tua-Case-Study]]
+- [[Frida-JS-API-Cheatsheet]] in [[Cheatsheets]]
 
 ## See also
 

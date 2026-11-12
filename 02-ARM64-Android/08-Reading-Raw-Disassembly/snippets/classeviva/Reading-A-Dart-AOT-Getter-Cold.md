@@ -1,5 +1,6 @@
 ---
 tags: [snippet]
+level: 3
 project: "Classeviva (Spaggiari ClasseViva student app)"
 source: "eu.spaggiari.classevivastudente — libapp.so, Dart AOT, disassembled with Blutter"
 version: "unknown (APK not versioned in the imported excerpt)"

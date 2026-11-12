@@ -1,5 +1,6 @@
 ---
 tags: [example]
+level: 2
 aliases: ["Interface implementation smali"]
 ---
 

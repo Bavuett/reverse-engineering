@@ -3,6 +3,7 @@ const topicSegment = tp.file.folder(true).split("/")[0].replace(/^\d+-/, "");
 -%>
 ---
 tags: [snippet]
+level: 3
 project: ""
 source: ""
 version: ""

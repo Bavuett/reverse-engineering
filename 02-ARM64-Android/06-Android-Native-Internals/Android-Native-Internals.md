@@ -79,9 +79,22 @@ See [[JNI-Native-Method-Signature]] for a full annotated JNI entry point, and [[
 
 ## More examples
 
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
 - [[JNI-Native-Method-Signature]] — annotated JNI entry point, implicit `env`/`thiz` parameters, and calling back through `JNINativeInterface`
+- [[JNIEnv-Function-Table-Offsets]] — naming every `ldr x8, [x8, #off]` / `blr x8` JNI call from its offset
+
+### Level 2 — intermediate
+
 - [[PLT-Stub-And-Indirect-Call]] — how external shared-library calls go through `.plt` and `.got`
-- [[JNI-OnLoad-And-RegisterNatives-In-Libflutter]] — real-world snippet showing dynamic JNI registration via `RegisterNatives` in `libflutter.so`
+- [[Calling-Back-Into-Java-From-JNI]] — `GetMethodID` name/descriptor strings and a variadic `CallVoidMethod`
+
+### Level 3 — real code
+
+- [[JNI-OnLoad-And-RegisterNatives-In-Libflutter]] — dynamic JNI registration via `RegisterNatives` in `libflutter.so`
+- [[Encryption-Decrypt-JNI-Entry-In-Libencrypt]] — PressReader's static JNI `decrypt`: descriptor-to-register mapping, string conversion, and a `byte[]` result
 
 ## See also
 

@@ -386,8 +386,25 @@ Same virtual-dispatch shape as examples 2 and the closure above (class-id extrac
 
 ## More examples
 
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
+- [[Finding-Function-Boundaries-And-Calls]] — splitting an unlabeled dump into functions, leaves, and tail calls
+- [[Naming-Arguments-From-Their-Uses]] — recovering a prototype from how `x0`–`x7` are first used
+
+### Level 2 — intermediate
+
 - [[Walking-An-Unknown-Function-Cold]] — recovering a bounded string copy (`sub_1a40`) in C from unlabeled AAPCS64 assembly
-- [[Reading-A-Dart-AOT-Getter-Cold]] — real-world snippet walking a Dart AOT getter (`MasterGrade.subjectId`) and its compressed-pointer decompression cold
+- [[Recognizing-A-Hash-Loop-By-Its-Constants]] — identifying djb2 from its initial value and update shape, plus a table of algorithm constants
+
+### Level 3 — real code
+
+- [[Reading-A-Dart-AOT-Getter-Cold]] — a Dart AOT getter (`MasterGrade.subjectId`) and its compressed-pointer decompression, read cold
+- [[Reading-Datastore-Shared-Counter-Cold]] — a whole real `.so` read cold, from sections and strings to a full C++ reconstruction
+
+### Further practice
+
 - [[Tracking-A-Stack-Slots-Meaning]] — the anchor-then-follow technique in isolation, on a short hand-written function
 
 ## See also

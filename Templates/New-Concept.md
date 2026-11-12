@@ -21,6 +21,18 @@ created: <% tp.date.now("YYYY-MM-DD") %>
 
 ## More examples
 
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
+-
+
+### Level 2 — intermediate
+
+-
+
+### Level 3 — real code
+
 -
 
 ## See also

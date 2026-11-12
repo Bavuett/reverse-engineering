@@ -1,5 +1,6 @@
 ---
 tags: [snippet]
+level: 3
 project: "Classeviva (Spaggiari ClasseViva student app)"
 source: "eu.spaggiari.classevivastudente — libflutter.so, arm64-v8a (Flutter engine native library)"
 version: "unknown (Flutter engine version not recorded in the imported excerpt)"

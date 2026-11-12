@@ -1,5 +1,6 @@
 ---
 tags: [example]
+level: 2
 created: 2026-07-28
 ---
 

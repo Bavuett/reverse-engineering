@@ -1,5 +1,6 @@
 ---
 tags: [example]
+level: 2
 aliases: ["Exception handling smali", "try catch smali"]
 ---
 

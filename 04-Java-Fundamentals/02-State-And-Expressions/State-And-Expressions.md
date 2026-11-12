@@ -60,8 +60,26 @@ The result `6` is `E[[(x+8)/y]]ϕ`.
 
 ## More examples
 
-- [[Evaluating-Expressions-In-A-State]] — evaluating arithmetic, relational, and short-circuit boolean expressions in a concrete state $\sigma$, contrasting when a division-by-zero sub-expression is skipped vs. blocked and how Dalvik compiles boolean guards into conditional branches.
-- [[Deriving-An-Arithmetic-Expression]] — a full evaluation derivation tree for an arithmetic expression.
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
+- [[Evaluating-Expressions-In-A-State]] — arithmetic, relational and short-circuit expressions in a concrete state, and the Dalvik branches they compile to
+- [[Variable-Lookup-And-Uninitialized-Values]] — `⊥` versus `$`, the `(ide)` side condition, and the compile errors it explains
+
+### Level 2 — intermediate
+
+- [[Evaluation-Order-And-Side-Effects]] — threading the state through `i++ + i`, and Java's left-to-right rule in bytecode
+- [[Short-Circuit-As-Nested-Conditionals]] — rules for `?:`, and `&&`/`||`/`!` as its desugarings
+
+### Level 3 — real code
+
+- [[Short-Circuit-Equals-In-PressReader-HttpUrl]] — a real `instanceof &&` guarding a cast, and a real `||`
+- [[Conditional-Expression-In-PressReader-Html-Encode]] — a real `?:` compiled to a single branch
+
+### Further practice
+
+- [[Deriving-An-Arithmetic-Expression]] — a full evaluation derivation tree for an arithmetic expression
 
 ## See also
 

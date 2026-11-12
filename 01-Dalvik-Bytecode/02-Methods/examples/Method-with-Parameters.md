@@ -1,5 +1,6 @@
 ---
 tags: [example]
+level: 1
 aliases: ["Method with parameters smali"]
 ---
 

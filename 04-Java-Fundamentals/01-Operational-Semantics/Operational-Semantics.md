@@ -61,8 +61,26 @@ Each node is a rule instance; a rule with no premises (`2 → 2`) is a leaf. The
 
 ## More examples
 
-- [[Deriving-An-Arithmetic-Expression]] — a full big-step derivation, step by step.
-- [[Evaluating-Expressions-In-A-State]] — big-step derivation trees over a concrete state, including short-circuit boolean rules vs. blocked configurations.
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
+- [[Deriving-An-Arithmetic-Expression]] — a full big-step derivation, step by step
+- [[Small-Step-Vs-Big-Step-On-One-Expression]] — one evaluation as a derivation tree and as a chain of single steps, next to its bytecode
+
+### Level 2 — intermediate
+
+- [[Blocked-Configurations-And-Runtime-Errors]] — which side condition fails for division by zero, uninitialized variables and null receivers
+- [[Semantic-Equivalence-Of-Two-Fragments]] — proving and refuting equivalence over all states, and why it licenses optimization
+
+### Level 3 — real code
+
+- [[Deriving-HttpUrl-Effective-Port-In-PressReader]] — a complete derivation for OkHttp's `HttpUrl.Builder` port logic as shipped in PressReader
+- [[Blocked-Null-Checks-In-HttpUrl-Builder]] — a real builder that checks side conditions up front instead of blocking later
+
+### Further practice
+
+- [[Evaluating-Expressions-In-A-State]] — big-step trees over a concrete state, including short-circuit rules versus blocked configurations
 
 ## See also
 

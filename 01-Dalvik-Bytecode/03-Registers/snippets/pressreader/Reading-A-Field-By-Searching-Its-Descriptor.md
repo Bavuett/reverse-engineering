@@ -1,5 +1,6 @@
 ---
 tags: [snippet]
+level: 3
 project: "PressReader"
 source: com.newspaperdirect.pressreader.android
 version: "unknown"

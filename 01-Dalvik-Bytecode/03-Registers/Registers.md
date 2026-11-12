@@ -141,13 +141,29 @@ A register (`v3`, `p1`, ...) never carries a source-level variable name — `bak
 
 ## More examples
 
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
 - [[Constructor-and-Fields]] — an explicit `.registers` layout in practice
+- [[Counting-Locals-And-Parameters]] — deriving the full `v`↔`p` map from the descriptor and `.locals`, wide parameters included
+
+### Level 2 — intermediate
+
+- [[Wide-Registers-For-Long-And-Double]] — the `-wide` opcode family, `cmp-long`, and dead pairs being recycled
+- [[Invoke-Range-For-Many-Arguments]] — `/range` calls and the register shuffle in front of them
+
+### Level 3 — real code
+
+- [[Device-Id-Wide-Register-Uuid]] — a real app packing two 32-bit hash codes into one 64-bit `UUID` constructor call via `shl-long/2addr`
+- [[Reading-A-Field-By-Searching-Its-Descriptor]] — the field-search technique above, in full, on a real app
+
+### Further practice
+
 - [[Exercise-01-Outlined-StringBuilder-Helpers]] — `p` registers in `static` methods (`p0` as the first parameter, no `this`) and in-place `/2addr` arithmetic
 - [[Exercise-02-HttpURLConnection-Factory]] — aggressive reuse of both local (`v0`) and parameter (`p0`) registers across different types within a single method
 - [[Exercise-07-Wait-Loop-Under-A-Monitor]] — wide register pairs (`const-wide/32 v1, 0xea60` occupying `v1`-`v2` for `Object.wait(long)`) and parameter register recycling
 - [[Exercise-08-Server-Mode-Map-Constructor]] — tracking five URL parameter registers as each is overwritten with a `kotlin.Pair` object in turn before `filled-new-array`
-
-Real-world fragments illustrating this chapter live in `snippets/` — see [[Device-Id-Wide-Register-Uuid]] for a real app packing two 32-bit hash codes into one 64-bit `UUID` constructor call via `shl-long/2addr`, or [[Reading-A-Field-By-Searching-Its-Descriptor]] for the field-search technique above in full.
 
 ## See also
 

@@ -61,9 +61,26 @@ frida -U -n "ClasseViva Studenti" -l smoke-test.js
 
 ## More examples
 
-- [[RPC-Exports-And-Host-Messaging]] — worked example comparing one-way `send(payload, data)` streaming against synchronous `rpc.exports` calls from a Python host script.
-- [[Diagnosing-A-Wedged-Frida-Server]] and [[Reattaching-Without-Losing-Session-State]] — real-world snippets from [[Poste-Italiane]] covering `frida-server` daemon recovery and mid-session `-p <pid>` reattachment.
-- [[Frida-Server-Setup]] in [[Tools]] walks through getting `frida-server` running on an x86_64 emulator with root — required before any script here can attach to anything.
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
+- [[First-Script-Attach-And-Enumerate]] — attaching by name or pid and asking the process about its architecture and loaded libraries
+- [[Spawn-Vs-Attach-Timing]] — why code that runs at startup can only be hooked by spawning the app
+
+### Level 2 — intermediate
+
+- [[Compiling-TypeScript-Agents-With-Frida-Compile]] — a typed agent project, the explicit `frida-java-bridge` import, and watch-mode reloading
+- [[RPC-Exports-And-Host-Messaging]] — one-way `send(payload, data)` streaming versus synchronous `rpc.exports` calls from a Python host
+
+### Level 3 — real code
+
+- [[Reattaching-Without-Losing-Session-State]] — mid-session `-p <pid>` reattachment in the [[Poste-Italiane]] investigation
+- [[Diagnosing-A-Wedged-Frida-Server]] — recovering a stuck `frida-server` daemon on a real device
+
+### Further practice
+
+- [[Frida-Server-Setup]] in [[Tools]] — getting `frida-server` running on a rooted emulator, required before any script here can attach
 
 ## See also
 

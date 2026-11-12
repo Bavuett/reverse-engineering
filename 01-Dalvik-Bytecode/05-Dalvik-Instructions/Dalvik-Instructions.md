@@ -145,6 +145,25 @@ See [[Return-And-Throw]] and [[Monitor-Enter-And-Monitor-Exit]] for detailed ref
 
 Every practical example across the vault exercises several of these families at once — see [[Invoke-Kinds-And-Move-Result]] for `invoke-*`/`move-result*`, [[Packed-Switch-Multi-Way-Branch]] for `packed-switch`, [[Constructor-and-Fields]] for `iput`/`iget`, [[Multidimensional-Arrays]] for `aget`/`aput`, [[Exception-Handling]] for `throw`/`move-exception`, or work through the twelve real-app reconstructions in [[Smali-Exercises]] (such as [[Exercise-01-Outlined-StringBuilder-Helpers]] for `/2addr` arithmetic, [[Exercise-06-Static-Monitors-And-Iterators]] and [[Exercise-07-Wait-Loop-Under-A-Monitor]] for `monitor-enter`/`monitor-exit`, and [[Exercise-09-Sparse-Switch-On-String-Hash]] for `sparse-switch` on string hashes).
 
+## More examples
+
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
+- [[For-Loop-Over-An-Array]] — the loop skeleton, inverted exit tests, and indexed vs for-each fingerprints
+- [[If-Else-And-Comparisons]] — negated branch conditions, decoding threshold constants, and `&&` as two jumps to one label
+
+### Level 2 — intermediate
+
+- [[Invoke-Kinds-And-Move-Result]] — `invoke-direct`, `invoke-virtual`, `invoke-static`, and `move-result-object` side by side
+- [[Packed-Switch-Multi-Way-Branch]] — a dense `switch` compiled to `packed-switch` and its data table
+
+### Level 3 — real code
+
+- [[String-Equals-Chain-In-PressReader]] — a real `equalsIgnoreCase` chain with a shared exit and an `||`, side by side with jadx output
+- [[R8-Merged-Lambdas-Packed-Switch-In-PressReader]] — a `packed-switch` R8 invented to dispatch several merged lambdas
+
 ## See also
 
 - [[Dalvik-Bytecode-Reference|Reference]] — where individual opcodes get their own detailed entry over time

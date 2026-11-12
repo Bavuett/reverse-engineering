@@ -55,7 +55,22 @@ class RecIncr { public int x;
 
 ## More examples
 
-- [[A-Method-Call-Frame]] — the `this`/parameter call frame drawn out and mapped to `p0`/`p1`.
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
+- [[A-Method-Call-Frame]] — the `this`/parameter call frame drawn out and mapped to `p0`/`p1`
+- [[Pass-By-Value-Of-References]] — mutating an argument's object versus rebinding the parameter
+
+### Level 2 — intermediate
+
+- [[Recursive-Factorial-Frame-By-Frame]] — frames stacking to the base case and values flowing back
+- [[Static-Method-Frames-Without-This]] — the static-call rule, no dispatch, and the shifted parameter registers
+
+### Level 3 — real code
+
+- [[Overload-Forwarding-Call-In-PressReader]] — a real default-argument overload: one `invoke-virtual`, two frames
+- [[Call-Chain-Frames-In-PressReader-HttpUrl-Builder]] — real nested calls three frames deep on the same receiver
 
 ## See also
 

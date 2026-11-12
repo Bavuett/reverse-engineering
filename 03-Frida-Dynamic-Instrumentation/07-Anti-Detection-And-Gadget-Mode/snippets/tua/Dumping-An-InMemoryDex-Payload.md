@@ -1,5 +1,6 @@
 ---
 tags: [snippet]
+level: 3
 project: "TUA (net.pluservice.tua)"
 source: "net.pluservice.tua — Cordova/Android hybrid app, hardened with a second check layer loaded via InMemoryDexClassLoader"
 version: "11.26.4"

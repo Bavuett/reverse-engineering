@@ -90,11 +90,27 @@ def on_message(message, data):
 
 ## More examples
 
-- [[Resolving-An-Indirect-Call-With-Stalker]] — worked example capturing the concrete runtime destination of an indirect `blr x8` call and mapping it back to a module offset for Ghidra.
-- [[Dumping-An-InMemoryDex-Payload]] — real-world snippet from [[Tua-Case-Study]] dumping a decrypted `InMemoryDexClassLoader` buffer to disk for static decompilation.
-- [[Attaching-At-A-Dart-AOT-Entry-Offset]] — real-world snippet from [[ClasseViva-Case-Study]] turning a static Blutter offset into a live register-reading hook.
-- [[Confirming-HttpUrl-Identity-By-Decompiling-The-APK]] in [[PressReader]] — combining static APK decompilation with live Frida hooks to confirm an obfuscated class's identity.
-- [[Frida-JS-API-Cheatsheet]] in [[Cheatsheets]].
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
+- [[From-Smali-Signature-To-Frida-Overload]] — the mechanical translation from smali descriptors to `Java.use`/`.overload` strings
+- [[From-Ghidra-Offset-To-Interceptor-Address]] — image base, module offset, and runtime address, in both directions
+
+### Level 2 — intermediate
+
+- [[Resolving-An-Indirect-Call-With-Stalker]] — capturing a runtime `blr x8` destination and mapping it back for Ghidra
+- [[Dumping-Decrypted-Strings-By-Hooking-The-Decoder]] — recognizing a string decoder in smali and letting the app decrypt its own strings
+
+### Level 3 — real code
+
+- [[Dumping-An-InMemoryDex-Payload]] — dumping a decrypted `InMemoryDexClassLoader` buffer for static decompilation in [[Tua-Case-Study]]
+- [[Attaching-At-A-Dart-AOT-Entry-Offset]] — a static Blutter offset turned into a live register-reading hook in [[ClasseViva-Case-Study]]
+
+### Further practice
+
+- [[Confirming-HttpUrl-Identity-By-Decompiling-The-APK]] in [[PressReader]] — static decompilation and live hooks confirming an obfuscated class's identity
+- [[Frida-JS-API-Cheatsheet]] in [[Cheatsheets]]
 
 ## See also
 

@@ -97,10 +97,22 @@ Reading this cold: `EnterFrame` and `CheckStackOverflow` are pure boilerplate �
 
 ## More examples
 
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
 - [[Leaf-Function-Prologue-Epilogue]] — the AAPCS64 side: when a prologue is skipped entirely
+- [[Passing-Arguments-And-Return-Values]] — integer and FP argument counters, callee-side widening, and the `b` tail call
+
+### Level 2 — intermediate
+
 - [[Stack-Frame-With-Locals]] — a non-leaf AAPCS64 function spilling callee-saved registers
 - [[Tracking-A-Stack-Slots-Meaning]] — anchoring at `SetupParameters` and following a stack slot's meaning (and reuse) through a function body
-- [[Dart-Function-Prologue-In-The-Wild]] — real-world snippet showing `EnterFrame`, `AllocStack`, `SetupParameters`, `CheckStackOverflow`, and `LeaveFrame` in `GradeUtils.getAvg`
+
+### Level 3 — real code
+
+- [[Dart-Function-Prologue-In-The-Wild]] — `EnterFrame`, `AllocStack`, `SetupParameters`, `CheckStackOverflow`, and `LeaveFrame` in `GradeUtils.getAvg`
+- [[Stack-Protector-And-Tail-Call-In-Datastore-JNI]] — a real frame with a `tpidr_el0` stack canary, and a tail call through `br x3` after the epilogue
 
 ## See also
 

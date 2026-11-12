@@ -619,8 +619,26 @@ This is the same patch 1 technique — conditional-to-unconditional-jump, nothin
 
 ## More examples
 
-- [[Recognizing-An-Opaque-Predicate-Guard]] — focused walkthrough of spotting an opaque-predicate-gated `div-int/lit8 ..., 0x0` crash trap inside a lifecycle override
-- [[Smali-Exercises]] — twelve graded source-reconstruction exercises on real PressReader smali (capped by [[Exercise-12-The-DQ-Request-Callable]], a 300-instruction method combining inlined Kotlin/OkHttp helpers, `synchronized` wait loops, and XML envelope formatting)
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction. The worked examples above are a separate, longer graded series on the same material.
+
+### Level 1 — basics
+
+- [[Reading-A-Getter-And-Setter-Cold]] — recovering a renamed Kotlin model class from method shapes and one leaked string
+- [[Annotating-A-Short-Method-Line-By-Line]] — the register-annotation table that every cold read is built on
+
+### Level 2 — intermediate
+
+- [[Same-Method-Debug-Vs-R8-Release]] — one class compiled debug and release: renaming, inlining, access widening, and `String.concat` rewrites
+- [[Recognizing-An-Opaque-Predicate-Guard]] — spotting an opaque-predicate-gated `div-int/lit8 ..., 0x0` crash trap inside a lifecycle override
+
+### Level 3 — real code
+
+- [[Reading-A-Native-Facade-Class-Cold]] — a real class with no bytecode logic: `loadLibrary` plus two `native` declarations, and how to follow them into ARM64
+- [[Telescoping-Constructors-And-Framework-Constants-In-TUA]] — real protector output: delegating constructors with an invented parameter, and decoder keys disguised as framework calls
+
+### Further practice
+
+- [[Smali-Exercises]] — twelve graded source-reconstruction exercises on real PressReader smali (capped by [[Exercise-12-The-DQ-Request-Callable]], a 300-instruction method combining inlined Kotlin/Rx code)
 
 ## See also
 

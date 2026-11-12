@@ -1,5 +1,6 @@
 ---
 tags: [snippet]
+level: 3
 project: "ClasseViva (eu.spaggiari.classevivastudente)"
 source: "eu.spaggiari.classevivastudente — Flutter (Dart AOT) Android app, libapp.so disassembled with Blutter"
 version: "unknown (not recorded alongside the imported files)"

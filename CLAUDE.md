@@ -149,9 +149,9 @@ Adding a genuinely new standalone note type follows the same shape: one root-lev
 | --- | --- | --- |
 | Topic home note | `moc`, `topic` | `aliases` |
 | Chapter concept note | `fundamentals` | `aliases` |
-| Example | `example` | — |
+| Example | `example` | `level` (`1` basics or `2` intermediate) |
 | Reference entry | `reference`, `reference-entry` | `category` |
-| Real-world snippet | `snippet` (+ `placeholder` for demo/non-real ones) | `project`, `source`, `version`, `source_path`, `date_added`, `license_note` |
+| Real-world snippet | `snippet` (+ `placeholder` for demo/non-real ones) | `level` (always `3`), `project`, `source`, `version`, `source_path`, `date_added`, `license_note` |
 | Case study overview | `case-study` (+ `placeholder` for the demo one) | `project`, `source`, `version`, `obtained_via`, `tools_used`, `topics`, `date_started`, `status`, `license_note` |
 | Case study analysis note | `case-study-note` (+ `placeholder` for the demo one) | `case_study`, `created` |
 | Cheatsheet | `cheatsheet` | `subject`, `topics` |
@@ -162,7 +162,19 @@ Adding a genuinely new standalone note type follows the same shape: one root-lev
 
 ## Chapter note structure
 
-A chapter's main concept note (`ChapterName.md`) generally includes, in this order: a short intro, the core explanation with syntax blocks and tables, a fully worked example, a "More examples" list linking to `examples/` (and `snippets/` if populated), a "See also" list linking to other chapters, a "References" link to that topic's `Bibliography`, and a closing `## Flashcards` section tagged `#flashcards` with 2-4 `Question::Answer` pairs for the Spaced Repetition plugin.
+A chapter's main concept note (`ChapterName.md`) generally includes, in this order: a short intro, the core explanation with syntax blocks and tables, a fully worked example, a "More examples" section linking to `examples/` and `snippets/`, a "See also" list linking to other chapters, a "References" link to that topic's `Bibliography`, and a closing `## Flashcards` section tagged `#flashcards` with 2-4 `Question::Answer` pairs for the Spaced Repetition plugin.
+
+### Difficulty levels in "More examples"
+
+Every concept chapter's "More examples" section is ordered from simplest to most complex, with **two entries per level**, under three subheadings:
+
+| Level | Subheading | Lives in | What it is |
+| --- | --- | --- | --- |
+| 1 | `### Level 1 — basics` | `examples/` (`level: 1`) | one idea isolated on minimal hand-written code |
+| 2 | `### Level 2 — intermediate` | `examples/` (`level: 2`) | several ideas combined, or a compiler idiom |
+| 3 | `### Level 3 — real code` | `snippets/<project>/` (`level: 3`) | real code from an analysed app, compared against its source or reconstruction |
+
+Anything beyond two per level (extra snippets, related case-study notes, cheatsheets) goes under a final `### Further practice` subheading. Each new example or snippet opens with a `> [!info] Level N — …` callout stating the single idea (Level 1), the combination (Level 2), or the real-code comparison (Level 3), and ends with a "Compared with real code" section (examples) or a "Reconstructed source" section (snippets) linking the levels together. A Level 3 snippet built from static analysis rather than a recorded run (e.g. a planned Stalker trace) says so in a `> [!warning]` callout. A topic's `Reference` chapter and exercise chapters (such as `08-Smali-Exercises`) are not concept chapters and don't follow this layout.
 
 ## Templates
 

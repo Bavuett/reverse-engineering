@@ -51,7 +51,22 @@ This is the model you carry into static and dynamic analysis:
 
 ## More examples
 
-- [[Tracing-A-Value-Through-The-Three-Regions]] — one small program, showing which region each value lives in and the smali it compiles to.
+Ordered from simplest to most complex, two per level: **Level 1** isolates one idea on minimal hand-written code, **Level 2** combines ideas or shows a compiler idiom, **Level 3** is real code from an analysed app, compared against its source or reconstruction.
+
+### Level 1 — basics
+
+- [[Tracing-A-Value-Through-The-Three-Regions]] — one small program, showing which region each value lives in and the smali it compiles to
+- [[Static-Fields-And-Class-Initialization]] — static fields in the library region, filled once by `<clinit>`
+
+### Level 2 — intermediate
+
+- [[Garbage-And-Reachability]] — roots, reference chains, and when objects become garbage
+- [[Copying-References-Vs-Copying-Objects]] — reference copy, shallow copy and deep copy as three heap shapes
+
+### Level 3 — real code
+
+- [[Static-Initializer-Choosing-An-Implementation-In-PressReader]] — a real `<clinit>` choosing an implementation class from a runtime flag
+- [[Static-Command-Queue-Outliving-Its-Producer-In-PressReader]] — real objects kept alive by a static queue after their producer is gone
 
 ## See also
 
